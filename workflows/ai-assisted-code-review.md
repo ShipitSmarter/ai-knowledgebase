@@ -160,8 +160,9 @@ How to know the workflow completed successfully:
 
 ## Related Workflows
 
-- [GitHub Copilot Setup](./github-copilot-setup.md)
-- [CI/CD Pipeline Configuration](./cicd-pipeline.md)
+- Link to GitHub Copilot setup guide (to be added)
+- Link to CI/CD pipeline configuration (to be added)
+- Link to other development workflows
 
 ## Maintenance
 

@@ -127,8 +127,9 @@ How will we measure if this idea is successful?
 
 ## Related Ideas
 
-- [AI-Assisted Code Review](./ai-code-review-enhancement.md)
-- [Automated Testing Documentation](./test-doc-automation.md)
+- Link to AI-assisted code review enhancements (to be added)
+- Link to automated testing documentation ideas (to be added)
+- Link to other automation ideas
 
 ## Discussion Notes
 

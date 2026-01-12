@@ -93,5 +93,6 @@ How to integrate this agent into existing workflows:
 
 ## Related Resources
 
-- [Code Review Workflow](../workflows/code-review-workflow.md)
-- [Security Best Practices Research](../research/security-best-practices.md)
+- [AI-Assisted Code Review Workflow](../workflows/ai-assisted-code-review.md)
+- Link to security best practices research (to be added)
+- Link to other related agents

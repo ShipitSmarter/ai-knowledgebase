@@ -166,4 +166,4 @@ Topics for future research:
 
 - **Last Updated**: 2026-01-12
 - **Review Status**: Final
-- **Related Research**: [AI Security Best Practices](./ai-security-research.md)
+- **Related Research**: Link to AI security best practices (to be added)
