@@ -1,0 +1,65 @@
+[
+  // ===========================================
+  // OpenCode Terminal Access
+  // ===========================================
+  {
+    "key": "ctrl+shift+o",
+    "command": "workbench.action.terminal.newWithProfile",
+    "args": { "profileName": "opencode" }
+  },
+  {
+    "key": "ctrl+alt+o",
+    "command": "workbench.action.terminal.sendSequence",
+    "args": { "text": "opencode\n" },
+    "when": "terminalFocus"
+  },
+  
+  // ===========================================
+  // Terminal Navigation
+  // ===========================================
+  {
+    "key": "ctrl+`",
+    "command": "workbench.action.terminal.toggleTerminal"
+  },
+  {
+    "key": "ctrl+shift+`",
+    "command": "workbench.action.terminal.new"
+  },
+  {
+    "key": "ctrl+pageup",
+    "command": "workbench.action.terminal.focusPrevious",
+    "when": "terminalFocus"
+  },
+  {
+    "key": "ctrl+pagedown",
+    "command": "workbench.action.terminal.focusNext",
+    "when": "terminalFocus"
+  },
+  
+  // ===========================================
+  // Copilot Shortcuts (for reference)
+  // ===========================================
+  // Tab - Accept inline suggestion (default)
+  // Esc - Dismiss suggestion (default)
+  // Alt+] - Next suggestion (default)
+  // Alt+[ - Previous suggestion (default)
+  
+  {
+    "key": "ctrl+shift+i",
+    "command": "github.copilot.chat.focus"
+  },
+  
+  // ===========================================
+  // Quick File Operations
+  // ===========================================
+  {
+    "key": "ctrl+shift+c",
+    "command": "copyFilePath",
+    "when": "editorFocus"
+  },
+  {
+    "key": "ctrl+shift+r",
+    "command": "copyRelativeFilePath",
+    "when": "editorFocus"
+  }
+]

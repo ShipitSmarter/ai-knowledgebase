@@ -1,0 +1,27 @@
+{
+  "recommendations": [
+    // AI Assistance
+    "GitHub.copilot",
+    "GitHub.copilot-chat",
+    
+    // Git & Version Control
+    "eamodio.gitlens",
+    "mhutchie.git-graph",
+    
+    // Terminal Enhancement
+    "ms-vscode.vscode-terminal-tabs",
+    
+    // Code Quality
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint",
+    
+    // Productivity
+    "christian-kohler.path-intellisense",
+    "streetsidesoftware.code-spell-checker",
+    
+    // Markdown (for documentation)
+    "yzhang.markdown-all-in-one",
+    "bierner.markdown-preview-github-styles"
+  ],
+  "unwantedRecommendations": []
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://opencode.ai/schema/config.json",
+  "instructions": "This is an AI knowledgebase repository for workflows, research, and agent setups. When conducting research, always use the /research skill and organize findings in the research/ folder by project. Always include source URLs and maintain proper attribution. Check Notion knowledge base first before web searching. Store important findings in memory for cross-session recall.",
+  
+  "plugins": [
+    "opencode-mem"
+  ],
+  
+  "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "env": {
+        "NOTION_TOKEN": "${NOTION_TOKEN}"
+      }
+    },
+    "google-ai-search": {
+      "command": "node",
+      "args": ["${HOME}/.opencode/plugins/opencode-google-ai-search/dist/index.js"],
+      "env": {}
+    }
+  }
+}

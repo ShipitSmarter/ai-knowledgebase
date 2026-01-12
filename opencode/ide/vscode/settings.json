@@ -1,0 +1,69 @@
+{
+  // ===========================================
+  // Terminal Configuration for OpenCode
+  // ===========================================
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.profiles.linux": {
+    "bash": {
+      "path": "bash",
+      "icon": "terminal-bash"
+    },
+    "opencode": {
+      "path": "bash",
+      "args": ["-c", "opencode"],
+      "icon": "robot"
+    }
+  },
+  "terminal.integrated.tabs.enabled": true,
+  "terminal.integrated.tabs.location": "right",
+  
+  // ===========================================
+  // GitHub Copilot Configuration
+  // ===========================================
+  "github.copilot.enable": {
+    "*": true,
+    "markdown": true,
+    "yaml": true,
+    "json": true,
+    "jsonc": true,
+    "plaintext": false
+  },
+  "github.copilot.editor.enableAutoCompletions": true,
+  
+  // ===========================================
+  // Editor Settings for AI Assistance
+  // ===========================================
+  "editor.inlineSuggest.enabled": true,
+  "editor.suggestSelection": "first",
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": false
+  },
+  
+  // ===========================================
+  // File Watching (for OpenCode changes)
+  // ===========================================
+  "files.autoSave": "onFocusChange",
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/.git/objects/**": true,
+    "**/.git/subtree-cache/**": true
+  },
+  
+  // ===========================================
+  // Git Integration
+  // ===========================================
+  "git.autofetch": true,
+  "git.confirmSync": false,
+  "git.enableSmartCommit": true,
+  
+  // ===========================================
+  // Recommended Editor Settings
+  // ===========================================
+  "editor.formatOnSave": true,
+  "editor.rulers": [80, 120],
+  "editor.wordWrap": "off",
+  "editor.minimap.enabled": false,
+  "workbench.editor.enablePreview": false
+}
