@@ -151,7 +151,7 @@ What wasn't covered or needs further research:
 - [Tabnine](https://www.tabnine.com/)
 - [Codeium](https://codeium.com/)
 - [Cursor](https://cursor.sh/)
-- [AI Coding Tools Benchmark Study 2026](https://example.com/benchmark)
+- AI Coding Tools Benchmark Study 2026 (to be added when available)
 
 ## Follow-up Research
 
