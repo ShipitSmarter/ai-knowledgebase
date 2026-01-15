@@ -2,152 +2,150 @@
 
 Access Penpot designs from AI coding agents. Penpot is an open-source design platform alternative to Figma.
 
-## Recommended Servers
+## Architecture
 
-### Official Server (Recommended)
+The Penpot MCP server uses a unique architecture:
 
-**[penpot/penpot-mcp](https://github.com/penpot/penpot-mcp)** (123 stars)
-- Official MCP Server from Penpot team
-- TypeScript implementation
-- Active development
+1. **MCP Server** - Exposes tools to AI clients via HTTP/SSE
+2. **Penpot Plugin** - Runs inside Penpot, connects to MCP server via WebSocket
+3. **AI Client** - Connects to MCP server (via `mcp-remote` proxy for stdio clients)
 
-### Community Server (More Stars)
-
-**[montevive/penpot-mcp](https://github.com/montevive/penpot-mcp)** (208 stars)
-- Python implementation
-- Community maintained
-- Feature-rich
+```
++----------------+     +------------------+     +------------------+
+|   OpenCode     |<--->|   MCP Server     |<--->|  Penpot Plugin   |
+|  (mcp-remote)  |     |   (port 4401)    |     |   (WebSocket)    |
++----------------+     +------------------+     +------------------+
+                                                        |
+                                                        v
+                                                +------------------+
+                                                |     Penpot       |
+                                                |    (browser)     |
+                                                +------------------+
+```
 
 ## Installation
 
-### Official TypeScript Server
+### 1. Clone the Official Server
 
 ```bash
-npm install -g @penpot/penpot-mcp
+mkdir -p ~/.local/share
+git clone https://github.com/penpot/penpot-mcp.git ~/.local/share/penpot-mcp
+cd ~/.local/share/penpot-mcp
+npm install
+npm run bootstrap
 ```
 
-### Community Python Server
+### 2. Configure OpenCode
 
-```bash
-pip install penpot-mcp
-```
-
-## Configuration
-
-### OpenCode Config (Official Server)
-
-Add to `~/.config/opencode/config.json` or `.opencode/config.json`:
+Add to `.opencode/config.json`:
 
 ```jsonc
 {
   "mcpServers": {
     "penpot": {
       "command": "npx",
-      "args": ["-y", "@penpot/penpot-mcp"],
-      "env": {
-        "PENPOT_ACCESS_TOKEN": "${PENPOT_ACCESS_TOKEN}",
-        "PENPOT_BASE_URL": "${PENPOT_BASE_URL}"
-      }
+      "args": ["-y", "mcp-remote", "http://localhost:4401/sse", "--allow-http"],
+      "env": {}
     }
   }
 }
 ```
 
-### OpenCode Config (Community Python Server)
+## Usage
 
-```jsonc
-{
-  "mcpServers": {
-    "penpot": {
-      "command": "uvx",
-      "args": ["penpot-mcp"],
-      "env": {
-        "PENPOT_ACCESS_TOKEN": "${PENPOT_ACCESS_TOKEN}",
-        "PENPOT_BASE_URL": "${PENPOT_BASE_URL}"
-      }
-    }
-  }
-}
-```
-
-### Environment Variables
+### Starting the Servers
 
 ```bash
-# Add to ~/.bashrc or ~/.zshrc
-
-# For Penpot Cloud
-export PENPOT_ACCESS_TOKEN="your-penpot-access-token"
-export PENPOT_BASE_URL="https://design.penpot.app"
-
-# For Self-Hosted Penpot
-export PENPOT_ACCESS_TOKEN="your-penpot-access-token"
-export PENPOT_BASE_URL="https://your-penpot-instance.com"
+cd ~/.local/share/penpot-mcp && npm run start:all
 ```
 
-## Getting a Penpot Access Token
+This starts:
+- **Port 4400**: Plugin web server
+- **Port 4401**: MCP HTTP/SSE endpoint
+- **Port 4402**: WebSocket server
+- **Port 4403**: REPL server
 
-### Penpot Cloud
+### Connecting the Plugin
 
-1. Go to [design.penpot.app](https://design.penpot.app)
-2. Log in to your account
-3. Go to Profile Settings
-4. Navigate to "Access Tokens"
-5. Generate a new token
-6. Copy and store securely
+1. Open [design.penpot.app](https://design.penpot.app)
+2. Open a design file
+3. Click **Plugins menu** (puzzle icon)
+4. Enter: `http://localhost:4400/manifest.json`
+5. Open the installed plugin
+6. Click **"Connect to MCP server"**
 
-### Self-Hosted
+### Using with OpenCode
 
-1. Access your Penpot instance admin panel
-2. Navigate to user settings
-3. Generate an API access token
+Use the `/designer` command to start an interactive design session.
 
 ## Available Tools
 
-Once configured, you can ask OpenCode to:
+| Tool | Description |
+|------|-------------|
+| `execute_code` | Execute code using the Penpot Plugin API |
+| `high_level_overview` | Get overview of current design file |
+| `penpot_api_info` | Get info about available Penpot API methods |
+| `export_shape` | Export a shape as image |
+| `import_image` | Import an image into the design |
 
-- "Get the design from this Penpot project"
-- "Extract components from the Penpot file"
-- "Show me the color palette from this design"
-- "List all frames in the Penpot project"
+## Example Workflows
 
-## Self-Hosted Penpot
-
-Penpot can be self-hosted for teams wanting full control:
-
-```bash
-# Docker Compose setup
-git clone https://github.com/penpot/penpot.git
-cd penpot/docker
-docker-compose up -d
+### Get Design Structure
+```
+Use high_level_overview to see frames, components, and layers
 ```
 
-Then configure MCP with your self-hosted URL:
-
-```bash
-export PENPOT_BASE_URL="http://localhost:9001"
+### Query Elements
+```
+Use execute_code with:
+- penpot.getPage().children - Get all page elements
+- penpot.selection - Get selected elements
+- penpot.library.local.colors - Get color palette
 ```
 
-## Alternative Servers
+### Generate Code from Design
+```
+1. Get design overview
+2. Export specific components
+3. Generate HTML/CSS based on design data
+```
 
-| Server | Language | Description |
-|--------|----------|-------------|
-| [zcube/penpot-mcp-server](https://github.com/zcube/penpot-mcp-server) | TypeScript | Docker support, design automation |
-| [ajeetraina/penpot-mcp-docker](https://github.com/ajeetraina/penpot-mcp-docker) | Docker | Containerized deployment |
+## Stopping the Servers
 
-## Use Cases
+```bash
+pkill -f "penpot-mcp"
+```
 
-### Open-Source Design Workflow
+## Browser Notes
 
-1. Create designs in Penpot (free, open-source)
-2. Share project with OpenCode via MCP
-3. Generate code from designs
-4. Iterate without vendor lock-in
+### Chromium 142+ (Chrome, Brave, Edge)
+Private network access restrictions require allowing localhost connections. 
+- Accept the popup when prompted
+- In Brave: disable "Shield" for design.penpot.app
 
-### Team Collaboration
+### Firefox
+Works without additional configuration.
 
-1. Self-host Penpot for your team
-2. Configure MCP server with team instance
-3. All developers can access designs via AI
+## Troubleshooting
+
+### Plugin won't connect
+- Check browser console for WebSocket errors
+- Verify servers are running: `ss -tlnp | grep 440`
+- Try Firefox if Chromium has issues
+
+### Servers not starting
+```bash
+# Check logs
+tail -50 /tmp/penpot-mcp.log
+
+# Restart
+pkill -f penpot-mcp
+cd ~/.local/share/penpot-mcp && npm run start:all
+```
+
+### MCP tools not available in OpenCode
+- Restart OpenCode after servers are running
+- Verify plugin shows "Connected to MCP server"
 
 ## Why Penpot?
 
@@ -157,25 +155,9 @@ export PENPOT_BASE_URL="http://localhost:9001"
 - **Standards-Based**: SVG-native
 - **Figma Import**: Can import Figma files
 
-## Troubleshooting
-
-### "Authentication failed"
-- Verify your access token is valid
-- Check token hasn't expired
-- Ensure base URL is correct (no trailing slash)
-
-### "Connection refused" (Self-Hosted)
-- Verify Penpot instance is running
-- Check firewall rules
-- Ensure the URL is accessible from your machine
-
-### "Project not found"
-- Verify you have access to the project
-- Check the project ID is correct
-
 ## Resources
 
-- [Penpot Official Docs](https://help.penpot.app/)
+- [Penpot MCP GitHub](https://github.com/penpot/penpot-mcp)
+- [Penpot Plugin API](https://help.penpot.app/plugins/)
+- [Penpot Help](https://help.penpot.app/)
 - [Penpot GitHub](https://github.com/penpot/penpot)
-- [Official MCP Server](https://github.com/penpot/penpot-mcp)
-- [Community MCP Server](https://github.com/montevive/penpot-mcp)
