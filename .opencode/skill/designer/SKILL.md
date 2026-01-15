@@ -11,6 +11,56 @@ Work with Penpot designs using the Penpot MCP server. Enables design-to-code and
 
 When user invokes `/designer` or asks to work with Penpot designs.
 
+## Prerequisites
+
+### One-time Setup
+
+Before first use, the Penpot MCP server must be installed and configured:
+
+**1. Clone and build the Penpot MCP server:**
+
+```bash
+mkdir -p ~/.local/share
+git clone https://github.com/penpot/penpot-mcp.git ~/.local/share/penpot-mcp
+cd ~/.local/share/penpot-mcp
+npm install
+npm run build:all
+```
+
+**2. Add Penpot MCP to OpenCode config:**
+
+Create or update `opencode.json` in the project root:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "penpot": {
+      "type": "remote",
+      "url": "http://localhost:4401/mcp",
+      "enabled": true
+    }
+  }
+}
+```
+
+Or use the CLI:
+
+```bash
+opencode mcp add
+# Select: Current project or Global
+# Type: remote
+# URL: http://localhost:4401/mcp
+```
+
+Verify with:
+
+```bash
+opencode mcp list
+```
+
+You should see `penpot` listed as connected (when servers are running).
+
 ## Process
 
 ### Step 1: Start Penpot MCP Servers
@@ -34,6 +84,7 @@ Wait for servers to be ready (ports 4400-4403):
 - **4403**: REPL server
 
 Verify with:
+
 ```bash
 sleep 3 && ss -tlnp | grep -E "440[0-3]"
 ```
@@ -53,6 +104,11 @@ Inform the user:
 > 6. Open the installed plugin
 > 7. Click **"Connect to MCP server"**
 >
+> **Browser Warning**: If you get "The plugin doesn't exist or the URL is not correct":
+> - **Brave**: Click the lion icon → turn **Shields OFF** for this site → refresh
+> - **Chrome/Edge**: Look for a popup asking to allow local network access, or click the lock icon → Site settings → allow insecure content
+> - **Firefox**: Usually works without issues (recommended)
+>
 > Let me know when you're connected!
 
 ### Step 3: Wait for Connection
@@ -60,6 +116,7 @@ Inform the user:
 The user must confirm the plugin is connected before MCP tools will work.
 
 Check server logs if needed:
+
 ```bash
 tail -20 /tmp/penpot-mcp.log
 ```
@@ -72,37 +129,67 @@ Once connected, the following MCP tools are available:
 
 | Tool | Description |
 |------|-------------|
-| `execute_code` | Execute arbitrary code in the Penpot Plugin API |
-| `high_level_overview` | Get an overview of the current design file |
-| `penpot_api_info` | Get information about available Penpot API methods |
-| `export_shape` | Export a shape as an image |
-| `import_image` | Import an image into the design |
+| `penpot_execute_code` | Execute JavaScript code using the Penpot Plugin API |
+| `penpot_high_level_overview` | Get an overview of the Penpot API and how to use it |
+| `penpot_penpot_api_info` | Get documentation for specific Penpot API types |
+| `penpot_export_shape` | Export a shape as PNG/SVG image |
+| `penpot_import_image` | Import an image into the design |
 
 ### Step 5: Execute Design Tasks
 
 Common design operations:
 
 **Get Design Overview**
-```
-Use the high_level_overview tool to see the current design structure
+
+```javascript
+// Get pages
+const pages = penpotUtils.getPages();
+
+// Get structure of current page (depth 3)
+const structure = penpotUtils.shapeStructure(penpot.root, 3);
+
+return { pages, structure };
 ```
 
-**Query Design Elements**
-```
-Use execute_code to run Penpot Plugin API code, e.g.:
-- Get all frames: penpot.getPage().children.filter(c => c.type === 'frame')
-- Get selected elements: penpot.selection
-- Get color palette: penpot.library.local.colors
+**Find Elements**
+
+```javascript
+// Find shapes by name
+const button = penpotUtils.findShape(s => s.name === "BaseButton");
+
+// Find all text elements
+const texts = penpotUtils.findShapes(s => s.type === "text", penpot.root);
+
+// Get selected elements
+const selected = penpot.selection;
 ```
 
 **Modify Designs**
+
+```javascript
+// Change fill color
+const shape = penpotUtils.findShape(s => s.name === "MyShape");
+shape.fills = [{ fillColor: "#EC4899", fillOpacity: 1 }];
 ```
-Use execute_code to create or modify elements using the Penpot Plugin API
+
+**Work with Components**
+
+```javascript
+// List library components
+const components = penpot.library.local.components.map(c => ({
+  id: c.id, 
+  name: c.name
+}));
+
+// Get main instance of a component
+const component = penpot.library.local.components.find(c => c.name === "Button");
+const mainShape = component.mainInstance();
 ```
 
 **Export Assets**
+
 ```
-Use export_shape to export specific shapes as PNG/SVG
+Use penpot_export_shape to export specific shapes as PNG/SVG
 ```
 
 ## Stopping the Servers
@@ -115,18 +202,37 @@ pkill -f "penpot-mcp"
 
 ## Troubleshooting
 
-### Plugin won't connect
-- Check browser console for WebSocket errors
-- In Brave browser, disable "Shield" for design.penpot.app
-- Try Firefox if Chromium-based browsers have issues
+### "The plugin doesn't exist or the URL is not correct"
+
+This is a browser security issue blocking localhost connections:
+- **Brave**: Click lion icon → turn **Shields OFF** for design.penpot.app → refresh
+- **Chrome/Edge**: Allow local network access when prompted, or go to lock icon → Site settings → Insecure content → Allow
+- **Firefox**: Recommended - works without extra configuration
+
+### Plugin won't connect to MCP server
+
+- Check browser console (F12) for WebSocket errors
+- Ensure servers are running: `ss -tlnp | grep 440`
+- Keep the plugin UI open - closing it disconnects WebSocket
 
 ### Servers not responding
+
 - Check logs: `tail -50 /tmp/penpot-mcp.log`
 - Restart: `pkill -f penpot-mcp && cd ~/.local/share/penpot-mcp && npm run start:all`
 
-### MCP tools not available
-- Restart OpenCode after servers are running
-- Verify config in `.opencode/config.json` has penpot entry
+### MCP tools not available in OpenCode
+
+1. Ensure servers are running first
+2. Check config: `opencode mcp list` should show penpot as connected
+3. If not listed, add it: create `opencode.json` with penpot config (see Prerequisites)
+4. Restart OpenCode after adding config
+
+### "No results found" when searching for penpot tools
+
+The MCP config was not loaded. Ensure:
+1. `opencode.json` exists in project root (not `.opencode/config.json`)
+2. Uses correct format with `"mcp"` key (not `"mcpServers"`)
+3. Penpot servers are running before starting OpenCode
 
 ## Architecture
 
@@ -134,8 +240,8 @@ pkill -f "penpot-mcp"
 +----------------+     +------------------+     +------------------+
 |                |     |                  |     |                  |
 |   OpenCode     |<--->|   MCP Server     |<--->|  Penpot Plugin   |
-|   (via mcp-    |     |   (port 4401)    |     |  (WebSocket)     |
-|    remote)     |     |                  |     |                  |
+|                |     |   (port 4401)    |     |  (WebSocket)     |
+|                |     |                  |     |                  |
 +----------------+     +------------------+     +------------------+
                               ^                         |
                               |                         v

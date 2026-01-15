@@ -6,23 +6,22 @@
     "opencode-mem"
   ],
   
-  "mcpServers": {
+  "mcp": {
     "notion": {
-      "command": "npx",
-      "args": ["-y", "@notionhq/notion-mcp-server"],
-      "env": {
-        "NOTION_TOKEN": "${NOTION_TOKEN}"
+      "type": "local",
+      "command": ["npx", "-y", "@notionhq/notion-mcp-server"],
+      "environment": {
+        "NOTION_TOKEN": "{env:NOTION_TOKEN}"
       }
     },
     "google-ai-search": {
-      "command": "node",
-      "args": ["${HOME}/.opencode/plugins/opencode-google-ai-search/dist/index.js"],
-      "env": {}
+      "type": "local",
+      "command": ["node", "{env:HOME}/.opencode/plugins/opencode-google-ai-search/dist/index.js"]
     },
     "penpot": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "http://localhost:4401/sse", "--allow-http"],
-      "env": {}
+      "type": "remote",
+      "url": "http://localhost:4401/mcp",
+      "enabled": true
     }
   }
 }
