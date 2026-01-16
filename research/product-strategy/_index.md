@@ -10,6 +10,7 @@ This research project explores best practices for writing product strategy, with
 |------|-------|--------|
 | 2026-01-13 | [Writing Product Strategy for Viya TMS](./2026-01-13-writing-product-strategy.md) | draft |
 | 2026-01-13 | [Skills for Writing Product Strategy](./2026-01-13-product-strategy-skills.md) | draft |
+| 2026-01-16 | [Team Organization: Personas vs Domains](./2026-01-16-team-organization-personas.md) | draft |
 
 ## Key Insights
 
@@ -50,6 +51,18 @@ This research project explores best practices for writing product strategy, with
 9. **Insight generation is the hardest skill** - Cultivate four types: quantitative, qualitative, technology, and industry insights.
 
 10. **Three distinguishing traits** - Entrepreneurial spirit, data savvy, superb communication.
+
+## Team Organization Insights
+
+11. **Stream-aligned teams are the gold standard** - Team Topologies, SVPG, and Spotify all converge on teams aligned to flows of customer value (not features or domains).
+
+12. **Empowered vs feature teams is crucial** - Feature teams (given output) produce dramatically different results than empowered teams (given problems). The PM role is fundamentally different.
+
+13. **Cognitive load is the design constraint** - Team boundaries should minimize cognitive load. Platform teams exist primarily to reduce cognitive load on stream-aligned teams.
+
+14. **Persona-based organization maps to value streams** - When distinct personas have different jobs-to-be-done, organizing by audience creates natural stream alignment (validates Viya's approach).
+
+15. **Trust enables empowerment** - The main barrier to empowered teams is leadership trust. Building trust requires competence + character, not "cultural fit."
 
 ## Open Questions
 

@@ -1,11 +1,9 @@
 {
   "$schema": "https://opencode.ai/schema/config.json",
   "instructions": "This is an AI knowledgebase repository for workflows, research, and agent setups. When conducting research, always use the /research skill and organize findings in the research/ folder by project. Always include source URLs and maintain proper attribution. Check Notion knowledge base first before web searching. Store important findings in memory for cross-session recall.",
-  
-  "plugin": [
-    "opencode-mem"
-  ],
-  
+
+  "plugin": ["opencode-mem"],
+
   "mcp": {
     "notion": {
       "type": "local",
@@ -16,11 +14,22 @@
     },
     "google-ai-search": {
       "type": "local",
-      "command": ["node", "{env:HOME}/.opencode/plugins/opencode-google-ai-search/dist/index.js"]
+      "command": [
+        "node",
+        "{env:HOME}/.opencode/plugins/opencode-google-ai-search/dist/index.js"
+      ]
     },
     "penpot": {
       "type": "remote",
       "url": "http://localhost:4401/mcp",
+      "enabled": true
+    },
+    "posthog": {
+      "type": "remote",
+      "url": "https://mcp.eu.posthog.com/mcp",
+      "headers": {
+        "Authorization": "Bearer {env:POSTHOG_API_KEY}"
+      },
       "enabled": true
     }
   }
