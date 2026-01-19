@@ -239,12 +239,15 @@ Use this to:
 
 #### Close Issue
 
+> **Important**: Only close issues after the PR is deployed to production, not just when merged. Move to "Review" status while awaiting deployment.
+
 With comment:
 ```bash
 gh issue close <number> --repo ShipitSmarter/<repo> --comment "$(cat <<'EOF'
 ### Completed
 
 **PR**: #<pr-number>
+**Deployed**: <date or environment>
 
 **Summary**: <what was implemented>
 
@@ -345,6 +348,7 @@ gh issue view <number> --repo ShipitSmarter/<repo> --json title,state,labels,com
 ### Completed
 
 **PR**: #<number>
+**Deployed**: <date or environment>
 
 **What was done**:
 - <change 1>
@@ -389,12 +393,15 @@ When blocked:
 2. Add blocker comment with details
 
 When PR is ready:
-1. Update project status to "In Review"
+1. Update project status to "Review"
 2. Link PR to issue
+3. **Do NOT close the issue yet** - wait for deployment
 
-When complete:
-1. Close issue with summary comment
-2. Project status auto-updates to "Done" when issue closes (if configured)
+When PR is merged and deployed:
+1. Update project status to "Done"
+2. Close issue with summary comment
+
+**Important**: Issues should only be closed after the PR is deployed to production, not just when the PR is merged. This ensures we can track issues back to deployed features.
 
 ## Error Handling
 
