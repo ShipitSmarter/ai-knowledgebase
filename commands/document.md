@@ -2,11 +2,11 @@
 description: Create or improve Viya product documentation
 ---
 
-Use the document skill to create or improve documentation for:
+Use the product-documentation skill to create or improve documentation for:
 
 $ARGUMENTS
 
-Follow the documentation skill workflow:
+Follow the product-documentation skill workflow:
 1. Clarify documentation type and audience
 2. Check existing documentation for consistency
 3. Gather feature information

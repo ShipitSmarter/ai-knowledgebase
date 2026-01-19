@@ -1,314 +1,375 @@
 # AI Knowledgebase
 
-**Central repository for AI skills, commands, and configurations at ShipitSmarter.**
+**Shared AI tools and instructions for everyone at ShipitSmarter.**
 
-This repository serves as the single source of truth for AI-assisted development tools across all ShipitSmarter projects. It provides shared skills, commands, MCP server configurations, and research documentation.
+This repository contains ready-to-use AI skills, commands, and settings that work across all our projects. Whether you're writing code, creating documentation, or doing research - these tools help AI assistants understand how we work.
 
-## Table of Contents
+## What Can I Do With This?
 
-- [Quick Setup](#quick-setup)
-- [What's Included](#whats-included)
-- [OpenCode Setup](#opencode-setup)
-- [GitHub Copilot Setup](#github-copilot-setup)
-- [Available Skills](#available-skills)
-- [Available Commands](#available-commands)
-- [Adding New Skills](#adding-new-skills)
-- [Updating](#updating)
-- [Repository Structure](#repository-structure)
+| I want to... | Use this |
+|--------------|----------|
+| Get AI help writing Vue components | The `vue-component` skill knows our patterns |
+| Research a topic with sources | `/research <topic>` command |
+| Create GitHub issues properly | `github-issue-creator` skill |
+| Write product documentation | `/document <topic>` command |
+| Analyze competitor ads | `competitive-ads-extractor` skill |
 
-## Quick Setup
+**18 skills** and **4 commands** are included - see the [full list](#available-skills) below.
 
-### OpenCode
+---
 
-Run the setup script to configure everything automatically:
+## Getting Started
+
+### Which AI Tool Are You Using?
+
+**OpenCode** (terminal-based AI assistant)
+- [Quick setup](#opencode-setup-5-minutes) - Run one command and you're done
+- Skills and commands work automatically
+
+**GitHub Copilot** (VS Code / IDE)
+- [Setup instructions](#github-copilot-setup) - Requires a manual step per repository
+- Only custom instructions are supported (not skills)
+
+**Other AI tools** (ChatGPT, Claude, etc.)
+- You can copy content from the `skills/` folder into your prompts manually
+
+---
+
+## OpenCode Setup (5 minutes)
+
+### Automatic Setup (Recommended)
+
+Open your terminal and run:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash
 ```
 
-The script will:
-1. Check if OpenCode is installed
-2. Clone the ai-knowledgebase to `~/.shipitsmarter/ai-knowledgebase`
-3. Configure shell environment variables (`OPENCODE_CONFIG_DIR`, `OPENCODE_CONFIG`)
-4. Verify the `opencode-mem` plugin is configured
-5. Show available skills and commands
+This will:
+1. Download this repository to your computer
+2. Configure OpenCode to use our shared skills and commands
+3. Show you what's available
 
-Then restart your terminal or run `source ~/.bashrc` (or `~/.zshrc`).
+After it finishes, **restart your terminal** (close and reopen it).
+
+**That's it!** Open any project folder, run `opencode`, and all skills are available.
 
 ### Manual Setup
 
-If you prefer manual setup:
+If the automatic setup doesn't work, or you prefer doing it yourself:
+
+**Step 1:** Download this repository
 
 ```bash
-# Clone to standard location
 git clone https://github.com/ShipitSmarter/ai-knowledgebase ~/.shipitsmarter/ai-knowledgebase
+```
 
-# Add to your shell config (~/.bashrc or ~/.zshrc)
+**Step 2:** Tell OpenCode where to find it
+
+Add these lines to your shell configuration file:
+- **Mac/Linux with zsh** (most common): Edit `~/.zshrc`
+- **Linux with bash**: Edit `~/.bashrc`
+
+Add at the bottom:
+```bash
 export OPENCODE_CONFIG_DIR="$HOME/.shipitsmarter/ai-knowledgebase"
 export OPENCODE_CONFIG="$HOME/.shipitsmarter/ai-knowledgebase/shared-config.json"
 ```
 
-## What's Included
+**Step 3:** Restart your terminal
 
-| Feature | Description |
-|---------|-------------|
-| **Skills** | 17 reusable AI skills for common development tasks |
-| **Commands** | Slash commands (`/research`, `/document`, etc.) |
-| **MCP Servers** | Pre-configured Notion, PostHog, and web search integrations |
-| **Plugins** | `opencode-mem` for persistent memory across sessions |
-| **Research** | Documented research organized by project |
-
-## OpenCode Setup
-
-OpenCode uses two environment variables to load shared configurations:
-
-| Variable | Purpose |
-|----------|---------|
-| `OPENCODE_CONFIG_DIR` | Directory containing `skills/`, `commands/`, `agents/` |
-| `OPENCODE_CONFIG` | Path to shared `opencode.json` config file |
-
-### How It Works
-
-1. **Shared config** (`shared-config.json`) provides:
-   - `opencode-mem` plugin for persistent memory
-   - MCP server configurations (disabled by default)
-
-2. **Skills directory** (`skills/`) contains all shared skills
-
-3. **Commands directory** (`commands/`) contains slash commands
-
-4. **Project configs** can override or extend shared settings
-
-### Enabling MCP Servers
-
-MCP servers are disabled by default. Enable them in your project's `opencode.json`:
-
-```json
-{
-  "$schema": "https://opencode.ai/config.json",
-  "mcp": {
-    "notion": { "enabled": true },
-    "google-ai-search": { "enabled": true }
-  }
-}
+Close and reopen your terminal, or run:
+```bash
+source ~/.zshrc  # or source ~/.bashrc
 ```
 
-**Available MCP servers:**
+### Verify It Works
 
-| Server | Description | Required Env Var |
-|--------|-------------|------------------|
-| `notion` | Search Notion knowledge base | `NOTION_TOKEN` |
-| `google-ai-search` | Web research capabilities | Plugin installed |
-| `posthog` | Analytics queries | `POSTHOG_API_KEY` |
+Run this to check:
+```bash
+ls $OPENCODE_CONFIG_DIR/skills
+```
+
+You should see a list of skill folders like `vue-component`, `research`, etc.
+
+---
 
 ## GitHub Copilot Setup
 
-GitHub Copilot doesn't support cross-repository custom instructions natively. Here are the options:
+### Why Is This Different From OpenCode?
 
-### Option 1: Copy Instructions (Simple)
+GitHub Copilot requires instructions to be inside each repository - it can't read from a central location like OpenCode can. This means you need to copy our shared instructions into each repository where you want to use them.
 
-Copy the instructions file to your repository:
+This is a limitation of how Copilot works, not something we can fix.
+
+### How to Add Copilot Instructions to a Repository
+
+**Option 1: Copy the file (simplest)**
+
+In your terminal, go to your repository folder and run:
 
 ```bash
-curl -o .github/copilot-instructions.md \
+curl -fsSL -o .github/copilot-instructions.md \
   https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/copilot/copilot-instructions.md
 ```
 
-### Option 2: GitHub Actions Sync (Automated)
-
-Add this workflow to automatically sync instructions weekly:
-
-```yaml
-# .github/workflows/sync-copilot-instructions.yml
-name: Sync Copilot Instructions
-on:
-  schedule:
-    - cron: '0 6 * * 1'  # Weekly on Monday
-  workflow_dispatch:
-
-jobs:
-  sync:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Fetch shared instructions
-        run: |
-          mkdir -p .github
-          curl -o .github/copilot-instructions.md \
-            https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/copilot/copilot-instructions.md
-      - name: Create PR if changed
-        uses: peter-evans/create-pull-request@v5
-        with:
-          title: "chore: sync Copilot instructions"
-          commit-message: "chore: sync Copilot instructions from ai-knowledgebase"
-          branch: sync-copilot-instructions
+Then commit the file:
+```bash
+git add .github/copilot-instructions.md
+git commit -m "Add Copilot instructions"
 ```
 
-### Option 3: Organization Instructions (Enterprise)
+**When to update:** Run the curl command again whenever you want the latest instructions.
 
-For Copilot Business/Enterprise, set organization-wide instructions in GitHub.com:
-1. Go to Organization Settings > Copilot > Custom Instructions
-2. Add your shared instructions
+**Option 2: Automatic weekly updates**
 
-**Note:** Organization instructions only work on GitHub.com, not in IDEs.
+If you want the repository to automatically check for updates, you can add a GitHub Action. See [Advanced: Automated Sync](#advanced-automated-copilot-sync) below.
+
+---
 
 ## Available Skills
 
+Skills are detailed instructions that teach AI assistants how to do specific tasks the ShipitSmarter way.
+
 ### General Skills
 
-| Skill | Description |
-|-------|-------------|
-| `github-issue-creator` | Create well-structured GitHub issues with templates |
-| `github-issue-tracker` | Track and update issue progress on project boards |
-| `research` | Conduct web research with source attribution |
-| `skill-writer` | Create new skills following the agentskills.io spec |
-| `product-documentation` | Write product documentation |
+| Skill | What it helps with |
+|-------|-------------------|
+| `research` | Finding information online and citing sources |
+| `product-documentation` | Writing user guides and help articles for Viya |
+| `product-strategy` | Creating product strategy documents |
+| `github-issue-creator` | Writing clear GitHub issues with the right template |
+| `github-issue-tracker` | Updating issues and moving them on project boards |
+| `skill-writer` | Creating new skills for this repository |
+| `designer` | Working with Penpot designs |
+| `competitive-ads-extractor` | Analyzing competitor advertising |
 
-### Development Skills (from viya-app)
+### Development Skills
 
-| Skill | Description |
-|-------|-------------|
-| `vue-component` | Vue 3 component conventions and script order |
-| `unit-testing` | Vitest + vue-test-utils test patterns |
-| `playwright-test` | E2E test patterns and fixtures |
-| `api-integration` | Generated API types and service patterns |
-| `typescript-helpers` | TypeScript types, interfaces, and guards |
-| `codebase-navigation` | Project structure and file organization |
-| `docs-writing` | User-facing documentation style |
-| `github-workflow` | PR workflow and commit conventions |
-| `pr-review` | Code review patterns and checklists |
-| `browser-debug` | Headless browser debugging |
+These are specifically for working on viya-app and similar Vue/TypeScript projects:
 
-### Using Skills
+| Skill | What it helps with |
+|-------|-------------------|
+| `vue-component` | Writing Vue 3 components our way |
+| `unit-testing` | Writing tests with Vitest |
+| `playwright-test` | Writing end-to-end browser tests |
+| `api-integration` | Working with our API types and services |
+| `typescript-helpers` | TypeScript types and utility functions |
+| `codebase-navigation` | Understanding our project structure |
+| `docs-writing` | Writing user-facing documentation |
+| `github-workflow` | Pull requests and commit messages |
+| `pr-review` | Reviewing code |
+| `browser-debug` | Debugging browser issues |
 
-In OpenCode, skills are automatically available. Load them with:
+### How to Use Skills
 
+In OpenCode, just mention what you want to do - it will often load the right skill automatically.
+
+You can also load a skill explicitly:
 ```
 /skill vue-component
 ```
 
-Or reference them in your prompt and OpenCode will load them automatically.
+Or ask OpenCode to use it:
+```
+Use the vue-component skill to create a button component
+```
+
+---
 
 ## Available Commands
 
-| Command | Description |
+Commands are shortcuts that start a specific workflow.
+
+| Command | What it does |
 |---------|-------------|
-| `/research <topic>` | Research a topic with source attribution |
-| `/document <topic>` | Create documentation |
-| `/designer` | Start Penpot design workflow |
-| `/product-strategy` | Create product strategy documents |
+| `/research <topic>` | Research something and create a document with sources |
+| `/document <topic>` | Write documentation for a Viya feature |
+| `/designer` | Start working with Penpot designs |
+| `/product-strategy` | Create a product strategy document |
 
-## Adding New Skills
-
-1. Create a folder: `skills/<skill-name>/`
-2. Add `SKILL.md` with YAML frontmatter:
-
-```yaml
----
-name: skill-name
-description: What it does and when to use it (required)
-license: MIT
-metadata:
-  author: shipitsmarter
-  version: "1.0"
----
-
-# Skill Title
-
-Instructions and guidelines...
+**Example:**
+```
+/research MongoDB Atlas pricing for small teams
 ```
 
-3. Commit and push - team members get it on next `git pull`
-
-See the [skill-writer skill](skills/skill-writer/SKILL.md) or [agentskills.io spec](https://agentskills.io/specification) for details.
-
-## Adding New Commands
-
-1. Create `commands/<command-name>.md`
-2. Add frontmatter:
-
-```yaml
----
-description: Short description shown in command list
 ---
 
-Your command template with $ARGUMENTS placeholder...
-```
+## Keeping Up to Date
 
-3. Commit and push
+### OpenCode
 
-## Updating
-
-Pull the latest skills and configurations:
+Get the latest skills and commands:
 
 ```bash
-git -C ~/.shipitsmarter/ai-knowledgebase pull
+cd ~/.shipitsmarter/ai-knowledgebase && git pull
 ```
 
 Or use the update script:
-
 ```bash
 ~/.shipitsmarter/ai-knowledgebase/tools/update.sh
 ```
 
-## Repository Structure
+**Tip:** Do this every few weeks to get new skills and improvements.
 
+### Copilot
+
+Re-run the curl command from the setup instructions to get the latest version.
+
+---
+
+## Adding Your Own Skills
+
+Found yourself explaining the same thing to AI over and over? Turn it into a skill!
+
+### Quick Guide
+
+1. Create a folder: `skills/my-skill-name/`
+2. Create a file inside called `SKILL.md`
+3. Start with this template:
+
+```markdown
+---
+name: my-skill-name
+description: One sentence explaining when to use this skill
+---
+
+# My Skill Name
+
+Explain what this skill helps with.
+
+## When to Use This
+
+- Situation 1
+- Situation 2
+
+## How to Do It
+
+Step-by-step instructions...
+
+## Examples
+
+Show examples of good output...
 ```
-ai-knowledgebase/
-├── skills/                  # Shared AI skills (17 skills)
-│   ├── github-issue-creator/
-│   ├── vue-component/
-│   └── ...
-├── commands/                # Slash commands
-│   ├── research.md
-│   └── ...
-├── shared-config.json       # Shared OpenCode config (MCP servers, plugins)
-├── research/                # Research documents by project
-│   ├── agent-skills/
-│   ├── github-copilot/
-│   └── ...
-├── tools/
-│   ├── setup.sh             # Developer setup script
-│   └── update.sh            # Update script
-├── docs/
-│   └── SETUP.md             # Detailed setup documentation
-├── opencode/                # OpenCode documentation and examples
-└── workflows/               # Reusable AI workflow patterns
+
+4. Test it locally, then submit a pull request
+
+**Need help?** Look at existing skills in the `skills/` folder for inspiration, or use:
 ```
+/skill skill-writer
+```
+
+---
 
 ## Troubleshooting
 
-### Skills not showing up
+### "Skills aren't showing up in OpenCode"
 
-1. Verify environment variables:
+1. Check that the setup worked:
    ```bash
    echo $OPENCODE_CONFIG_DIR
-   echo $OPENCODE_CONFIG
    ```
-2. Restart OpenCode after changing shell config
-3. Ensure `SKILL.md` is named correctly (case-sensitive)
+   Should print: `/Users/yourname/.shipitsmarter/ai-knowledgebase` (or similar)
 
-### MCP server not connecting
+2. If it's empty, you need to restart your terminal after setup
 
-1. Check required environment variables are set
-2. Enable the server in your project's `opencode.json`
-3. Check OpenCode logs for errors
+3. Still not working? Run the setup script again
 
-### Commands not available
+### "Commands like /research don't work"
 
-1. Verify `OPENCODE_CONFIG_DIR` is set correctly
-2. Commands need `.md` extension
-3. Restart OpenCode after adding commands
+Same as above - check `$OPENCODE_CONFIG_DIR` is set and restart your terminal.
 
-## Contributing
+### "Copilot isn't following the instructions"
 
-1. Fork/clone the repository
-2. Create your skill or command
-3. Test locally by setting `OPENCODE_CONFIG_DIR` to your clone
-4. Submit a PR
+1. Make sure `.github/copilot-instructions.md` exists in your repository
+2. The file must be committed (not just saved locally)
+3. Try restarting VS Code
 
-## Related Documentation
+### Getting Help
 
-- [Detailed Setup Guide](docs/SETUP.md)
-- [OpenCode Documentation](https://opencode.ai/docs/)
-- [Agent Skills Specification](https://agentskills.io/specification)
+Ask in the team Slack channel, or create an issue in this repository.
+
+---
+
+## Advanced Topics
+
+### What's Actually in This Repository?
+
+```
+ai-knowledgebase/
+├── skills/                  # AI skill definitions (18 skills)
+├── commands/                # Slash command definitions
+├── copilot/                 # Copilot instructions to copy to repos
+├── shared-config.json       # OpenCode settings (plugins, integrations)
+├── research/                # Research documents we've created
+└── tools/                   # Setup and update scripts
+```
+
+### Advanced: Automated Copilot Sync
+
+If you want a repository to automatically update its Copilot instructions weekly, add this file:
+
+**`.github/workflows/sync-copilot-instructions.yml`**
+
+```yaml
+name: Sync Copilot Instructions
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'  # Every Monday at 6 AM
+  workflow_dispatch:      # Allows manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download latest instructions
+        run: |
+          mkdir -p .github
+          curl -fsSL -o .github/copilot-instructions.md \
+            https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/copilot/copilot-instructions.md
+      
+      - name: Create PR if changed
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: "Update Copilot instructions"
+          commit-message: "Update Copilot instructions from ai-knowledgebase"
+          branch: update-copilot-instructions
+          delete-branch: true
+```
+
+This creates a pull request whenever the shared instructions change, so you can review before merging.
+
+### Advanced: Enabling Extra Integrations
+
+Some integrations are available but disabled by default (they need API keys):
+
+| Integration | What it does | How to enable |
+|-------------|--------------|---------------|
+| Notion | Search our Notion workspace | Set `NOTION_TOKEN` environment variable |
+| PostHog | Query analytics data | Set `POSTHOG_API_KEY` environment variable |
+| Web Search | Search the internet | Already enabled |
+
+To enable in a specific project, create `opencode.json` in the project root:
+
+```json
+{
+  "mcp": {
+    "notion": { "enabled": true }
+  }
+}
+```
+
+---
+
+## Questions?
+
+- **Something broken?** Create an issue in this repository
+- **Want to add a skill?** Pull requests welcome!
+- **Not sure how something works?** Ask in the team Slack
