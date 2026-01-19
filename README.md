@@ -151,11 +151,14 @@ ai-knowledgebase/
 ├── commands/                # Legacy command location
 ├── copilot/                 # Copilot instructions
 ├── docs/
-│   └── getting-started/     # Role-specific guides
+│   ├── getting-started/     # Role-specific guides
+│   └── repository-map.md    # All ShipitSmarter repositories explained
 ├── research/                # Research documents we've created
 ├── knowledgebase/           # Company context, personas
 └── tools/                   # Setup and update scripts
 ```
+
+**Looking for a specific repository?** See the [Repository Map](docs/repository-map.md) for a guide to all ~100 ShipitSmarter GitHub repos.
 
 ---
 
