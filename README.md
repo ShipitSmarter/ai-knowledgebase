@@ -18,17 +18,26 @@ This repository serves as the single source of truth for AI-assisted development
 
 ## Quick Setup
 
-### OpenCode (Recommended)
+### OpenCode
 
-Run the setup script to install skills and configure OpenCode:
+Run the setup script to configure everything automatically:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash
 ```
 
+The script will:
+1. Check if OpenCode is installed
+2. Clone the ai-knowledgebase to `~/.shipitsmarter/ai-knowledgebase`
+3. Configure shell environment variables (`OPENCODE_CONFIG_DIR`, `OPENCODE_CONFIG`)
+4. Verify the `opencode-mem` plugin is configured
+5. Show available skills and commands
+
 Then restart your terminal or run `source ~/.bashrc` (or `~/.zshrc`).
 
 ### Manual Setup
+
+If you prefer manual setup:
 
 ```bash
 # Clone to standard location
