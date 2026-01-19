@@ -35,6 +35,7 @@ These skills teach AI our patterns and conventions:
 | `github-workflow` | Pull requests and commit messages |
 | `pr-review` | Reviewing code |
 | `browser-debug` | Debugging browser issues |
+| `viya-dev-environment` | Managing local dev environment, testing PR builds |
 
 **Example prompts:**
 ```
@@ -81,6 +82,47 @@ When working on UI, these commands help ensure quality:
 
 /i-harden - add proper error states and loading indicators
 ```
+
+---
+
+## Testing Backend PRs Locally
+
+When you need to test a shipping, auditor, or other backend service PR against the local viya-app:
+
+### Quick Method
+
+```
+/test-pr shipping 1277
+```
+
+This will:
+1. Check if the PR build succeeded
+2. Get the correct image version
+3. Update your `dev/.env`
+4. Offer to restart the service
+
+### Manual Method
+
+1. **Get the PR build version:**
+   ```bash
+   gh pr checks <PR_NUMBER> --repo ShipitSmarter/<repo>
+   gh run list --repo ShipitSmarter/<repo> --branch <branch> --limit 1 --json databaseId
+   ```
+   Version format: `0.0.0-pr.<PR_NUMBER>.<RUN_ID>`
+
+2. **Update `/home/wouter/git/viya-app/dev/.env`:**
+   ```
+   SHIPPING_VERSION=0.0.0-pr.1277.21150237490
+   ```
+
+3. **Restart the service:**
+   ```bash
+   cd /home/wouter/git/viya-app/dev
+   docker compose stop shipping && docker compose rm -f shipping && docker compose pull shipping && docker compose up -d shipping
+   ```
+
+### Reset to Latest
+Edit `dev/.env` and set versions back to `latest`, then restart.
 
 ---
 

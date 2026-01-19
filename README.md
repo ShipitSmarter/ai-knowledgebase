@@ -38,7 +38,7 @@ All skills and commands now work in any project folder.
 
 ## What's Included
 
-### Skills (19 total)
+### Skills (20 total)
 
 Skills teach AI how to do specific tasks the ShipitSmarter way.
 
@@ -68,6 +68,7 @@ Skills teach AI how to do specific tasks the ShipitSmarter way.
 | `github-workflow` | Pull requests and commits |
 | `pr-review` | Reviewing code |
 | `browser-debug` | Debugging browser issues |
+| `viya-dev-environment` | Managing local dev environment, testing PR builds |
 
 ### Commands
 
@@ -80,6 +81,7 @@ Commands are shortcuts that start specific workflows.
 | `/document <topic>` | Write Viya user documentation |
 | `/designer` | Start working with Penpot designs |
 | `/product-strategy` | Create a product strategy document |
+| `/test-pr <repo> <pr>` | Test a backend service PR in local dev environment |
 
 **Design Quality (Impeccable):**
 | Command | What it does |
