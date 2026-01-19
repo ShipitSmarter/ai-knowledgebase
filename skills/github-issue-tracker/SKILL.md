@@ -32,18 +32,29 @@ gh auth refresh -s project
 Issues are tracked on the **Viya Project Board**:
 - **Organization**: ShipitSmarter
 - **Project Number**: 10
+- **Project ID**: `PVT_kwDOBLw3L84AWp6I`
 - **URL**: https://github.com/orgs/ShipitSmarter/projects/10
 
 ### Project Status Values
 
-| Status | When to Use |
-|--------|-------------|
-| **Backlog** | Not yet started, in queue |
-| **Todo** | Ready to be picked up |
-| **In Progress** | Actively being worked on |
-| **In Review** | PR open, awaiting review |
-| **Done** | Completed and merged |
-| **Blocked** | Waiting on external dependency |
+| Status | Option ID | When to Use |
+|--------|-----------|-------------|
+| **TBD** | `7a21a9d6` | Needs triage/clarification |
+| **NTH** | `712c3744` | Nice to have, low priority |
+| **Parked** | `054d4b74` | On hold, not actively worked |
+| **Todo** | `344a2867` | Ready to be picked up |
+| **In Progress** | `47fc9ee4` | Actively being worked on |
+| **Review** | `e631f3c2` | PR open, awaiting review |
+| **Done** | `98236657` | Completed and merged |
+
+### Project Field IDs
+
+| Field | Field ID |
+|-------|----------|
+| Status | `PVTSSF_lADOBLw3L84AWp6IzgOerNk` |
+| WBSO | `PVTSSF_lADOBLw3L84AWp6IzgSLhgM` |
+| Customer | `PVTSSF_lADOBLw3L84AWp6Izgb1EuU` |
+| Topics | `PVTSSF_lADOBLw3L84AWp6Izgqm4DY` |
 
 ## Process
 
@@ -74,46 +85,73 @@ gh issue view <number> --repo ShipitSmarter/<repo> --json title,state,labels
 
 #### Update Project Board Status
 
-First, get the project item ID for the issue:
-```bash
-gh project item-list 10 --owner ShipitSmarter --format json | grep -B5 -A5 "<issue-url>"
-```
+**Step 1: Find the project item ID for the issue**
 
-Or find by issue number:
 ```bash
 gh api graphql -f query='
-  query {
-    organization(login: "ShipitSmarter") {
-      projectV2(number: 10) {
-        items(first: 100) {
-          nodes {
-            id
-            content {
-              ... on Issue {
-                number
-                repository { name }
-              }
+query {
+  organization(login: "ShipitSmarter") {
+    projectV2(number: 10) {
+      items(last: 50) {
+        nodes {
+          id
+          content {
+            ... on Issue {
+              number
+              title
             }
           }
         }
       }
     }
   }
-' | grep -B2 -A2 '"number": <issue-number>'
+}'
 ```
 
-Then update the status field:
+Look for the issue number in the output and note the `id` field (starts with `PVTI_`).
+
+**Step 2: Update the status**
+
 ```bash
-gh project item-edit \
-  --project-id <project-id> \
-  --id <item-id> \
-  --field-id <status-field-id> \
-  --single-select-option-id <status-option-id>
+gh api graphql -f query='
+mutation {
+  updateProjectV2ItemFieldValue(
+    input: {
+      projectId: "PVT_kwDOBLw3L84AWp6I"
+      itemId: "<ITEM_ID>"
+      fieldId: "PVTSSF_lADOBLw3L84AWp6IzgOerNk"
+      value: { singleSelectOptionId: "<STATUS_OPTION_ID>" }
+    }
+  ) {
+    projectV2Item { id }
+  }
+}'
 ```
 
-**Simplified approach** - Use the web UI for status updates and note in comment:
+**Status Option IDs (copy-paste ready):**
+- TBD: `7a21a9d6`
+- NTH: `712c3744`
+- Parked: `054d4b74`
+- Todo: `344a2867`
+- In Progress: `47fc9ee4`
+- Review: `e631f3c2`
+- Done: `98236657`
+
+**Example: Set issue to "In Progress"**
 ```bash
-gh issue comment <number> --repo ShipitSmarter/<repo> --body "Status updated to **In Progress** in [project board](https://github.com/orgs/ShipitSmarter/projects/10)"
+gh api graphql -f query='
+mutation {
+  updateProjectV2ItemFieldValue(
+    input: {
+      projectId: "PVT_kwDOBLw3L84AWp6I"
+      itemId: "PVTI_lADOBLw3L84AWp6Izgj5Jsw"
+      fieldId: "PVTSSF_lADOBLw3L84AWp6IzgOerNk"
+      value: { singleSelectOptionId: "47fc9ee4" }
+    }
+  ) {
+    projectV2Item { id }
+  }
+}'
 ```
 
 #### Add Progress Comment
