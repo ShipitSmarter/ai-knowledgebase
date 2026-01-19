@@ -2,6 +2,22 @@
 
 Reference guide for setting up and configuring the GitHub CLI (`gh`) for use with AI agents and automation.
 
+## Quick Start for ShipitSmarter
+
+For full functionality with ShipitSmarter skills (issue creation, project board updates):
+
+```bash
+# Install gh CLI (see Installation section below)
+gh auth login
+
+# Add project scope for Viya project board integration
+gh auth refresh -s project
+
+# Verify
+gh auth status
+# Should show: Token scopes: 'gist', 'project', 'read:org', 'repo'
+```
+
 ## Installation
 
 ### macOS

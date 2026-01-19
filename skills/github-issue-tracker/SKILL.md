@@ -1,16 +1,17 @@
 ---
 name: github-issue-tracker
-description: Update and maintain GitHub issues during development. Add progress comments, handle blockers, link PRs, and close issues with summaries. Use when user asks to update an issue, add a comment, mark progress, or close an issue.
+description: Update and maintain GitHub issues during development. Add progress comments, update project board status, handle blockers, link PRs, and close issues with summaries. Use when user asks to update an issue, change status, add a comment, or close an issue.
 ---
 
 # GitHub Issue Tracker
 
-Help engineers keep GitHub issues updated and stakeholders informed during development.
+Help engineers keep GitHub issues updated and stakeholders informed during development. Includes project board status management.
 
 ## Trigger
 
 When user asks to:
 - Update issue #X with progress
+- Change issue status (In Progress, Blocked, Done, etc.)
 - Add a comment to an issue
 - Mark an issue as blocked or in progress
 - Close an issue with a summary
@@ -19,7 +20,30 @@ When user asks to:
 
 ## Prerequisites
 
-Requires GitHub CLI (`gh`) authenticated. See [GitHub Setup](../../opencode/github/SETUP.md).
+Requires GitHub CLI (`gh`) authenticated with project scope. See [GitHub Setup](../../opencode/github/SETUP.md).
+
+```bash
+# Add project scope (required for status updates)
+gh auth refresh -s project
+```
+
+## Project Board
+
+Issues are tracked on the **Viya Project Board**:
+- **Organization**: ShipitSmarter
+- **Project Number**: 10
+- **URL**: https://github.com/orgs/ShipitSmarter/projects/10
+
+### Project Status Values
+
+| Status | When to Use |
+|--------|-------------|
+| **Backlog** | Not yet started, in queue |
+| **Todo** | Ready to be picked up |
+| **In Progress** | Actively being worked on |
+| **In Review** | PR open, awaiting review |
+| **Done** | Completed and merged |
+| **Blocked** | Waiting on external dependency |
 
 ## Process
 
@@ -38,6 +62,7 @@ gh issue view <number> --repo ShipitSmarter/<repo> --json title,state,labels
 
 | Operation | When to Use |
 |-----------|-------------|
+| **Update project status** | Change status in project board (In Progress, Done, etc.) |
 | **Add comment** | Progress update, findings, questions |
 | **Update labels** | Status change (wip, blocked) |
 | **Edit body** | Add technical details or update requirements |
@@ -46,6 +71,50 @@ gh issue view <number> --repo ShipitSmarter/<repo> --json title,state,labels
 | **Link PR** | Connect implementation to issue |
 
 ### Step 3: Execute Operation
+
+#### Update Project Board Status
+
+First, get the project item ID for the issue:
+```bash
+gh project item-list 10 --owner ShipitSmarter --format json | grep -B5 -A5 "<issue-url>"
+```
+
+Or find by issue number:
+```bash
+gh api graphql -f query='
+  query {
+    organization(login: "ShipitSmarter") {
+      projectV2(number: 10) {
+        items(first: 100) {
+          nodes {
+            id
+            content {
+              ... on Issue {
+                number
+                repository { name }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+' | grep -B2 -A2 '"number": <issue-number>'
+```
+
+Then update the status field:
+```bash
+gh project item-edit \
+  --project-id <project-id> \
+  --id <item-id> \
+  --field-id <status-field-id> \
+  --single-select-option-id <status-option-id>
+```
+
+**Simplified approach** - Use the web UI for status updates and note in comment:
+```bash
+gh issue comment <number> --repo ShipitSmarter/<repo> --body "Status updated to **In Progress** in [project board](https://github.com/orgs/ShipitSmarter/projects/10)"
+```
 
 #### Add Progress Comment
 
@@ -268,7 +337,26 @@ cc @<stakeholder>
 After each operation:
 1. Confirm what was done
 2. Show link to updated issue
-3. Note any warnings (e.g., label not found)
+3. Remind to update project board status if needed
+4. Note any warnings (e.g., label not found)
+
+## Recommended Workflow
+
+When starting work on an issue:
+1. Update project status to "In Progress"
+2. Add a comment noting you're starting
+
+When blocked:
+1. Update project status to "Blocked"
+2. Add blocker comment with details
+
+When PR is ready:
+1. Update project status to "In Review"
+2. Link PR to issue
+
+When complete:
+1. Close issue with summary comment
+2. Project status auto-updates to "Done" when issue closes (if configured)
 
 ## Error Handling
 
@@ -294,3 +382,6 @@ After each operation:
 | `gh issue close <n>` | Close issue |
 | `gh issue reopen <n>` | Reopen issue |
 | `gh issue list` | Find issues |
+| `gh project item-list 10 --owner ShipitSmarter` | List project items |
+| `gh project item-edit` | Update project item fields |
+| `gh project field-list 10 --owner ShipitSmarter` | List project fields (Status, etc.) |

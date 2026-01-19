@@ -1,11 +1,11 @@
 ---
 name: github-issue-creator
-description: Create well-structured GitHub issues with appropriate templates for bugs, features, papercuts, and tasks. Supports user story format for features. Use when user asks to create an issue, write a user story, report a bug, or request a feature.
+description: Create well-structured GitHub issues with appropriate templates for bugs, features, papercuts, and tasks. Automatically adds issues to Viya project board. Use when user asks to create an issue, write a user story, report a bug, or request a feature.
 ---
 
 # GitHub Issue Creator
 
-Create well-structured GitHub issues for ShipitSmarter repositories with appropriate templates based on issue type.
+Create well-structured GitHub issues for ShipitSmarter repositories with appropriate templates based on issue type. Issues are automatically added to the Viya project board.
 
 ## Trigger
 
@@ -18,12 +18,25 @@ When user asks to:
 
 ## Prerequisites
 
-Requires GitHub CLI (`gh`) authenticated. See [GitHub Setup](../../opencode/github/SETUP.md).
+Requires GitHub CLI (`gh`) authenticated with project scope. See [GitHub Setup](../../opencode/github/SETUP.md).
 
-For project board integration, add project scope:
 ```bash
+# Add project scope (required for project board integration)
 gh auth refresh -s project
 ```
+
+**Verify auth:**
+```bash
+gh auth status
+# Should show 'project' in Token scopes
+```
+
+## Project Board
+
+All issues are added to the **Viya Project Board**:
+- **Organization**: ShipitSmarter
+- **Project Number**: 10
+- **URL**: https://github.com/orgs/ShipitSmarter/projects/10
 
 ## Process
 
@@ -126,12 +139,21 @@ gh issue create \
 
 Capture the issue URL from the output.
 
-### Step 7: Add to Project (Optional)
+### Step 7: Add to Viya Project Board
 
-If user wants to add to project board and has project scope:
+**Always add the issue to the Viya project board:**
 
 ```bash
 gh project item-add 10 --owner ShipitSmarter --url <issue-url>
+```
+
+This returns a project item ID that can be used for status updates.
+
+**If project scope is missing**, the command will fail. Inform the user:
+```
+Issue created successfully, but could not add to project board.
+Run: gh auth refresh -s project
+Then manually add at: https://github.com/orgs/ShipitSmarter/projects/10
 ```
 
 ## Output to User
@@ -139,8 +161,8 @@ gh project item-add 10 --owner ShipitSmarter --url <issue-url>
 After creating the issue:
 1. Confirm creation with issue number and URL
 2. Show which labels were applied
-3. Note if added to project board
-4. Suggest next steps (assign, add to sprint, etc.)
+3. Confirm added to Viya project board (or provide manual instructions)
+4. Suggest next steps (assign, update status in project board)
 
 ## Error Handling
 
