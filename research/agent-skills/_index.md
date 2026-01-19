@@ -8,6 +8,7 @@ Research on the Agent Skills specification and best practices for creating effec
 
 | Date | Topic | Status |
 |------|-------|--------|
+| 2026-01-19 | [Loading Skills from External Repositories](./2026-01-19-external-skills-loading.md) | final |
 | 2026-01-19 | [Agent Skills Specification & Best Practices](./2026-01-19-agent-skills-best-practices.md) | final |
 
 ## Key Insights
@@ -22,3 +23,5 @@ Research on the Agent Skills specification and best practices for creating effec
 
 - [ ] How to best test skills across different model sizes (Haiku/Sonnet/Opus)?
 - [ ] Best patterns for skills that integrate multiple MCP servers?
+- [ ] Can OpenCode plugins register new skill discovery mechanisms?
+- [ ] How to handle skill version conflicts across multiple sources?

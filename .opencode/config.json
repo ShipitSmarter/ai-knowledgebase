@@ -1,35 +1,12 @@
 {
-  "$schema": "https://opencode.ai/schema/config.json",
-  "instructions": "This is an AI knowledgebase repository for workflows, research, and agent setups. When conducting research, always use the /research skill and organize findings in the research/ folder by project. Always include source URLs and maintain proper attribution. Check Notion knowledge base first before web searching. Store important findings in memory for cross-session recall.",
-
-  "plugin": ["opencode-mem"],
-
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": "This is the AI knowledgebase repository - the central source for skills and configurations. When conducting research, use the /research skill and organize findings in research/<project>/. Always include source URLs. When creating skills, use the skill-writer skill.",
   "mcp": {
-    "notion": {
-      "type": "local",
-      "command": ["npx", "-y", "@notionhq/notion-mcp-server"],
-      "environment": {
-        "NOTION_TOKEN": "{env:NOTION_TOKEN}"
-      }
-    },
-    "google-ai-search": {
-      "type": "local",
-      "command": [
-        "node",
-        "{env:HOME}/.opencode/plugins/opencode-google-ai-search/dist/index.js"
-      ]
-    },
+    "notion": { "enabled": true },
+    "google-ai-search": { "enabled": true },
     "penpot": {
       "type": "remote",
       "url": "http://localhost:4401/mcp",
-      "enabled": true
-    },
-    "posthog": {
-      "type": "remote",
-      "url": "https://mcp.eu.posthog.com/mcp",
-      "headers": {
-        "Authorization": "Bearer {env:POSTHOG_API_KEY}"
-      },
       "enabled": true
     }
   }
