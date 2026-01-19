@@ -1,217 +1,204 @@
 # Issue Templates
 
-Templates for different issue types at ShipitSmarter.
+Focused templates for GitHub issues. Keep issues high-level - implementation details belong in branch plans.
 
-## Bug Report
+## Feature Template
 
 ```markdown
-### report
+## Summary
 
-**Description**
-<Clear description of what's broken>
+<1-2 sentences: what capability and why it matters>
 
-**Steps to Reproduce**
-1. Go to <location>
-2. Click on <element>
-3. Observe <behavior>
+## User Story
 
-**Expected Behavior**
-<What should happen>
+**As a** <role>,
+**I want** <capability>,
+**So that** <benefit>.
 
-**Actual Behavior**
-<What actually happens>
+## Scope
 
-**Environment**
+**Included:**
+- <what's in scope>
+
+**Not included:**
+- <what's explicitly out of scope>
+
+## Acceptance Criteria
+
+- [ ] <User-visible outcome 1>
+- [ ] <User-visible outcome 2>
+- [ ] <User-visible outcome 3>
+
+## Implementation
+
+See branch plan: `docs/PLAN.md` in feature branch
+
+## Notes
+
+<Context, constraints, references - keep brief>
+```
+
+## Bug Template
+
+```markdown
+## Problem
+
+<What's broken, from user perspective>
+
+## Steps to Reproduce
+
+1. <step>
+2. <step>
+3. <step>
+
+## Expected vs Actual
+
+- **Expected**: <what should happen>
+- **Actual**: <what happens instead>
+
+## Environment
+
 - URL: <if applicable>
-- Browser: <if frontend issue>
+- Browser: <if frontend>
 - User/Tenant: <if relevant>
 
-**Screenshots**
-<Add screenshots if helpful>
+## Screenshots
 
-**Additional Context**
-<Any other relevant information>
+<if helpful>
 ```
 
-## Feature Request (User Story Format)
+## Task Template
 
 ```markdown
-### User Story
+## Goal
 
-**As a** <role/persona>,
-**I want** <capability/feature>,
-**So that** <benefit/value>.
+<What we're trying to achieve and why>
 
-### Background
+## Scope
 
-<Context and motivation for this feature. Why is it needed? What problem does it solve?>
+<What's included in this work>
 
-### Requirements
+## Done When
 
-- [ ] <Requirement 1>
-- [ ] <Requirement 2>
-- [ ] <Requirement 3>
+- [ ] <Outcome 1>
+- [ ] <Outcome 2>
 
-### Acceptance Criteria
+## Implementation
 
-- [ ] <Criterion 1 - how do we verify this works>
-- [ ] <Criterion 2>
-- [ ] <Criterion 3>
-
-### Design / Mockups
-
-<Link to Figma, screenshots, or description of UI if applicable>
-
-### Technical Notes
-
-<Any technical considerations, dependencies, or constraints>
+See branch plan: `docs/PLAN.md` in feature branch
 ```
 
-## Papercut (Small UI Issue)
-
-```markdown
-### report
-
-<Brief description of the UI issue>
-
-**Location**: <Page/component where this occurs>
-
-**Screenshot**
-<Screenshot showing the issue>
-
-**Suggested Improvement**
-<How it should look/behave instead>
-```
-
-## Task (Technical Work)
-
-```markdown
-### Background
-
-<Why is this work needed? What's the context?>
-
-### Requirements
-
-- [ ] <Requirement 1>
-- [ ] <Requirement 2>
-- [ ] <Requirement 3>
-
-### Done Criteria
-
-- [ ] <How do we know this is complete>
-- [ ] <Verification step>
-
-### Technical Notes
-
-<Implementation details, dependencies, or considerations>
-```
+---
 
 ## Examples
 
-### Bug Example
+### Feature Example
+
+**Title:** Add ETA display to consignment page
 
 ```markdown
-### report
+## Summary
 
-**Description**
-Consignment reference link ignores /test prefix in playground mode, leading to 404 errors.
+Show estimated delivery date on consignment pages so users can check delivery timing without navigating to the parent shipment.
 
-**Steps to Reproduce**
+## User Story
+
+**As a** logistics manager,
+**I want** to see the ETA on the consignment page,
+**So that** I can quickly check delivery estimates while reviewing consignment details.
+
+## Scope
+
+**Included:**
+- Display requested/planned/actual delivery dates in consignment tracking sidepanel
+- Update when new tracking events arrive
+
+**Not included:**
+- Editing delivery dates from consignment page
+- Email notifications for ETA changes
+
+## Acceptance Criteria
+
+- [ ] ETA dates visible on consignment detail page
+- [ ] Dates match what's shown on parent shipment
+- [ ] Updates reflect new tracking events
+
+## Implementation
+
+See branch plan: `docs/PLAN.md` in feature branch
+
+## Notes
+
+Similar layout to existing shipment sidepanel tracking section.
+```
+
+### Bug Example
+
+**Title:** Consignment link ignores /test prefix in playground mode
+
+```markdown
+## Problem
+
+In playground/test mode, clicking the consignment reference link leads to a 404 because the /test prefix is missing from the URL.
+
+## Steps to Reproduce
+
 1. Create a shipment in Test/Playground mode
 2. Open shipment at URL like: `https://tenant.viyatest.it/test/shipment/{id}`
 3. Navigate to Overview section
 4. Click on Consignment Reference link in Tracking block
 
-**Expected Behavior**
-Link should navigate to `/test/consignment/{id}` preserving the test prefix.
+## Expected vs Actual
 
-**Actual Behavior**
-Link navigates to `/consignment/{id}` without test prefix, showing non-existing consignment.
+- **Expected**: Link navigates to `/test/consignment/{id}`
+- **Actual**: Link navigates to `/consignment/{id}` (missing /test prefix), showing 404
 
-**Environment**
+## Environment
+
 - URL: https://pr-tenant-stitch-integrations-2270.test.viyatest.it/test/shipment/{id}
 
-**Screenshots**
+## Screenshots
+
 <screenshot>
-
-**Additional Context**
-Manually adding /test prefix resolves the issue, confirming this is a routing bug.
-```
-
-### Feature Example
-
-```markdown
-### User Story
-
-**As a** logistics manager,
-**I want** to see the ETA on the consignment page,
-**So that** I can quickly check delivery estimates without navigating to the shipment.
-
-### Background
-
-Currently the requested/planned/actual delivery date is shown in the shipment tracking sidepanel, but not on the consignment page. Since most track & trace data comes in at the consignment level, users need this information there too.
-
-### Requirements
-
-- [ ] Display ETA in consignment tracking sidepanel
-- [ ] Show same date fields as shipment (requested/planned/actual)
-- [ ] Update when new tracking events arrive
-
-### Acceptance Criteria
-
-- [ ] ETA visible on consignment detail page
-- [ ] Dates match what's shown on parent shipment
-- [ ] Works for all carrier integrations
-
-### Design / Mockups
-
-Similar to existing shipment sidepanel:
-<screenshot reference>
-```
-
-### Papercut Example
-
-```markdown
-### report
-
-Carrier profile cards have inconsistent widths, creating misalignment.
-
-**Location**: Carrier settings page, profile cards section
-
-**Screenshot**
-<screenshot showing misaligned cards>
-
-**Suggested Improvement**
-Card widths should be consistent, with each section (logo, name, details) having fixed widths.
 ```
 
 ### Task Example
 
+**Title:** Remove deprecated /v3 API endpoints
+
 ```markdown
-### Background
+## Goal
 
-Legacy /v3 API endpoints are deprecated but still in the codebase. We need to verify no traffic remains before removing them.
+Clean up legacy /v3 API endpoints that are no longer in use, reducing maintenance burden and codebase size.
 
-### Requirements
+## Scope
 
-- [ ] Check Grafana for traffic on /v3 endpoints (last 2 weeks)
-- [ ] If no traffic, remove endpoints from shipping service
-- [ ] Remove corresponding legacy pages from viya-app
+- Verify no traffic on /v3 endpoints (check Grafana, last 2 weeks)
+- Remove endpoints from shipping service
+- Remove corresponding legacy pages from viya-app
 
-### Done Criteria
+## Done When
 
-- [ ] No /v3 endpoint traffic confirmed in logs
-- [ ] Endpoints removed from shipping service
-- [ ] Legacy pages removed from viya-app
-- [ ] PR merged and deployed
+- [ ] No /v3 endpoint traffic confirmed
+- [ ] Endpoints removed and deployed
+- [ ] Legacy pages removed and deployed
 
-### Technical Notes
+## Implementation
 
-Endpoints to check:
-- `/v3/consignments/{id}/...`
-- `/v3/pickups/{id}/...`
-
-Related pages in viya-app:
-- `/consignment/order-request`
-- `/consignments/tracking`
+See branch plan: `docs/PLAN.md` in feature branch
 ```
+
+---
+
+## Writing Tips
+
+### Good Acceptance Criteria
+- ✅ "User can export reports as PDF"
+- ✅ "Exported PDF includes all visible columns"
+- ❌ "ExportService class is created"
+- ❌ "API endpoint returns 200"
+
+### Keep Issues Focused
+- ONE issue per user-facing outcome
+- Implementation details go in branch PLAN.md
+- If you need 5+ checkboxes, consider if it's really one thing

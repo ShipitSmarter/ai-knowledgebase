@@ -1,89 +1,71 @@
 ---
 name: github-issue-creator
-description: Create well-structured GitHub issues with appropriate templates for bugs, features, papercuts, and tasks. Automatically adds issues to Viya project board. Use when user asks to create an issue, write a user story, report a bug, or request a feature.
+description: Create focused GitHub issues that serve as summaries for work. Issues describe the user goal and link to branch plans for implementation details. One issue per meaningful unit of work - avoid splitting into many small issues.
 ---
 
 # GitHub Issue Creator
 
-Create well-structured GitHub issues for ShipitSmarter repositories with appropriate templates based on issue type. Issues are automatically added to the Viya project board.
+Create focused, user-centric GitHub issues that serve as high-level summaries. Implementation details belong in branch plans (PLAN.md), not fragmented across multiple issues.
+
+## Philosophy
+
+**Issues are for tracking and communication, not for decomposition.**
+
+- **One issue = one meaningful outcome** from the user's perspective
+- **Branch plans contain the implementation details** - issues just link to them
+- **Engineers hate tracking 10 issues** for what should be one coherent piece of work
+- **Focus on the "what" and "why"** - the "how" lives in the branch plan
 
 ## Trigger
 
 When user asks to:
 - Create a new issue or user story
 - Report a bug
-- Request a feature
-- Log a papercut (small UI issue)
-- Create a task
+- Plan a feature (create issue + branch plan)
 
 ## Prerequisites
 
-Requires GitHub CLI (`gh`) authenticated with project scope. See [GitHub Setup](../../opencode/github/SETUP.md).
+Requires GitHub CLI (`gh`) authenticated with project scope:
 
 ```bash
-# Add project scope (required for project board integration)
 gh auth refresh -s project
-```
-
-**Verify auth:**
-```bash
-gh auth status
-# Should show 'project' in Token scopes
+gh auth status  # Should show 'project' in Token scopes
 ```
 
 ## Project Board
 
-All issues are added to the **Viya Project Board**:
+Issues are added to the **Viya Project Board**:
 - **Organization**: ShipitSmarter
 - **Project Number**: 10
 - **URL**: https://github.com/orgs/ShipitSmarter/projects/10
 
 ## Process
 
-### Step 1: Determine Issue Type
+### Step 1: Understand the Work
 
-Ask the user what type of issue they want to create:
+Ask the user:
+1. **What's the user-visible outcome?** (not the technical tasks)
+2. **Who benefits and how?** (the "so that" part)
+3. **Is this one thing or multiple unrelated things?**
 
-| Type | Description | Template |
-|------|-------------|----------|
-| **Bug** | Something isn't working correctly | Problem-focused with repro steps |
-| **Feature** | New functionality request | User story format with acceptance criteria |
-| **Papercut** | Small UI/UX polish item | Brief description with location |
-| **Task** | Technical work without user-facing change | Requirements and done criteria |
+**Key question**: Can this be described in one sentence that a product manager would understand?
 
-### Step 2: Gather Information
+- "Users can export reports to PDF" ✓ (one issue)
+- "Refactor auth + add PDF export + fix sidebar" ✗ (split into separate issues)
 
-Based on issue type, ask clarifying questions:
+### Step 2: Determine Issue Type
 
-**For Bug:**
-- What is happening? (actual behavior)
-- What should happen? (expected behavior)
-- Steps to reproduce?
-- Any error messages or screenshots?
-- Which environment? (URL if applicable)
+| Type | When to Use | Keep it to ONE issue if... |
+|------|-------------|---------------------------|
+| **Bug** | Something broken | It's one bug, even if fix touches multiple files |
+| **Feature** | New capability | It's one user-facing capability |
+| **Task** | Technical work | It's one coherent technical goal |
 
-**For Feature:**
-- Who is the user? (role/persona)
-- What do they want to do?
-- Why? (the benefit/value)
-- Acceptance criteria? (how do we know it's done)
-- Any mockups or examples?
-
-**For Papercut:**
-- What's the UI issue?
-- Where in the app? (page/component)
-- Screenshot if possible?
-- Suggested improvement?
-
-**For Task:**
-- What technical work is needed?
-- Why is it needed? (context)
-- What are the requirements?
-- How do we know it's done?
+**Do NOT split a feature into:**
+- ❌ "Add button", "Add API endpoint", "Add database field", "Add tests"
+- ✅ ONE issue: "Feature: Export reports to PDF"
 
 ### Step 3: Select Repository
-
-Ask which repository the issue belongs to:
 
 | Repository | Purpose |
 |------------|---------|
@@ -97,21 +79,94 @@ Ask which repository the issue belongs to:
 | `ShipitSmarter/authorizing` | Authorization service |
 | `ShipitSmarter/stitch-integrations` | Carrier integrations |
 
-### Step 4: Format Issue
+### Step 4: Write the Issue
 
-Use the appropriate template from [TEMPLATES.md](references/TEMPLATES.md).
+**Keep it focused on outcomes, not tasks:**
 
-**Label Mapping:**
-| Type | Labels |
-|------|--------|
-| Bug | `bug` |
-| Feature | `enhancement` or `feature 🏆` |
-| Papercut | `papercut` |
-| Task | (none by default) |
+#### For Features
 
-### Step 5: Preview with User
+```markdown
+## Summary
 
-Before creating, show the formatted issue:
+<1-2 sentences: what capability are we adding and why it matters>
+
+## User Story
+
+**As a** <role>,
+**I want** <capability>,
+**So that** <benefit>.
+
+## Scope
+
+<What's included and what's explicitly NOT included>
+
+## Acceptance Criteria
+
+- [ ] <User-visible outcome 1>
+- [ ] <User-visible outcome 2>
+- [ ] <User-visible outcome 3>
+
+## Implementation
+
+See branch plan: `docs/PLAN.md` in feature branch (or link when available)
+
+## Notes
+
+<Any context, constraints, or references - keep brief>
+```
+
+#### For Bugs
+
+```markdown
+## Problem
+
+<What's broken, from user perspective>
+
+## Steps to Reproduce
+
+1. <step>
+2. <step>
+3. <step>
+
+## Expected vs Actual
+
+- **Expected**: <what should happen>
+- **Actual**: <what happens instead>
+
+## Environment
+
+- URL: <if applicable>
+- User/Tenant: <if relevant>
+
+## Screenshots
+
+<if helpful>
+```
+
+#### For Tasks
+
+```markdown
+## Goal
+
+<What we're trying to achieve and why>
+
+## Scope
+
+<What's included>
+
+## Done When
+
+- [ ] <Outcome 1>
+- [ ] <Outcome 2>
+
+## Implementation
+
+See branch plan: `docs/PLAN.md` in feature branch (or link when available)
+```
+
+### Step 5: Preview and Confirm
+
+Show the user:
 
 ```
 ## Preview
@@ -137,53 +192,86 @@ gh issue create \
   --body "<body>"
 ```
 
-Capture the issue URL from the output.
-
-### Step 7: Add to Viya Project Board
-
-**Always add the issue to the Viya project board:**
+### Step 7: Add to Project Board
 
 ```bash
 gh project item-add 10 --owner ShipitSmarter --url <issue-url>
 ```
 
-This returns a project item ID that can be used for status updates.
+## Branch Plans
 
-**If project scope is missing**, the command will fail. Inform the user:
+When creating a feature issue, suggest creating a branch with a PLAN.md:
+
+```bash
+git checkout -b feature/<issue-number>-<short-name>
 ```
-Issue created successfully, but could not add to project board.
-Run: gh auth refresh -s project
-Then manually add at: https://github.com/orgs/ShipitSmarter/projects/10
+
+The PLAN.md in the branch should contain:
+- Technical approach
+- Files to modify
+- Step-by-step implementation tasks
+- Testing strategy
+
+**This keeps the issue clean and focused while giving engineers detailed guidance in the branch itself.**
+
+## Anti-Patterns to Avoid
+
+### ❌ Don't Create Multiple Issues For One Feature
+
+Bad:
+- Issue 1: "Add export button to reports page"
+- Issue 2: "Create PDF generation service"
+- Issue 3: "Add export API endpoint"
+- Issue 4: "Write tests for PDF export"
+
+Good:
+- ONE Issue: "Feature: Export reports to PDF"
+- Branch PLAN.md contains all implementation steps
+
+### ❌ Don't Put Implementation Details in Issues
+
+Bad:
+```markdown
+## Tasks
+- [ ] Create ExportService class in /services
+- [ ] Add POST /api/exports endpoint
+- [ ] Install pdfkit dependency
+- [ ] Add ExportButton.vue component
 ```
 
-## Output to User
+Good:
+```markdown
+## Acceptance Criteria
+- [ ] User can export any report as PDF
+- [ ] Exported PDF matches screen layout
+- [ ] Works for reports with up to 1000 rows
+```
 
-After creating the issue:
-1. Confirm creation with issue number and URL
-2. Show which labels were applied
-3. Confirm added to Viya project board (or provide manual instructions)
-4. Suggest next steps (assign, update status in project board)
+### ❌ Don't Create Issues for Every Subtask
+
+If you're tempted to create 5+ issues for one feature, stop and ask:
+- Is this really multiple features?
+- Or is this one feature that needs a branch plan?
+
+## Labels
+
+| Type | Labels |
+|------|--------|
+| Bug | `bug` |
+| Feature | `enhancement` |
+| Task | (none by default) |
 
 ## Error Handling
 
-**If repository doesn't exist or no access:**
-- List available repositories
-- Ask user to select from list
+**Repository access issues:**
+- List available repositories with `gh repo list ShipitSmarter`
 
-**If label doesn't exist:**
-- Create issue without that label
-- Inform user the label wasn't found
+**Missing project scope:**
+- Create issue, inform user to run `gh auth refresh -s project`
 
-**If project scope missing:**
-- Create issue successfully
-- Inform user to run `gh auth refresh -s project` for project board features
+## Output
 
-## Tool Reference
-
-| Command | Purpose |
-|---------|---------|
-| `gh issue create` | Create the issue |
-| `gh issue list --repo <repo> --search "<query>"` | Check for duplicates |
-| `gh label list --repo <repo>` | List available labels |
-| `gh repo list ShipitSmarter` | List available repositories |
-| `gh project item-add` | Add issue to project board |
+After creating:
+1. Confirm with issue number and URL
+2. Confirm added to project board
+3. Suggest: "Create a feature branch and add a PLAN.md for implementation details"
