@@ -14,6 +14,42 @@ Guidelines for writing Playwright E2E tests in this project.
 
 ---
 
+## Workflow: Write, Run, Iterate
+
+**CRITICAL:** When writing Playwright tests, you MUST follow this complete workflow:
+
+### 1. Write the tests
+- Follow all conventions and patterns documented below
+- Use proper fixtures, locators, and assertions
+
+### 2. Run tests on Chromium first (faster iteration)
+```bash
+cd playwright
+npx playwright test <path-to-test-file> --project=chromium
+```
+
+### 3. Iterate until all tests pass on Chromium
+- If tests fail, analyze the error output
+- Fix the issues (selectors, timing, assertions, etc.)
+- Re-run the tests **on Chromium only**
+- Repeat until **all tests pass successfully on Chromium**
+
+### 4. Run tests on Firefox
+Once all tests pass on Chromium, run on Firefox:
+```bash
+npx playwright test <path-to-test-file> --project=firefox
+```
+
+### 5. Iterate until all tests pass on Firefox
+- Firefox can be 2-3x slower than Chromium
+- Common Firefox issues: timing (use 60s timeout for API waits), different rendering
+- Fix any Firefox-specific issues
+- Re-run until **all tests pass on Firefox**
+
+**DO NOT consider the task complete until tests pass on BOTH Chromium and Firefox.** Writing tests without verifying they pass is incomplete work.
+
+---
+
 ## Project structure
 
 ```
@@ -584,6 +620,7 @@ Features: dashboard with browser grouping, one-click trace viewing, arrow key na
 - [ ] Cleans up test data in teardown if needed
 - [ ] Works on both Chromium and Firefox
 - [ ] Works in CI environment (no local dependencies)
+- [ ] **Tests have been run and pass successfully** (most important!)
 
 ---
 
