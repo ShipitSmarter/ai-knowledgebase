@@ -9,7 +9,47 @@ This skill guides AI-assisted MongoDB development using the official MongoDB MCP
 
 ## Prerequisites
 
-Ensure the MongoDB MCP server is configured in OpenCode. The MCP server provides direct database access through these tools:
+The MongoDB MCP server must be configured in OpenCode to use this skill.
+
+### Setup for viya-app
+
+Add the MongoDB MCP server to your `viya-app/opencode.json`. If you already have an `mcp` section, just add the `mongodb` entry:
+
+```json
+{
+  "$schema": "https://opencode.ai/config.json",
+  "mcp": {
+    "chrome-devtools": { ... },
+    "mongodb": {
+      "command": "npx",
+      "args": ["-y", "mongodb-mcp-server@latest"],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": "mongodb://localhost:27017/shipping"
+      }
+    }
+  }
+}
+```
+
+**Quick copy-paste** - add this to the `mcp` section:
+
+```json
+"mongodb": {
+  "command": "npx",
+  "args": ["-y", "mongodb-mcp-server@latest"],
+  "env": {
+    "MDB_MCP_CONNECTION_STRING": "mongodb://localhost:27017/shipping"
+  }
+}
+```
+
+Or add to your global config at `~/.config/opencode/opencode.json` to have it available everywhere.
+
+**Verify setup**: After adding, restart OpenCode and check that MongoDB tools appear (find, aggregate, collection-schema, etc.). You can verify by asking: "list all databases"
+
+### Available MCP Tools
+
+The MongoDB MCP server provides:
 
 - `find` - Query documents
 - `aggregate` - Run aggregation pipelines
@@ -19,11 +59,55 @@ Ensure the MongoDB MCP server is configured in OpenCode. The MCP server provides
 - `explain` - Query execution plan
 - `list-databases` / `list-collections` - Explore structure
 
+### Connecting to Different Databases
+
+Change the connection string to target different databases:
+
+```bash
+# Shipping (default)
+mongodb://localhost:27017/shipping
+
+# Auditor
+mongodb://localhost:27017/auditor
+
+# Rates
+mongodb://localhost:27017/rates
+```
+
+You can configure multiple MCP servers for different databases:
+
+```json
+{
+  "mcp": {
+    "mongodb-shipping": {
+      "command": "npx",
+      "args": ["-y", "mongodb-mcp-server@latest"],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": "mongodb://localhost:27017/shipping"
+      }
+    },
+    "mongodb-auditor": {
+      "command": "npx",
+      "args": ["-y", "mongodb-mcp-server@latest"],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": "mongodb://localhost:27017/auditor"
+      }
+    }
+  }
+}
+```
+
 ## ShipitSmarter Database Overview
 
 ### Local Development
 
 MongoDB runs in Docker via `viya-app/dev/docker-compose.yaml` at `localhost:27017`.
+
+Make sure the dev environment is running:
+```bash
+cd viya-app/dev
+docker compose up -d mongodb
+```
 
 ### Main Databases
 
@@ -352,3 +436,28 @@ mongodb://localhost:27017/shipping
 # With auth
 mongodb://user:pass@localhost:27017/shipping?authSource=admin
 ```
+
+## Example Prompts
+
+Try these prompts in viya-app to do data analysis:
+
+### Exploration
+- "List all collections in the shipping database and show me the schema of shipments"
+- "What indexes exist on the shipments collection?"
+- "Show me a sample document from the orders collection"
+
+### Analysis
+- "How many shipments were created per day in the last 30 days?"
+- "What's the distribution of shipments by status?"
+- "Show me the top 10 customers by shipment volume this month"
+- "Find shipments that have been in 'processing' status for more than 24 hours"
+
+### Debugging
+- "Find the shipment with tracking number ABC123 and show all its tracking events"
+- "Are there any shipments with missing carrier information?"
+- "Show me shipments that failed validation in the last hour"
+
+### Performance
+- "Explain the query plan for finding shipments by customerId"
+- "What queries would benefit from additional indexes on the shipments collection?"
+
