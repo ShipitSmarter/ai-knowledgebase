@@ -1,4 +1,21 @@
 #!/bin/bash
+#
+# setup.sh - Set up ShipitSmarter AI Knowledgebase for OpenCode
+#
+# This script:
+# 1. Clones ai-knowledgebase to ~/.shipitsmarter/ai-knowledgebase
+# 2. Symlinks skills and commands to ~/.config/opencode/ for global availability
+# 3. Sets up the opencode-mem plugin for persistent memory
+#
+# After running, skills will be available in ANY repository.
+#
+# Usage:
+#   curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash
+#
+# Or locally:
+#   ./tools/setup.sh
+#
+
 set -e
 
 # Colors for output
@@ -10,7 +27,7 @@ NC='\033[0m' # No Color
 
 INSTALL_DIR="${HOME}/.shipitsmarter/ai-knowledgebase"
 REPO_URL="https://github.com/ShipitSmarter/ai-knowledgebase"
-OPENCODE_PLUGINS_DIR="${HOME}/.opencode/plugins"
+OPENCODE_CONFIG_HOME="${HOME}/.config/opencode"
 
 print_header() {
   echo ""
@@ -76,80 +93,138 @@ else
   print_success "Cloned ai-knowledgebase to $INSTALL_DIR"
 fi
 
-# Step 3: Configure shell environment
-print_header "Shell Configuration"
+# Step 3: Create OpenCode config directories
+print_header "Setting up OpenCode Configuration"
 
-SHELL_RC=$(detect_shell_config)
-NEEDS_SOURCE=false
+mkdir -p "$OPENCODE_CONFIG_HOME/skills"
+mkdir -p "$OPENCODE_CONFIG_HOME/commands"
 
-if ! grep -q "OPENCODE_CONFIG_DIR" "$SHELL_RC" 2>/dev/null; then
-  echo "" >> "$SHELL_RC"
-  echo "# ShipitSmarter AI Knowledgebase (added by setup.sh)" >> "$SHELL_RC"
-  echo "export OPENCODE_CONFIG_DIR=\"\$HOME/.shipitsmarter/ai-knowledgebase\"" >> "$SHELL_RC"
-  echo "export OPENCODE_CONFIG=\"\$HOME/.shipitsmarter/ai-knowledgebase/shared-config.json\"" >> "$SHELL_RC"
-  print_success "Added environment variables to $SHELL_RC"
-  NEEDS_SOURCE=true
-else
-  print_success "Environment variables already configured"
+# Step 4: Symlink skills to global config
+echo "Linking skills..."
+SKILLS_LINKED=0
+SKILLS_SKIPPED=0
+
+for skill_dir in "$INSTALL_DIR/.opencode/skill"/*/; do
+  if [[ -d "$skill_dir" && -f "${skill_dir}SKILL.md" ]]; then
+    skill_name=$(basename "$skill_dir")
+    link_path="$OPENCODE_CONFIG_HOME/skills/${skill_name}"
+    
+    if [[ -L "$link_path" ]]; then
+      # Check if symlink points to our repo
+      current_target=$(readlink "$link_path")
+      if [[ "$current_target" == "$skill_dir"* || "$current_target" == *"ai-knowledgebase"* ]]; then
+        SKILLS_SKIPPED=$((SKILLS_SKIPPED + 1))
+      else
+        print_warning "Skill '$skill_name' exists but points elsewhere: $current_target"
+        SKILLS_SKIPPED=$((SKILLS_SKIPPED + 1))
+      fi
+    elif [[ -e "$link_path" ]]; then
+      print_warning "Skill '$skill_name' exists but is not a symlink, skipping"
+      SKILLS_SKIPPED=$((SKILLS_SKIPPED + 1))
+    else
+      ln -sf "$skill_dir" "$link_path"
+      SKILLS_LINKED=$((SKILLS_LINKED + 1))
+    fi
+  fi
+done
+
+if [[ $SKILLS_LINKED -gt 0 ]]; then
+  print_success "Linked $SKILLS_LINKED new skills"
+fi
+if [[ $SKILLS_SKIPPED -gt 0 ]]; then
+  echo "  ($SKILLS_SKIPPED skills already configured)"
 fi
 
-# Export for current session
-export OPENCODE_CONFIG_DIR="$INSTALL_DIR"
-export OPENCODE_CONFIG="$INSTALL_DIR/shared-config.json"
+# Step 5: Symlink commands to global config
+echo "Linking commands..."
+COMMANDS_LINKED=0
+COMMANDS_SKIPPED=0
 
-# Step 4: Install opencode-mem plugin (if not installed)
-print_header "Plugins"
+for cmd_file in "$INSTALL_DIR/.opencode/command"/*.md; do
+  if [[ -f "$cmd_file" ]]; then
+    cmd_name=$(basename "$cmd_file")
+    link_path="$OPENCODE_CONFIG_HOME/commands/${cmd_name}"
+    
+    if [[ -L "$link_path" ]]; then
+      current_target=$(readlink "$link_path")
+      if [[ "$current_target" == *"ai-knowledgebase"* ]]; then
+        COMMANDS_SKIPPED=$((COMMANDS_SKIPPED + 1))
+      else
+        print_warning "Command '$cmd_name' exists but points elsewhere"
+        COMMANDS_SKIPPED=$((COMMANDS_SKIPPED + 1))
+      fi
+    elif [[ -e "$link_path" ]]; then
+      print_warning "Command '$cmd_name' exists but is not a symlink, skipping"
+      COMMANDS_SKIPPED=$((COMMANDS_SKIPPED + 1))
+    else
+      ln -sf "$cmd_file" "$link_path"
+      COMMANDS_LINKED=$((COMMANDS_LINKED + 1))
+    fi
+  fi
+done
 
-OPENCODE_CONFIG_HOME="${HOME}/.config/opencode"
-if [ ! -f "$OPENCODE_CONFIG_HOME/opencode.json" ]; then
-  mkdir -p "$OPENCODE_CONFIG_HOME"
+if [[ $COMMANDS_LINKED -gt 0 ]]; then
+  print_success "Linked $COMMANDS_LINKED new commands"
+fi
+if [[ $COMMANDS_SKIPPED -gt 0 ]]; then
+  echo "  ($COMMANDS_SKIPPED commands already configured)"
+fi
+
+# Step 6: Set up opencode.json with plugins
+print_header "Configuring Plugins"
+
+OPENCODE_JSON="$OPENCODE_CONFIG_HOME/opencode.json"
+if [ ! -f "$OPENCODE_JSON" ]; then
   echo '{
   "$schema": "https://opencode.ai/config.json",
   "plugin": ["opencode-mem"]
-}' > "$OPENCODE_CONFIG_HOME/opencode.json"
+}' > "$OPENCODE_JSON"
   print_success "Created global config with opencode-mem plugin"
-elif ! grep -q "opencode-mem" "$OPENCODE_CONFIG_HOME/opencode.json" 2>/dev/null; then
+elif ! grep -q "opencode-mem" "$OPENCODE_JSON" 2>/dev/null; then
   print_warning "opencode-mem plugin not in global config"
-  echo "  Add to $OPENCODE_CONFIG_HOME/opencode.json:"
+  echo "  Add to $OPENCODE_JSON:"
   echo '  "plugin": ["opencode-mem"]'
 else
   print_success "opencode-mem plugin configured"
 fi
 
-# Step 5: Check for google-ai-search plugin (optional)
-if [ -d "$OPENCODE_PLUGINS_DIR/opencode-google-ai-search" ]; then
-  print_success "google-ai-search plugin installed"
-else
-  print_warning "google-ai-search plugin not installed (optional)"
-  echo "  To install: See https://github.com/anthropics/opencode-google-ai-search"
+# Step 7: Clean up old environment variables (optional migration)
+SHELL_RC=$(detect_shell_config)
+if grep -q "OPENCODE_CONFIG_DIR.*ai-knowledgebase" "$SHELL_RC" 2>/dev/null; then
+  print_warning "Found old OPENCODE_CONFIG_DIR in $SHELL_RC"
+  echo "  The new setup uses symlinks instead. You can remove these lines:"
+  echo "    export OPENCODE_CONFIG_DIR=..."
+  echo "    export OPENCODE_CONFIG=..."
 fi
 
-# Step 6: Summary
+# Step 8: Summary
 print_header "Setup Complete"
 
-echo "Skills available ($(ls -1 "$INSTALL_DIR/skills" | wc -l) total):"
-ls -1 "$INSTALL_DIR/skills" | head -10 | sed 's/^/  - /'
-if [ $(ls -1 "$INSTALL_DIR/skills" | wc -l) -gt 10 ]; then
-  echo "  ... and $(( $(ls -1 "$INSTALL_DIR/skills" | wc -l) - 10 )) more"
+SKILL_COUNT=$(find "$OPENCODE_CONFIG_HOME/skills" -maxdepth 1 -type l 2>/dev/null | wc -l)
+COMMAND_COUNT=$(find "$OPENCODE_CONFIG_HOME/commands" -maxdepth 1 -type l -name "*.md" 2>/dev/null | wc -l)
+
+echo "Skills available globally ($SKILL_COUNT total):"
+find "$OPENCODE_CONFIG_HOME/skills" -maxdepth 1 -type l -exec basename {} \; 2>/dev/null | sort | head -10 | sed 's/^/  - /'
+if [[ $SKILL_COUNT -gt 10 ]]; then
+  echo "  ... and $(( SKILL_COUNT - 10 )) more"
 fi
 
 echo ""
-echo "Commands available:"
-ls -1 "$INSTALL_DIR/commands" | sed 's/.md$//' | sed 's/^/  \//g'
-
-echo ""
-echo "MCP Servers (enable in project opencode.json):"
-echo "  - notion (requires NOTION_TOKEN)"
-echo "  - google-ai-search (requires plugin)"
-echo "  - posthog (requires POSTHOG_API_KEY)"
-
-if [ "$NEEDS_SOURCE" = true ]; then
-  echo ""
-  echo -e "${YELLOW}Action required:${NC} Restart your terminal or run:"
-  echo "  source $SHELL_RC"
+echo "Commands available globally ($COMMAND_COUNT total):"
+find "$OPENCODE_CONFIG_HOME/commands" -maxdepth 1 -type l -name "*.md" -exec basename {} .md \; 2>/dev/null | sort | head -10 | sed 's/^/  \//'
+if [[ $COMMAND_COUNT -gt 10 ]]; then
+  echo "  ... and $(( COMMAND_COUNT - 10 )) more"
 fi
 
+echo ""
+echo -e "${GREEN}Skills are now available in ANY repository!${NC}"
+echo ""
+echo "Try it out:"
+echo "  cd ~/your-project"
+echo "  opencode"
+echo "  /research <topic>"
 echo ""
 echo "To update later:"
-echo "  git -C ~/.shipitsmarter/ai-knowledgebase pull"
+echo "  cd ~/.shipitsmarter/ai-knowledgebase && git pull"
+echo "  # Or run this script again"
 echo ""
