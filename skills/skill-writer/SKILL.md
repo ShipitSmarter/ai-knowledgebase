@@ -1,6 +1,8 @@
 ---
+
 name: skill-writer
 description: Create and refine Agent Skills following the agentskills.io specification. Use when user asks to write a skill, create a skill, or build automation workflows for AI agents.
+
 ---
 
 # Skill Writer
@@ -10,6 +12,7 @@ Create well-structured Agent Skills following the [agentskills.io specification]
 ## Trigger
 
 When user asks to:
+
 - Create a new skill
 - Write a skill for a specific workflow
 - Build an agent automation
@@ -25,6 +28,7 @@ The context window is a shared resource. Every token in your skill competes with
 **Default assumption**: Claude is already very smart. Only add context Claude doesn't already have.
 
 Challenge each piece of information:
+
 - "Does Claude really need this explanation?"
 - "Can I assume Claude knows this?"
 - "Does this paragraph justify its token cost?"
@@ -33,11 +37,11 @@ Challenge each piece of information:
 
 Match specificity to the task's fragility:
 
-| Freedom Level | When to Use | Example |
-|---------------|-------------|---------|
-| **High** (text instructions) | Multiple approaches valid, context-dependent | Code review guidelines |
-| **Medium** (pseudocode/templates) | Preferred pattern exists, some variation OK | Report generation |
-| **Low** (specific scripts) | Fragile operations, consistency critical | Database migrations |
+| Freedom Level                     | When to Use                                  | Example                |
+| --------------------------------- | -------------------------------------------- | ---------------------- |
+| **High** (text instructions)      | Multiple approaches valid, context-dependent | Code review guidelines |
+| **Medium** (pseudocode/templates) | Preferred pattern exists, some variation OK  | Report generation      |
+| **Low** (specific scripts)        | Fragile operations, consistency critical     | Database migrations    |
 
 ### 3. Progressive Disclosure
 
@@ -52,6 +56,7 @@ Structure skills so agents load only what they need:
 ### Step 1: Understand the Skill's Purpose
 
 Ask clarifying questions:
+
 - What task or workflow does this skill automate?
 - Who is the target user/audience?
 - What tools or MCP servers are required?
@@ -61,6 +66,7 @@ Ask clarifying questions:
 ### Step 2: Choose the Skill Name
 
 Requirements:
+
 - Max 64 characters
 - Lowercase letters, numbers, and hyphens only
 - Must not start or end with hyphen
@@ -68,6 +74,7 @@ Requirements:
 - Directory name must match skill name
 
 **Naming conventions** (prefer gerund form):
+
 - `processing-pdfs` (gerund - preferred)
 - `pdf-processing` (noun phrase - acceptable)
 - `process-pdfs` (action-oriented - acceptable)
@@ -79,6 +86,7 @@ Requirements:
 The description is critical for skill discovery. Claude uses it to select the right skill from potentially 100+ available skills.
 
 Requirements:
+
 - Max 1024 characters
 - Non-empty
 - **Always write in third person** (not "I can help" or "You can use")
@@ -86,11 +94,13 @@ Requirements:
 - Include specific keywords/triggers
 
 **Good example**:
+
 ```yaml
 description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
 ```
 
 **Bad example**:
+
 ```yaml
 description: Helps with documents.
 ```
@@ -112,6 +122,7 @@ description: <what it does and when to use it>
 ## Trigger
 
 When user asks to:
+
 - <trigger 1>
 - <trigger 2>
 
@@ -178,22 +189,25 @@ Copy this checklist:
 **Example:**
 Input: "Update the user model"
 Output:
-  feat(models): add email validation to User model
+feat(models): add email validation to User model
 ```
 
 ### Step 6: Handle Optional Features
 
 **For skills with scripts**:
+
 - Scripts should handle errors explicitly (don't punt to Claude)
 - Document all "magic constants" with rationale
 - List required packages
 - Use Unix-style paths (forward slashes)
 
 **For skills using MCP tools**:
+
 - Use fully qualified tool names: `ServerName:tool_name`
 - Example: `BigQuery:bigquery_schema`, `notion:search`
 
 **For skills with large reference docs**:
+
 - Add table of contents to files >100 lines
 - Keep references one level deep (no nested chains)
 
@@ -202,6 +216,7 @@ Output:
 Quality checklist:
 
 **Core Quality**:
+
 - [ ] Description is specific with keywords
 - [ ] Description includes what + when to use
 - [ ] SKILL.md body <500 lines
@@ -212,6 +227,7 @@ Quality checklist:
 - [ ] Clear workflow steps
 
 **If includes scripts**:
+
 - [ ] Scripts handle errors explicitly
 - [ ] No unexplained constants
 - [ ] Required packages documented
@@ -230,6 +246,7 @@ Write the SKILL.md file and any additional resources.
 ## Output to User
 
 After creating a skill, provide:
+
 1. The complete SKILL.md content
 2. Directory structure created
 3. Summary of what the skill does
@@ -238,15 +255,15 @@ After creating a skill, provide:
 
 ## Anti-Patterns to Avoid
 
-| Anti-Pattern | Problem | Solution |
-|--------------|---------|----------|
-| Too verbose | Wastes context tokens | Assume Claude knows basics |
-| Too many options | Confuses the agent | Provide sensible default |
-| Vague description | Poor skill discovery | Include specific keywords |
-| Windows paths | Cross-platform issues | Always use `/` not `\` |
-| Nested references | Partial reads | Keep one level deep |
-| Time-sensitive info | Becomes outdated | Use "old patterns" section |
-| Magic numbers | Unclear intent | Document all constants |
+| Anti-Pattern        | Problem               | Solution                   |
+| ------------------- | --------------------- | -------------------------- |
+| Too verbose         | Wastes context tokens | Assume Claude knows basics |
+| Too many options    | Confuses the agent    | Provide sensible default   |
+| Vague description   | Poor skill discovery  | Include specific keywords  |
+| Windows paths       | Cross-platform issues | Always use `/` not `\`     |
+| Nested references   | Partial reads         | Keep one level deep        |
+| Time-sensitive info | Becomes outdated      | Use "old patterns" section |
+| Magic numbers       | Unclear intent        | Document all constants     |
 
 ## Skill Templates by Type
 
@@ -272,12 +289,15 @@ When user asks to <action>.
 ## Process
 
 ### Step 1: Gather Input
+
 <...>
 
 ### Step 2: Execute Workflow
+
 <...>
 
 ### Step 3: Verify Results
+
 <...>
 
 ## Output to User
@@ -306,8 +326,8 @@ When user asks to use <tool> or <related tasks>.
 ## Available Operations
 
 | Operation | Command/Tool | Description |
-|-----------|--------------|-------------|
-| <op1> | `<command>` | <desc> |
+| --------- | ------------ | ----------- |
+| <op1>     | `<command>`  | <desc>      |
 
 ## Process
 
@@ -335,15 +355,19 @@ When user asks to research <topic> or <related queries>.
 ## Process
 
 ### Step 1: Check Existing Knowledge
+
 <memory/knowledge base search>
 
 ### Step 2: Conduct Research
+
 <web search, API calls>
 
 ### Step 3: Synthesize Findings
+
 <combine sources>
 
 ### Step 4: Create Output
+
 <document template>
 
 ## Output Format
@@ -359,16 +383,17 @@ When user asks to research <topic> or <related queries>.
 
 From [agentskills.io/specification](https://agentskills.io/specification):
 
-| Field | Required | Constraints |
-|-------|----------|-------------|
-| `name` | Yes | Max 64 chars, lowercase alphanumeric + hyphens |
-| `description` | Yes | Max 1024 chars, non-empty |
-| `license` | No | License name or file reference |
-| `compatibility` | No | Max 500 chars, environment requirements |
-| `metadata` | No | Key-value pairs for custom data |
-| `allowed-tools` | No | Space-delimited pre-approved tools (experimental) |
+| Field           | Required | Constraints                                       |
+| --------------- | -------- | ------------------------------------------------- |
+| `name`          | Yes      | Max 64 chars, lowercase alphanumeric + hyphens    |
+| `description`   | Yes      | Max 1024 chars, non-empty                         |
+| `license`       | No       | License name or file reference                    |
+| `compatibility` | No       | Max 500 chars, environment requirements           |
+| `metadata`      | No       | Key-value pairs for custom data                   |
+| `allowed-tools` | No       | Space-delimited pre-approved tools (experimental) |
 
 **Optional directories**:
+
 - `scripts/` - Executable code
 - `references/` - Additional documentation
 - `assets/` - Templates, schemas, static resources
