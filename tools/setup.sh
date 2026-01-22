@@ -137,6 +137,10 @@ setup_directory_symlink "skills" "$INSTALL_DIR/skills"
 echo "Setting up commands..."
 setup_directory_symlink "commands" "$INSTALL_DIR/commands"
 
+# Link agents directory
+echo "Setting up agents..."
+setup_directory_symlink "agents" "$INSTALL_DIR/agents"
+
 # Step 4: Set up opencode.json with plugins
 print_header "Configuring Plugins"
 
@@ -167,13 +171,15 @@ fi
 # Summary
 print_header "Setup Complete"
 
-# Count skills and commands
+# Count skills, commands, and agents
 SKILL_COUNT=$(find "$INSTALL_DIR/skills" -maxdepth 1 -type d -name "*" ! -name "skills" 2>/dev/null | wc -l | tr -d ' ')
 COMMAND_COUNT=$(find "$INSTALL_DIR/commands" -maxdepth 1 -type f -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+AGENT_COUNT=$(find "$INSTALL_DIR/agents" -maxdepth 1 -type f -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
 
 echo "Configuration:"
 echo "  skills   -> $INSTALL_DIR/skills"
 echo "  commands -> $INSTALL_DIR/commands"
+echo "  agents   -> $INSTALL_DIR/agents"
 echo ""
 echo "Skills available globally ($SKILL_COUNT total):"
 find "$INSTALL_DIR/skills" -maxdepth 1 -type d ! -name "skills" -exec basename {} \; 2>/dev/null | sort | head -10 | sed 's/^/  - /'
@@ -187,6 +193,10 @@ find "$INSTALL_DIR/commands" -maxdepth 1 -type f -name "*.md" -exec basename {} 
 if [[ $COMMAND_COUNT -gt 10 ]]; then
   echo "  ... and $(( COMMAND_COUNT - 10 )) more"
 fi
+
+echo ""
+echo "Agents available globally ($AGENT_COUNT total):"
+find "$INSTALL_DIR/agents" -maxdepth 1 -type f -name "*.md" -exec basename {} .md \; 2>/dev/null | sort | sed 's/^/  - /'
 
 echo ""
 echo -e "${GREEN}Skills are now available in ANY repository!${NC}"
