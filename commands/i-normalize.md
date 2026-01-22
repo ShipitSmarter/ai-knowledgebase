@@ -9,6 +9,10 @@ args:
 
 Analyze and redesign the feature to perfectly match our design system standards, aesthetics, and established patterns.
 
+## MANDATORY PREPARATION
+
+**First**: Load the `frontend-design` skill for design principles and anti-patterns.
+
 ## Plan
 
 Before making changes, deeply understand the context:

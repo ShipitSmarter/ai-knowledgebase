@@ -9,6 +9,10 @@ args:
 
 Create or improve onboarding experiences that help users understand, adopt, and succeed with the product quickly.
 
+## MANDATORY PREPARATION
+
+**First**: Load the `frontend-design` skill for UX principles, interaction patterns, and anti-patterns.
+
 ## Assess Onboarding Needs
 
 Understand what users need to learn and why:

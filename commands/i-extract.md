@@ -9,6 +9,10 @@ args:
 
 Identify reusable patterns, components, and design tokens, then extract and consolidate them into the design system for systematic reuse.
 
+## MANDATORY PREPARATION
+
+**First**: Load the `frontend-design` skill to understand design principles that should guide component extraction.
+
 ## Discover
 
 Analyze the target area to identify extraction opportunities:

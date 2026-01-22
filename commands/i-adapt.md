@@ -12,6 +12,10 @@ args:
 
 Adapt existing designs to work effectively across different contexts - different screen sizes, devices, platforms, or use cases.
 
+## MANDATORY PREPARATION
+
+**First**: Load the `frontend-design` skill for design principles, responsive design patterns, and anti-patterns.
+
 ## Assess Adaptation Challenge
 
 Understand what needs adaptation and why:
