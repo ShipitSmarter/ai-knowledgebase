@@ -431,6 +431,38 @@ Once set up, I can submit PR reviews directly to GitHub for you.
 5. **Always show the review and ask for confirmation before submitting**
 6. Submit via `gh api` with line-specific comments
 
+### Line-Specific Comments (IMPORTANT!)
+
+**Always include line-specific comments when submitting GitHub reviews.** Don't just provide an overall summary - attach comments directly to the relevant lines of code. This makes feedback actionable and easier to address.
+
+#### Rules for Line-Specific Comments:
+
+1. **All issues/suggestions MUST have line comments** - Every piece of feedback that references specific code should be attached to that line in the PR
+2. **Limit positive comments to 2-3 max** - Don't flood the PR with praise on every good line. Pick the 2-3 most noteworthy positive things
+3. **Every review should have at least ONE positive line comment** - Find something genuinely good to highlight, even in PRs that need work. This keeps reviews balanced and encouraging
+4. **Be specific in positive comments** - Don't just say "nice!", explain *why* it's good: "Nice use of `Task.WhenAll` for parallel execution - great performance optimization! 👍"
+
+#### Example Distribution:
+
+```
+PR with issues:
+- 5 line comments for things to fix/improve
+- 1-2 line comments highlighting good patterns
+- Overall summary in review body
+
+Clean PR:
+- 1-2 minor suggestions (nits)
+- 2-3 positive line comments on best parts
+- Overall approval summary
+```
+
+#### What Makes a Good Positive Line Comment:
+
+- Points out a specific pattern or technique: "Good use of static readonly array to avoid allocations 👍"
+- Acknowledges thoughtful design: "Love the generic constraint here - makes this reusable for subclasses 😍"
+- Praises test coverage: "Great edge case coverage! Testing pagination behavior separately is exactly right 🎉"
+- Recognizes refactoring improvements: "Nice extraction of this helper - much cleaner than the duplication before"
+
 ### Key Differences from Local Review
 
 | Aspect | Local Review | GitHub Review |
