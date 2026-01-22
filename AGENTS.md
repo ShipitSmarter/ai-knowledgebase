@@ -47,23 +47,28 @@ Examples from this repo:
 
 ```
 ai-knowledgebase/
-├── .opencode/              # OpenCode configuration (active config)
+├── skills/                 # Skill definitions (source of truth)
+│   └── <skill-name>/       # Each skill in its own folder
+│       └── SKILL.md        # Skill definition
+├── commands/               # Slash commands (e.g., /research)
+│   └── <command>.md        # Command definition
+├── agents/                 # Agent configurations
+│   └── <agent>.md          # Agent definition
+├── .opencode/              # OpenCode-specific config
 │   ├── config.json         # Main OpenCode config
-│   ├── command/            # Slash commands (e.g., /research)
-│   └── skill/              # Skills (detailed workflows)
+│   ├── skills -> ../skills # Symlink to skills/
+│   ├── command -> ../commands # Symlink to commands/
+│   └── agent -> ../agents  # Symlink to agents/
 ├── opencode/               # OpenCode documentation & examples
-│   ├── agents/             # Agent presets & prompts
 │   ├── ide/                # IDE-specific setups
 │   ├── mcp-servers/        # MCP server configurations
-│   ├── plugins/            # Plugin documentation
-│   └── skills/             # Skill documentation
+│   └── plugins/            # Plugin documentation
 ├── research/               # Research projects (organized by topic)
 │   └── <project-name>/     # Each project in its own folder
 │       ├── _index.md       # Project overview
 │       └── YYYY-MM-DD-*.md # Research documents
 ├── architect-reviews/      # Technical architecture reviews
 │   └── YYYY-MM-DD-*.md     # Review documents
-├── agents/                 # Generic agent configurations
 ├── workflows/              # Reusable AI workflow patterns
 ├── ideas/                  # Ideas backlog
 ├── tools/                  # Scripts and utilities

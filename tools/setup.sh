@@ -104,7 +104,7 @@ echo "Linking skills..."
 SKILLS_LINKED=0
 SKILLS_SKIPPED=0
 
-for skill_dir in "$INSTALL_DIR/.opencode/skill"/*/; do
+for skill_dir in "$INSTALL_DIR/skills"/*/; do
   if [[ -d "$skill_dir" && -f "${skill_dir}SKILL.md" ]]; then
     skill_name=$(basename "$skill_dir")
     link_path="$OPENCODE_CONFIG_HOME/skills/${skill_name}"
@@ -140,7 +140,7 @@ echo "Linking commands..."
 COMMANDS_LINKED=0
 COMMANDS_SKIPPED=0
 
-for cmd_file in "$INSTALL_DIR/.opencode/command"/*.md; do
+for cmd_file in "$INSTALL_DIR/commands"/*.md; do
   if [[ -f "$cmd_file" ]]; then
     cmd_name=$(basename "$cmd_file")
     link_path="$OPENCODE_CONFIG_HOME/commands/${cmd_name}"
