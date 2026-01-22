@@ -223,6 +223,45 @@ When research fails:
 - Check if Notion has relevant content
 - Offer to try different approaches
 
+## Planning Workflow
+
+When creating plans or doing any planning activities (feature plans, implementation plans, 
+architecture proposals, migration strategies, etc.), follow this workflow:
+
+### Step 1: Persist the Plan
+
+Save the plan to `plan/` with a descriptive filename:
+
+```
+plan/YYYY-MM-DD-<topic-slug>.md
+```
+
+**Note**: We don't include timelines in plans - focus on what and how, not when.
+
+### Step 2: Validate with Architect Review
+
+Before finalizing any significant plan, consult the `technical-architect` skill:
+
+1. Load the skill to get architect perspective
+2. Ask clarifying questions on design decisions
+3. Challenge assumptions and identify trade-offs
+4. Surface risks and complexity
+
+Questions to address in architect review:
+- Does this align with existing architecture patterns?
+- What are the hidden complexities?
+- What's the simplest approach that could work?
+- What happens when this fails?
+- How do we roll this back?
+
+### Step 3: Document Key Decisions
+
+After architect review, update the plan with:
+- Design decisions made and rationale
+- Trade-offs accepted
+- Risks identified and mitigations
+- Open questions for further investigation
+
 ## Common Tasks
 
 ### Adding a New Research Topic
