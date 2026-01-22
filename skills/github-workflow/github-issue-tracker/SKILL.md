@@ -20,7 +20,7 @@ When user asks to:
 
 ## Prerequisites
 
-Requires GitHub CLI (`gh`) authenticated with project scope. See [GitHub Setup](../../opencode/github/SETUP.md).
+Requires GitHub CLI (`gh`) authenticated with project scope.
 
 ```bash
 # Add project scope (required for status updates)

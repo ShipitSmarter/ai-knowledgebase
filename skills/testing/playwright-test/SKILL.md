@@ -741,7 +741,7 @@ Features: dashboard with browser grouping, one-click trace viewing, arrow key na
 
 ## Related Documentation
 
-- [Testing Strategy](../../../docs/testing-strategy.md) - When to write E2E vs unit tests, critical flows, coverage expectations
+- [Testing Strategy Research](../../../research/testing-strategy/2026-01-16-modern-testing-strategy.md) - When to write E2E vs unit tests, critical flows, coverage expectations
 
 ---
 

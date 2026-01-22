@@ -195,8 +195,8 @@ Avoid these traps that sneak features in:
 | 4 | [Gibson Biddle - DHM Model](https://medium.com/@gibsonbiddle/2-the-dhm-model-6ea5dfd80792) | Delight + Hard-to-copy + Margin framework |
 | 5 | [Intercom - Product Strategy Means Saying No](https://www.intercom.com/blog/product-strategy/) | 12 traps that sneak features in |
 | 6 | [Playing to Win (Book)](https://www.amazon.com/Playing-Win-Strategy-Really-Works/dp/142218739X) | 5 strategic choices framework |
-| 7 | [Viya Strategy 2025-2030](./../../knowledgebase/strategy/) | Company winning aspiration and where to play |
-| 8 | [Viya Mission & Vision](./../../knowledgebase/vision/) | Company purpose and approach |
+| 7 | [Viya Strategy 2025-2030](../../knowledgebase/Strategy%202025-2030.md) | Company winning aspiration and where to play |
+| 8 | [Viya Mission & Vision](../../knowledgebase/Mission%20&%20Vision.md) | Company purpose and approach |
 | 9 | [Melissa Perri - Good Product Strategy](https://melissaperri.com/blog/2016/07/14/what-is-good-product-strategy) | Vision → Strategy → Discovery → Delivery hierarchy |
 | 10 | [Brandon Chu - Ruthless Prioritization](https://blackboxofpm.com/ruthless-prioritization-e4256e3520a9) | Prioritization framework |
 | 11 | [Roman Pichler - OKRs and Roadmaps](https://www.romanpichler.com/blog/okrs-and-product-roadmaps/) | Connecting goals to roadmaps |
@@ -220,8 +220,8 @@ Avoid these traps that sneak features in:
 
 ## Related Research
 
-- Company Strategy 2025-2030: `knowledgebase/strategy/`
-- Company Mission & Vision: `knowledgebase/vision/`
+- Company Strategy 2025-2030: `knowledgebase/Strategy 2025-2030.md`
+- Company Mission & Vision: `knowledgebase/Mission & Vision.md`
 
 ## Skill Created
 

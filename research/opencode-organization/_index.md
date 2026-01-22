@@ -37,5 +37,5 @@ Research completed 2026-01-22.
 
 ## Related
 
-- [skill-writer skill](/skills/skill-writer/SKILL.md) - How to write skills
+- [skill-writer skill](../../skills/documentation/skill-writer/SKILL.md) - How to write skills
 - [OpenCode Docs](https://opencode.ai/docs/) - Official documentation

@@ -19,7 +19,22 @@ This is a documentation repository with no build system. There are no:
 - Linting tools
 - CI/CD pipelines
 
-**Validation**: Manually review markdown formatting and link validity.
+**Validation**: Run `./tools/check-links.sh` to verify all internal links are valid.
+
+### Link Checker
+
+**IMPORTANT**: After moving, renaming, or deleting files, ALWAYS run the link checker:
+
+```bash
+./tools/check-links.sh
+```
+
+This checks all markdown files for broken relative links. Fix any broken links before committing.
+
+To see suggested fixes for broken links:
+```bash
+./tools/check-links.sh --fix
+```
 
 ## Git Workflow
 
@@ -48,23 +63,23 @@ Examples from this repo:
 ```
 ai-knowledgebase/
 ├── skills/                 # Skill definitions (source of truth)
-│   ├── frontend/           # Vue/TypeScript frontend skills
-│   │   └── <skill-name>/   # Each frontend skill in its own folder
-│   │       └── SKILL.md
-│   ├── structures/         # App structure skills (viya-app, warehouse)
-│   │   └── <app-name>/
-│   │       └── SKILL.md
-│   └── <skill-name>/       # General skills in root
-│       └── SKILL.md        # Skill definition
+│   ├── research-strategy/  # Research & planning skills
+│   ├── github-workflow/    # Git/GitHub workflow skills
+│   ├── frontend-development/ # Vue/TypeScript frontend skills
+│   ├── testing/            # Testing skills (unit, E2E, review)
+│   ├── documentation/      # Documentation skills
+│   ├── design/             # UI/UX design skills
+│   ├── infrastructure/     # Tools & infrastructure skills
+│   └── codebase-structures/ # App structure documentation
 ├── commands/               # Slash commands (e.g., /research)
 │   └── <command>.md        # Command definition
 ├── agents/                 # Agent configurations
 │   └── <agent>.md          # Agent definition
-├── .opencode/              # OpenCode-specific config
+├── .opencode/              # OpenCode-specific config (symlinks to above)
 │   ├── config.json         # Main OpenCode config
-│   ├── skills -> ../skills # Symlink to skills/
-│   ├── command -> ../commands # Symlink to commands/
-│   └── agent -> ../agents  # Symlink to agents/
+│   ├── skills -> ../skills
+│   ├── command -> ../commands
+│   └── agent -> ../agents
 ├── opencode/               # OpenCode documentation & examples
 │   ├── ide/                # IDE-specific setups
 │   ├── mcp-servers/        # MCP server configurations

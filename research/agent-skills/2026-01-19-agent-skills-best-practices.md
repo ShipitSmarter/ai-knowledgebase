@@ -170,5 +170,5 @@ Copy this checklist:
 ## Related Research
 
 - [OpenCode configuration](../../opencode/) - How skills integrate with OpenCode
-- [Product Strategy Skill](../../.opencode/skill/product-strategy/SKILL.md) - Example domain-specific skill
-- [Research Skill](../../.opencode/skill/research/SKILL.md) - Example workflow skill
+- [Product Strategy Skill](../../skills/research-strategy/product-strategy/SKILL.md) - Example domain-specific skill
+- [Research Skill](../../skills/research-strategy/research/SKILL.md) - Example workflow skill

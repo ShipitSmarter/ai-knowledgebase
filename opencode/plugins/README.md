@@ -31,4 +31,4 @@ Google AI Search is technically an MCP server but documented here since it's a l
 ## See Also
 
 - [MCP Servers](../mcp-servers/README.md) - External tool integrations
-- [Research Agent](../agents/research-agent.md) - Uses these plugins for research workflows
+- [Research Skill](../../skills/research-strategy/research/SKILL.md) - Uses these plugins for research workflows

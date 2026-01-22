@@ -38,8 +38,8 @@ This research project explores best practices for writing product strategy, with
 
 ### Related Company Documents
 
-- [Strategy 2025-2030](../../knowledgebase/strategy/)
-- [Mission & Vision](../../knowledgebase/vision/)
+- [Strategy 2025-2030](../../knowledgebase/Strategy%202025-2030.md)
+- [Mission & Vision](../../knowledgebase/Mission%20&%20Vision.md)
 
 ## Key Skills for Product Strategists
 
