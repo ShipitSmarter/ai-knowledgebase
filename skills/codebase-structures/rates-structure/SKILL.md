@@ -75,6 +75,36 @@ Rates.Contracts/v1/
     └── BillableWeight/
 ```
 
+**Contract Class Rules:**
+
+1. **No explicit constructors** - Use implicit constructors with `required` properties for JSON serialization/deserialization compatibility:
+
+```csharp
+// CORRECT - implicit constructor with required properties
+public class RatesShipment
+{
+    public required string Reference { get; set; }
+    public required List<HandlingUnit> HandlingUnits { get; set; }
+}
+
+// AVOID - explicit constructor (breaks JSON deserialization)
+public class RatesShipment
+{
+    public RatesShipment(string reference, List<HandlingUnit> handlingUnits)
+    {
+        Reference = reference;
+        HandlingUnits = handlingUnits;
+    }
+    
+    public string Reference { get; }
+    public List<HandlingUnit> HandlingUnits { get; }
+}
+```
+
+2. **Exception: Base class inheritance** - When inheriting from base classes with explicit constructors (e.g., `ListWrapper<T>` from viya-core), you must call the base constructor.
+
+3. **XML documentation required** - All public properties must have `<summary>` documentation.
+
 ### Rates.Core
 - **Purpose**: Domain logic, data access, external service integrations
 - **Contains**: Entities, Repositories, Services, Helpers

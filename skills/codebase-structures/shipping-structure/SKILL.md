@@ -171,6 +171,56 @@ Shipping.Contracts/v4/
 └── CustomAnnotations/      # Validation attributes
 ```
 
+**Contract Class Rules:**
+
+1. **No explicit constructors** - Use implicit constructors with `required` properties for JSON serialization/deserialization compatibility:
+
+```csharp
+// CORRECT - implicit constructor with required properties
+public class InvoiceListItem
+{
+    public required Guid Id { get; set; }
+    public required string InvoiceNumber { get; set; }
+    public required string CarrierReference { get; set; }
+}
+
+// AVOID - explicit constructor (breaks JSON deserialization)
+public class InvoiceListItem
+{
+    public InvoiceListItem(Guid id, string invoiceNumber, string carrierReference)
+    {
+        Id = id;
+        InvoiceNumber = invoiceNumber;
+        CarrierReference = carrierReference;
+    }
+    
+    public Guid Id { get; }
+    public string InvoiceNumber { get; }
+    public string CarrierReference { get; }
+}
+```
+
+2. **Exception: Base class inheritance** - When inheriting from base classes with explicit constructors (e.g., `ListWrapper<T>` from viya-core), you must call the base constructor:
+
+```csharp
+// OK - required when base class has explicit constructor
+public class InvoiceListWrapper : ListWrapper<InvoiceListItem>
+{
+    public InvoiceListWrapper(
+        long totalCount, int pageNumber, int pageSize, Uri url,
+        List<InvoiceListItem> items,
+        List<UnclosedInvoicesByCarrier> unclosedInvoicesByCarrier)
+        : base(totalCount, pageNumber, pageSize, url, items)
+    {
+        UnclosedInvoicesByCarrier = unclosedInvoicesByCarrier;
+    }
+
+    public List<UnclosedInvoicesByCarrier> UnclosedInvoicesByCarrier { get; }
+}
+```
+
+3. **XML documentation required** - All public properties must have `<summary>` documentation.
+
 ### Shipping.Migrations
 
 MongoDB data migrations for schema changes.
