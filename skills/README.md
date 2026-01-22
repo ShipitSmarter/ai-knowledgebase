@@ -41,6 +41,7 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [viya-app-structure](./codebase-structures/viya-app-structure/SKILL.md) | Viya app codebase structure | codebase-structures |
 | [viya-dev-environment](./infrastructure/viya-dev-environment/SKILL.md) | Local dev environment management | infrastructure |
 | [viya-ui-warehouse-structure](./codebase-structures/viya-ui-warehouse-structure/SKILL.md) | Warehouse UI structure | codebase-structures |
+| [viya-app-coding-standards](./frontend-development/viya-app-coding-standards/SKILL.md) | Viya-app coding standards | frontend-development |
 | [vue-component](./frontend-development/vue-component/SKILL.md) | Vue 3 component conventions | frontend-development |
 
 ## Skills by Category
@@ -69,6 +70,7 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | Skill | Description |
 |-------|-------------|
 | [vue-component](./frontend-development/vue-component/SKILL.md) | Vue 3 components following project conventions |
+| [viya-app-coding-standards](./frontend-development/viya-app-coding-standards/SKILL.md) | Coding standards for TypeScript, Vue, and Playwright |
 | [api-integration](./frontend-development/api-integration/SKILL.md) | API types and service integration patterns |
 | [typescript-helpers](./frontend-development/typescript-helpers/SKILL.md) | TypeScript patterns, interfaces, type guards |
 | [codebase-navigation](./frontend-development/codebase-navigation/SKILL.md) | Understanding viya-app project structure |
