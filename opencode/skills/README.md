@@ -49,4 +49,4 @@ Instructions for the agent...
 ## See Also
 
 - [OpenCode Skills Documentation](https://opencode.ai/docs/skills/)
-- [Research Agent](../agents/research-agent.md) - Uses the research skill
+- [Research Skill](../../skills/research-strategy/research/SKILL.md) - Example research workflow

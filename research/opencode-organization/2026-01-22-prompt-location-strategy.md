@@ -95,7 +95,7 @@ skills/<name>/
 **User's frontend-design skill example:**
 - 127 lines of design principles
 - 7 reference files for typography, color, motion, etc.
-- References loaded as needed: `→ *Consult [typography reference](reference/typography.md)*`
+- References loaded as needed: *Consult `reference/typography.md`*
 
 **Best practices:**
 - Put detailed workflows here, not in agent prompts

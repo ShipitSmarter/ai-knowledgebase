@@ -134,7 +134,7 @@ Instructions and guidelines...
 
 3. Commit and push - all team members get it on next `git pull`
 
-See the [skill-writer skill](../skills/skill-writer/SKILL.md) or [agentskills.io spec](https://agentskills.io/specification) for details.
+See the [skill-writer skill](../skills/documentation/skill-writer/SKILL.md) or [agentskills.io spec](https://agentskills.io/specification) for details.
 
 ## Adding New Commands
 

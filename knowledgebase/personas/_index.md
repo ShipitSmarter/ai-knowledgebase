@@ -70,7 +70,7 @@ Personas are categorized by their **frequency of interaction** and **strategic i
 
 ## Strategic Alignment
 
-Each persona maps to strategic priorities from the [Strategy 2025-2030](./Strategy%202025-2030.md):
+Each persona maps to strategic priorities from the [Strategy 2025-2030](../Strategy%202025-2030.md):
 
 | Strategic Priority | Primary Personas | Product Focus |
 |-------------------|------------------|---------------|
@@ -147,7 +147,7 @@ Legend: ●●● = Major pain, ●● = Moderate, ● = Minor, - = Not applicab
 
 ## Related Documents
 
-- [Team Structure Matrix](./team-structure-matrix.md)
-- [Strategy 2025-2030](./Strategy%202025-2030.md)
-- [Mission & Vision](./Mission%20&%20Vision.md)
-- [Competitor Analysis](../research/company-context/2026-01-13-competitor-analysis.md)
+- [Team Structure Matrix](../team-structure-matrix.md)
+- [Strategy 2025-2030](../Strategy%202025-2030.md)
+- [Mission & Vision](../Mission%20&%20Vision.md)
+- [Competitor Analysis](../../research/company-context/2026-01-13-competitor-analysis.md)

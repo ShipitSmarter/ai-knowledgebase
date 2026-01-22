@@ -198,4 +198,4 @@ You still get Kubernetes-native workflows (GitOps, CRDs, kubectl) while offloadi
 
 ## Related Research
 
-- [MCP Servers - MongoDB](../opencode/mcp-servers/mongodb.md) - MongoDB MCP server for OpenCode
+- [MCP Servers - MongoDB](../../opencode/mcp-servers/mongodb.md) - MongoDB MCP server for OpenCode
