@@ -12,7 +12,7 @@ Steps:
 1. Get the PR details and check if build succeeded using `gh pr checks`
 2. Get the run ID from the successful "Docker build" job
 3. Construct the version string: `0.0.0-pr.<PR_NUMBER>.<RUN_ID>`
-4. Update `/home/wouter/git/viya-app/dev/.env` with the new version
+4. Find the viya-app repository (check ~/git/viya-app or ask user for location) and update `dev/.env` with the new version
 5. Offer to restart the service
 
 If the build is still running or failed, inform the user and don't proceed.

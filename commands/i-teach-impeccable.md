@@ -5,6 +5,10 @@ description: One-time setup that gathers design context for your project and sav
 
 Gather design context for this project, then persist it for all future sessions.
 
+## MANDATORY PREPARATION
+
+**First**: Load the `frontend-design` skill to understand the design principles and anti-patterns that will guide this project.
+
 ## Step 1: Explore the Codebase
 
 Before asking questions, thoroughly scan the project to discover what you can:
