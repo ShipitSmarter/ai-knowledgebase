@@ -17,7 +17,6 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [api-integration](./frontend-development/api-integration/SKILL.md) | API types and service integration | frontend-development |
 | [browser-debug](./testing/browser-debug/SKILL.md) | Headless browser debugging and visual testing | testing |
 | [code-review](./testing/code-review/SKILL.md) | Code review patterns and checklists | testing |
-| [codebase-navigation](./frontend-development/codebase-navigation/SKILL.md) | Understanding project structure | frontend-development |
 | [deep-research](./research-strategy/deep-research/SKILL.md) | Multi-phase exploration and synthesis | research-strategy |
 | [designer](./design/designer/SKILL.md) | Penpot MCP integration for design workflows | design |
 | [docs-writing](./documentation/docs-writing/SKILL.md) | User-facing documentation for non-technical users | documentation |
@@ -74,8 +73,11 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [viya-app-coding-standards](./frontend-development/viya-app-coding-standards/SKILL.md) | Coding standards for TypeScript, Vue, and Playwright |
 | [api-integration](./frontend-development/api-integration/SKILL.md) | API types and service integration patterns |
 | [typescript-helpers](./frontend-development/typescript-helpers/SKILL.md) | TypeScript patterns, interfaces, type guards |
-| [codebase-navigation](./frontend-development/codebase-navigation/SKILL.md) | Understanding viya-app project structure |
 | [rates-feature](./frontend-development/rates-feature/SKILL.md) | Rates module development patterns |
+
+> **Note**: Large skills have reference material in `reference/` subfolders. For example:
+> - `typescript-helpers/reference/utility-types.md` - detailed type patterns
+> - `vue-component/reference/conventions.md` - script order and lessons learned
 
 ### Testing (`testing/`)
 
@@ -85,6 +87,8 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [playwright-test](./testing/playwright-test/SKILL.md) | Playwright E2E testing patterns |
 | [browser-debug](./testing/browser-debug/SKILL.md) | Headless browser debugging for QA failures |
 | [code-review](./testing/code-review/SKILL.md) | Code review patterns and checklists |
+
+> **Note**: `playwright-test/reference/patterns.md` contains detailed locator strategies and common patterns.
 
 ### Documentation (`documentation/`)
 
@@ -121,7 +125,7 @@ The `frontend-design` skill includes reference files for:
 
 | Skill | Description |
 |-------|-------------|
-| [viya-app-structure](./codebase-structures/viya-app-structure/SKILL.md) | Main viya-app codebase structure |
+| [viya-app-structure](./codebase-structures/viya-app-structure/SKILL.md) | Main viya-app codebase structure (includes navigation patterns) |
 | [viya-ui-warehouse-structure](./codebase-structures/viya-ui-warehouse-structure/SKILL.md) | Warehouse UI structure |
 | [rates-structure](./codebase-structures/rates-structure/SKILL.md) | Rates microservice codebase structure |
 | [shipping-structure](./codebase-structures/shipping-structure/SKILL.md) | Shipping microservice codebase structure |
@@ -150,11 +154,19 @@ OpenCode looks for skills in:
 
 Use the [skill-writer](./documentation/skill-writer/SKILL.md) skill to create new skills following the agentskills.io specification.
 
+## Usage Tracking
+
+Track which skills are used and how helpful they are in [USAGE.md](./USAGE.md). This helps identify:
+- Most valuable skills
+- Skills needing improvement
+- Missing skill opportunities
+
 ## Directory Structure
 
 ```
 skills/
 ├── README.md                   # This file
+├── USAGE.md                    # Skill usage tracking
 ├── research-strategy/          # Research & Strategy (4 skills)
 │   ├── deep-research/
 │   ├── research/
@@ -166,15 +178,17 @@ skills/
 │   ├── github-workflow/
 │   ├── git-branch-update/
 │   └── pr-review/
-├── frontend-development/       # Frontend Development (5 skills)
+├── frontend-development/       # Frontend Development (4 skills)
 │   ├── vue-component/
+│   │   └── reference/          # Conventions, lessons learned
 │   ├── api-integration/
 │   ├── typescript-helpers/
-│   ├── codebase-navigation/
+│   │   └── reference/          # Utility types
 │   └── rates-feature/
 ├── testing/                    # Testing (4 skills)
 │   ├── unit-testing/
 │   ├── playwright-test/
+│   │   └── reference/          # Locator patterns
 │   ├── browser-debug/
 │   └── code-review/
 ├── documentation/              # Documentation (3 skills)
@@ -182,7 +196,8 @@ skills/
 │   ├── docs-writing/
 │   └── skill-writer/
 ├── design/                     # Design (2 skills)
-│   ├── frontend-design/        # Includes reference/ subfolder
+│   ├── frontend-design/
+│   │   └── reference/          # Design guides
 │   └── designer/
 ├── infrastructure/             # Infrastructure & Tools (2 skills)
 │   ├── mongodb-development/
@@ -200,5 +215,6 @@ When adding a new skill:
 1. Identify the appropriate category folder
 2. Create a subfolder with the skill name
 3. Add a `SKILL.md` file following the pattern of existing skills
-4. Update this README with the new skill in both the Quick Reference table and appropriate category section
-5. Keep descriptions concise (under 60 characters)
+4. For large skills with detailed patterns, extract reference material to `reference/` subfolder
+5. Update this README with the new skill in both the Quick Reference table and appropriate category section
+6. Keep descriptions concise (under 60 characters)

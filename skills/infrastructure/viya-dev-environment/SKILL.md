@@ -1,6 +1,6 @@
 ---
 name: viya-dev-environment
-description: Manage viya-app local development environment - set service versions from PRs, restart containers
+description: Manage viya-app local development environment. Use when setting up services from PRs, troubleshooting container issues, restarting Docker services, switching service versions, or debugging local dev environment problems.
 ---
 
 # Viya Dev Environment Management

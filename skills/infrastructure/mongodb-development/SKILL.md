@@ -1,6 +1,6 @@
 ---
 name: mongodb-development
-description: MongoDB database development - queries, aggregations, schema analysis using MCP tools
+description: MongoDB database exploration, querying, and debugging using MCP tools. Use when writing aggregation pipelines, analyzing schemas, debugging data issues, or exploring collections in ShipitSmarter databases.
 ---
 
 # MongoDB Development Skill
