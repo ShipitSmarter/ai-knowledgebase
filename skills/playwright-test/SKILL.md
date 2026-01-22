@@ -5,12 +5,93 @@ license: MIT
 compatibility: Requires Node.js and Playwright. Tests run in playwright/ directory.
 metadata:
   author: shipitsmarter
-  version: "1.0"
+  version: "1.1"
 ---
 
 # Playwright Test Skill
 
 Guidelines for writing Playwright E2E tests in this project.
+
+---
+
+## Quick Reference
+
+### Common Commands
+
+```bash
+cd playwright
+
+# Fast dev cycle (RECOMMENDED - skips teardown, ~15-20s)
+npx playwright test tests/app-tests/{feature}/{feature}.spec.ts --no-deps --project=chromium
+
+# Run specific test by name
+npx playwright test tests/app-tests/{feature}/{feature}.spec.ts --grep "01. Create" --no-deps
+
+# Full run with traces
+npx playwright test tests/app-tests/{feature}/{feature}.spec.ts --trace=on
+
+# View traces (start viewer, then open http://localhost:9400)
+cd trace-viewer && node trace-viewer.js &
+```
+
+### Key Paths
+
+| Path | Purpose |
+|------|----------|
+| `playwright/tests/app-tests/{feature}/` | Feature test files |
+| `playwright/tests/helpers/` | Shared fixtures, functions, constants |
+| `playwright/test-results/` | Traces, screenshots, videos |
+| `playwright/.auth/user.json` | Stored auth state |
+
+### Critical Rules
+
+- Use `data-testid` for element selection (add to Vue components if missing)
+- Tests must be **functional** (Create/Update/Delete), NOT navigational
+- Test names: `'01. Create entity'` (two-digit prefix, <25 chars)
+- **Entity references MUST start with `PW_ENTITY_PREFIX` (`pwtest-`)** - enables automatic cleanup
+- **Add teardown section** in `entities.teardown.ts` to delete all `pwtest-` prefixed entities
+- Use `--no-deps` during development (skip teardown)
+- Always run on **both** Chromium and Firefox before committing
+
+---
+
+## 13-Step Implementation Workflow
+
+**When asked to create tests, follow these steps in order:**
+
+| Step | Action | Output |
+|------|--------|--------|
+| **0. Verify dev server** | Check Docker containers and Vite dev server are running | Prerequisites confirmed |
+| **1. Explore** | Search codebase for views, routes, services, data-testids, API endpoints | Understanding of UI structure |
+| **2. Create PLAN.md** | Document test plan following Standard PLAN.md Structure below | `playwright/tests/app-tests/{feature}/PLAN.md` |
+| **3. Create mock data** | Define test fixtures and constants using `PW_ENTITY_PREFIX` | `mock-data.ts` |
+| **4. Create test helpers** | Build navigation, form filling, verification, and cleanup helpers | `{feature}-helpers.ts` |
+| **5. Implement tests** | Write test specifications using helpers | `{feature}.spec.ts` |
+| **6. Add teardown** | Add cleanup section to `entities.teardown.ts` for `pwtest-` prefixed entities | Safety net cleanup |
+| **7. Run & verify** | Execute tests on Chromium with `--no-deps --trace=on` | Test results |
+| **8. Fix & iterate** | Debug failures, fix selectors/timing, update helpers | Passing tests |
+| **9. Review locators** | Replace fragile CSS/index selectors with `data-testid` or robust alternatives | Maintainable selectors |
+| **10. Review helpers** | Identify generic helpers and move to `~/helpers/functions.ts` if reusable | Organized codebase |
+| **11. Cross-browser test** | Run on Firefox and Chromium, fix browser-specific issues | Both browsers passing |
+| **12. Show traces** | Start trace viewer and display results | http://localhost:9400 |
+
+**Do NOT skip steps. Each builds on the previous one.**
+
+### Step 0: Verify Dev Server Prerequisites
+
+Before starting, verify the local development environment:
+
+```bash
+# Check Docker containers
+docker compose -f dev/docker-compose.yaml ps --format "table {{.Name}}\t{{.Status}}" 2>/dev/null | grep -q "Up" && echo "Docker: Running" || echo "Docker: Not running"
+
+# Check Vite dev server
+curl -s -o /dev/null -w "%{http_code}" http://localhost:8080 | grep -q "200" && echo "Vite: Running" || echo "Vite: Not running"
+```
+
+**If services are not running**, inform the user to start them manually:
+- Docker: `npm run dev:docker:go`
+- Vite: `npm run serve`
 
 ---
 
@@ -25,7 +106,7 @@ Guidelines for writing Playwright E2E tests in this project.
 ### 2. Run tests on Chromium first (faster iteration)
 ```bash
 cd playwright
-npx playwright test <path-to-test-file> --project=chromium
+npx playwright test <path-to-test-file> --project=chromium --no-deps
 ```
 
 ### 3. Iterate until all tests pass on Chromium
@@ -37,7 +118,7 @@ npx playwright test <path-to-test-file> --project=chromium
 ### 4. Run tests on Firefox
 Once all tests pass on Chromium, run on Firefox:
 ```bash
-npx playwright test <path-to-test-file> --project=firefox
+npx playwright test <path-to-test-file> --project=firefox --no-deps
 ```
 
 ### 5. Iterate until all tests pass on Firefox
@@ -301,6 +382,40 @@ In Vue components, add `data-testid`:
 
 ```vue
 <ButtonComponent data-testid="create-shipment-btn" label="Create" />
+```
+
+### Locator Fragility Patterns
+
+**DO use robust patterns:**
+
+| Pattern | Example | Why |
+|---------|---------|-----|
+| Use `data-testid` | `getByTestId('contract-save-btn')` | Explicit, stable, self-documenting |
+| Scope to testid first | `getByTestId('zone-cell').locator('.multiselect')` | Limits blast radius of CSS changes |
+| Use Radix attributes | `locator('[data-radix-popper-content-wrapper]')` | Framework-provided, stable |
+| Add testid wrappers in Vue | `h('div', { 'data-testid': 'cell-name' }, [...])` | Makes table cells addressable |
+| Use `getByRole` | `getByRole('button', { name: 'Save' })` | Semantic, accessibility-friendly |
+
+**DO NOT use fragile patterns:**
+
+| Anti-Pattern | Example | Problem |
+|--------------|---------|---------|
+| Index-based column | `td.nth(5)`, `input.nth(2)` | Breaks when columns reorder |
+| Index-based multiselect | `.multiselect.nth(3)` | Breaks when fields added/removed |
+| Generic CSS filtering | `.flex.flex-col` | Matches unrelated elements |
+| Deeply nested CSS | `.card .header .btn` | Fragile to DOM restructuring |
+
+**Refactoring fragile patterns:**
+
+```typescript
+// FRAGILE: Column index can change
+const serviceLevelDropdown = lastRow.locator('.multiselect').nth(2);
+
+// ROBUST: Add testid wrapper in Vue, then scope
+// In Vue: h('div', { 'data-testid': 'surcharge-service-levels-cell' }, [...])
+const serviceLevelDropdown = lastRow
+  .getByTestId('surcharge-service-levels-cell')
+  .locator('.multiselect');
 ```
 
 ---

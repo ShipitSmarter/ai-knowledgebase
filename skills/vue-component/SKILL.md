@@ -4,12 +4,112 @@ description: Creating Vue 3 components following project conventions and script 
 license: MIT
 metadata:
   author: shipitsmarter
-  version: "1.0"
+  version: "1.1"
 ---
 
 # Vue Component Skill
 
 Guidelines for creating Vue 3 components in this project.
+
+> **IMPORTANT:** All code must follow the **Frontend Guidelines** in `docs/frontend-guidelines/frontend-guidelines.md`. This is the authoritative source for code structure, naming conventions, and component organization.
+
+---
+
+## Quick Reference
+
+### Common Commands
+```bash
+npm run type-check    # Type checking
+npm run lint          # Linting
+npm run lint:fix      # Auto-fix lint issues
+npm run dev:docker:go # Run dev server
+npm run test:unit     # Run unit tests
+npm run test:unit -- --grep "MyComponent"  # Run specific test
+```
+
+### Key Paths
+| Path | Purpose |
+|------|----------|
+| `src/views/{feature}/` | Feature page components |
+| `src/components/{feature}/` | Reusable feature components |
+| `src/components/utilities/` | Common utility components (BaseDialog, BaseCard, etc.) |
+| `src/composables/` | Stateful reusable logic |
+| `src/utils/` | Stateless pure functions |
+| `src/services/` | API service classes |
+| `src/store/` | Pinia stores |
+| `src/types/` | TypeScript type definitions |
+
+### Development Workflow (8 Steps)
+1. **Understand** → 2. **PLAN.md** → 3. **Types** → 4. **Implementation** → 5. **Lint & Format** → 6. **Type Check** → 7. **Test Decision** → 8. **Unit/E2E Tests**
+
+---
+
+## Development Workflow (Detailed)
+
+| Step | Action | Output |
+|------|--------|--------|
+| **1. Understand** | Read existing code, routes, services, types, API endpoints | Understanding of feature context |
+| **2. Create PLAN.md** | Document implementation plan with steps, file changes, decisions | `PLAN.md` in feature directory |
+| **3. Define Types** | Create/update TypeScript interfaces and types | Type definitions |
+| **4. Implement** | Write Vue components, composables, services following code standards | Working feature code |
+| **5. Lint & Format** | Run `npm run lint:fix` to auto-fix formatting issues | Clean, formatted code |
+| **6. Type Check** | Run `npm run typecheck` and fix all errors | Zero type errors |
+| **7. Test Decision** | Evaluate if E2E tests are needed (see Test Decision Framework) | Decision documented in PLAN.md |
+| **8. Write Tests** | Write unit tests and/or E2E tests as appropriate | Test coverage |
+
+**Critical:**
+- Do NOT skip steps. Each step builds on the previous one.
+- **Your PLAN.md and todo list MUST include ALL 8 steps**
+- The exploration phase is essential for understanding patterns before writing any code
+- Steps 5-6 are mandatory before any PR
+
+---
+
+## PLAN.md Template
+
+Create a `PLAN.md` file in the feature directory to track progress and document decisions:
+
+```markdown
+# Feature: [Feature Name]
+
+## Overview
+Brief description of the feature and its purpose.
+
+## Implementation Workflow
+
+| Step | Status | Notes |
+|------|--------|-------|
+| 1. Understand existing code | ⏳ | |
+| 2. Create PLAN.md | ✅ | |
+| 3. Define types | ⏳ | |
+| 4. Implement components | ⏳ | |
+| 5. Lint & format | ⏳ | |
+| 6. Type check | ⏳ | |
+| 7. Test decision | ⏳ | |
+| 8. Write tests | ⏳ | |
+
+## Files to Modify/Create
+
+| File | Action | Description |
+|------|--------|-------------|
+| `src/views/feature/FeaturePage.vue` | Create | Main feature page |
+| `src/components/feature/FeatureCard.vue` | Create | Reusable card component |
+
+## Test Decision
+
+### E2E Test Evaluation
+- [ ] Critical business workflow? 
+- [ ] Crosses multiple pages/routes?
+- [ ] Area has recurring bugs?
+- [ ] Manual testing time-consuming?
+- [ ] Can unit tests cover the logic adequately?
+
+**Decision:** [Write E2E tests / Skip E2E, use unit tests]
+**Justification:** [Reasoning]
+
+## Lessons Learned
+<!-- Update this section as you discover patterns, quirks, or useful information -->
+```
 
 ---
 
@@ -352,3 +452,129 @@ Before submitting:
 | **api-integration** | Using services in components |
 | **pr-review** | Component structure verification during review |
 | **playwright-test** | Adding data-testid for E2E testing |
+
+---
+
+## Test Decision Framework
+
+**Not every feature needs E2E tests.** Use this decision tree:
+
+```
+Should I write an E2E test?
+│
+├─ Is this a critical business workflow? (shipments, rates, bookings)
+│   └─ YES → Write E2E test
+│
+├─ Does the feature cross multiple pages/routes?
+│   └─ YES → Write E2E test
+│
+├─ Has this area had recurring bugs?
+│   └─ YES → Write E2E test
+│
+├─ Is manual testing time-consuming or error-prone?
+│   └─ YES → Write E2E test
+│
+├─ Can unit/component tests adequately cover the logic?
+│   └─ YES → Skip E2E, use unit tests
+│
+├─ Is the feature stable and rarely changes?
+│   └─ YES → Skip E2E
+│
+└─ Default → Skip E2E (start with unit tests)
+```
+
+### E2E Test Priority
+
+| Priority | What to Test | Examples |
+|----------|--------------|----------|
+| **Critical** | Core business workflows | Shipment creation, rate calculation |
+| **Important** | Complex integrations, bug-prone areas | FTP connections, zone calculations |
+| **Standard** | Standard CRUD with complex state | Contract management |
+| **Low** | Simple CRUD, read-only views | Settings pages, reports |
+
+When E2E tests are needed, use the **playwright-test** skill for guidance.
+
+---
+
+## Lessons Learned
+
+### Focus Retention in Table Cells
+
+When creating editable table cells with TanStack Table:
+- **Problem**: Vue re-renders can cause input focus loss during typing
+- **Solution**: Create a stable component with local state that syncs to table only on blur
+- **Pattern**: Use a `focusTracker` module-level singleton to track active cell and cursor position
+- **Key insight**: Extract complex cell components to separate `.vue` files, don't use `defineComponent` inline
+
+### Component Extraction
+
+When moving inline components to separate files:
+- Create the `.vue` file using Composition API
+- If the component needs module-level state (like `focusTracker`), put it in a separate `.ts` file
+- Use absolute imports in the new file
+- Test thoroughly after extraction - import resolution issues can crash the app
+
+### Extracting Complex Dialog Logic
+
+When a page component grows large due to dialog functionality:
+- **Extract the dialog** to its own component (e.g., `ImportContractDialog.vue`)
+- **Extract reusable UI patterns** (e.g., `FileUploadWithDragDrop.vue`, `DragDropZone.vue`)
+- **Pass dependencies as props** (e.g., `existingReferences` for validation) rather than importing services
+- **Emit events** for parent actions (e.g., `@imported` to trigger data refresh)
+- **Reset state on dialog close** using a watcher on the `open` model
+
+### Drag-and-Drop File Upload Pattern
+
+For file upload with drag-and-drop support:
+- Create a `DragDropZone` component handling drag events and format validation
+- The zone emits `drop` (with FileList) and `formatError` events
+- Wrap it in a `FileUploadWithDragDrop` component that:
+  - Shows drop zone OR selected file info (never both)
+  - Processes file content via FileReader
+  - Emits `fileSelected` with content and File object
+  - Exposes `clearSelectedFile()` for parent reset
+
+### UI Component Availability
+
+Not all expected components/icons exist in the warehouse library:
+- **Dialogs**: Use `BaseDialog` from `@/components/utilities/BaseDialog.vue`, NOT `DialogComponent` from warehouse
+- **Icons**: Check available icons - e.g., `PhFileJson` doesn't exist, use `PhFileText` instead
+- **When in doubt**: Search codebase for existing usage patterns
+
+### Vuelidate in Dialogs
+
+When using Vuelidate for validation inside dialogs:
+- Reset validation state when dialog closes: `v$.value.$reset()`
+- Use `computed` for validation object to make it reactive
+- Combine `required` with custom validators using `helpers.withMessage()`
+
+### Finding API Endpoints
+
+To find which endpoint is called for a feature:
+1. Find the store that manages the data (e.g., `useCarrierSelectStore`)
+2. Look at the actions that fetch data (e.g., `getRates`)
+3. Trace to the service method (e.g., `shipmentService.getShipmentOptionsWithQuery`)
+4. Find the actual endpoint in the service (e.g., `POST /shipping/v4/shipments/options`)
+
+### Attribute Ordering in Templates
+
+ESLint enforces specific attribute ordering in Vue templates:
+1. `TWO_WAY_BINDING` (v-model)
+2. `DEFINITION`
+3. `LIST_RENDERING` (v-for)
+4. `CONDITIONALS` (v-if, v-show)
+5. `RENDER_MODIFIERS`
+6. `GLOBAL`
+7. `UNIQUE`, `SLOT`
+8. `OTHER_DIRECTIVES`
+9. `EVENTS` (@click, etc.)
+10. `CONTENT`
+11. `OTHER_ATTR` (:prop bindings)
+
+### Refactoring Large Files
+
+When refactoring large files into multiple smaller files:
+- **First verify existing tests pass** before making changes
+- Make incremental changes and test after each
+- If import resolution fails, revert and try a simpler approach
+- Not every file needs to be split - readability > modularity
