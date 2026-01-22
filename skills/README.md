@@ -34,6 +34,7 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [rates-feature](./frontend-development/rates-feature/SKILL.md) | Rates module development patterns | frontend-development |
 | [rates-structure](./codebase-structures/rates-structure/SKILL.md) | Rates codebase structure | codebase-structures |
 | [research](./research-strategy/research/SKILL.md) | Online research with source attribution | research-strategy |
+| [shipping-structure](./codebase-structures/shipping-structure/SKILL.md) | Shipping microservice structure | codebase-structures |
 | [skill-writer](./documentation/skill-writer/SKILL.md) | Create and refine agent skills | documentation |
 | [technical-architect](./research-strategy/technical-architect/SKILL.md) | Architecture review and planning | research-strategy |
 | [typescript-helpers](./frontend-development/typescript-helpers/SKILL.md) | TypeScript patterns and type guards | frontend-development |
@@ -122,7 +123,8 @@ The `frontend-design` skill includes reference files for:
 |-------|-------------|
 | [viya-app-structure](./codebase-structures/viya-app-structure/SKILL.md) | Main viya-app codebase structure |
 | [viya-ui-warehouse-structure](./codebase-structures/viya-ui-warehouse-structure/SKILL.md) | Warehouse UI structure |
-| [rates-structure](./codebase-structures/rates-structure/SKILL.md) | Rates module codebase structure |
+| [rates-structure](./codebase-structures/rates-structure/SKILL.md) | Rates microservice codebase structure |
+| [shipping-structure](./codebase-structures/shipping-structure/SKILL.md) | Shipping microservice codebase structure |
 
 ## Using Skills in OpenCode
 
@@ -185,10 +187,11 @@ skills/
 ├── infrastructure/             # Infrastructure & Tools (2 skills)
 │   ├── mongodb-development/
 │   └── viya-dev-environment/
-└── codebase-structures/        # Codebase Structures (3 skills)
+└── codebase-structures/        # Codebase Structures (4 skills)
     ├── viya-app-structure/
     ├── viya-ui-warehouse-structure/
-    └── rates-structure/
+    ├── rates-structure/
+    └── shipping-structure/
 ```
 
 ## Contributing
