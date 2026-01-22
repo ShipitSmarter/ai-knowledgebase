@@ -1,6 +1,6 @@
 ---
 description: Transfer Vue components from viya-app to viya-ui-warehouse with proper documentation and Storybook stories
-mode: subagent
+mode: primary
 tools:
   write: true
   edit: true
@@ -27,6 +27,7 @@ Transfer Vue components from `viya-app` to the `viya-ui-warehouse` Storybook com
 > This agent requires both `viya-app` and `viya-ui-warehouse` to be present as sibling directories.
 >
 > Expected structure:
+>
 > ```
 > {current-directory}/
 > ├── viya-app/
@@ -42,6 +43,7 @@ Transfer Vue components from `viya-app` to the `viya-ui-warehouse` Storybook com
 ---
 
 **Required Skills:** Load the following skills for codebase structure information:
+
 - `viya-app-structure` - Main application structure and conventions
 - `viya-ui-warehouse-structure` - Component library structure and patterns
 
@@ -49,21 +51,22 @@ Transfer Vue components from `viya-app` to the `viya-ui-warehouse` Storybook com
 
 ## Transfer Workflow (11 Steps)
 
-| Step | Action | Output |
-|------|--------|--------|
-| **1. Create PLAN.md** | Document transfer plan with component details | `.plan/[ComponentName]_PLAN.md` |
-| **2. Locate Component** | Find component in viya-app, identify all files | List of source files |
-| **3. Analyze Dependencies** | Map subcomponents, helpers, styles, composables | Dependency graph |
-| **4. Create in Warehouse** | Set up component following warehouse structure | Component files in warehouse |
-| **5. Setup Stories** | Create `.stories.ts` with relevant stories | Working Storybook stories |
-| **6. Write MDX Docs** | Create `.mdx` documentation file | Component documentation |
-| **7. Export Component** | Add exports to `index.ts` files | Proper exports |
-| **8. Lint & Fix** | Run `npm run lint -- --fix` | No lint errors |
-| **9. Setup Local Sync** | Start dev terminals for real-time testing | Live dev environment |
-| **10. Replace & Delete** | Update viya-app imports, delete original | Updated imports |
-| **11. Run Tests** | Find & run Playwright tests | Passing tests |
+| Step                        | Action                                          | Output                          |
+| --------------------------- | ----------------------------------------------- | ------------------------------- |
+| **1. Create PLAN.md**       | Document transfer plan with component details   | `.plan/[ComponentName]_PLAN.md` |
+| **2. Locate Component**     | Find component in viya-app, identify all files  | List of source files            |
+| **3. Analyze Dependencies** | Map subcomponents, helpers, styles, composables | Dependency graph                |
+| **4. Create in Warehouse**  | Set up component following warehouse structure  | Component files in warehouse    |
+| **5. Setup Stories**        | Create `.stories.ts` with relevant stories      | Working Storybook stories       |
+| **6. Write MDX Docs**       | Create `.mdx` documentation file                | Component documentation         |
+| **7. Export Component**     | Add exports to `index.ts` files                 | Proper exports                  |
+| **8. Lint & Fix**           | Run `npm run lint -- --fix`                     | No lint errors                  |
+| **9. Setup Local Sync**     | Start dev terminals for real-time testing       | Live dev environment            |
+| **10. Replace & Delete**    | Update viya-app imports, delete original        | Updated imports                 |
+| **11. Run Tests**           | Find & run Playwright tests                     | Passing tests                   |
 
 **Critical:**
+
 - Do NOT skip steps
 - Always update PLAN.md with progress and lessons learned
 - User review required before finalizing
@@ -78,57 +81,64 @@ Create `.plan/[ComponentName]_PLAN.md`:
 # Component Transfer: [ComponentName]
 
 ## Overview
+
 Brief description of the component and why it's being transferred.
 
 ## Source Information
+
 - **Source Path:** `viya-app/src/components/{feature}/{ComponentName}.vue`
 - **Component Type:** [Base / Feature / Utility]
 - **Complexity:** [Simple / Medium / Complex]
 
 ## Transfer Workflow
 
-| Step | Status | Notes |
-|------|--------|-------|
-| 1. Create PLAN.md | ✅ | |
-| 2. Locate component | ⏳ | |
-| 3. Analyze dependencies | ⏳ | |
-| 4. Create in warehouse | ⏳ | |
-| 5. Setup stories | ⏳ | |
-| 6. Write MDX docs | ⏳ | |
-| 7. Export component | ⏳ | |
-| 8. Lint & fix | ⏳ | |
-| 9. Setup local sync | ⏳ | |
-| 10. Replace & delete | ⏳ | |
-| 11. Run tests | ⏳ | |
+| Step                    | Status | Notes |
+| ----------------------- | ------ | ----- |
+| 1. Create PLAN.md       | ✅     |       |
+| 2. Locate component     | ⏳     |       |
+| 3. Analyze dependencies | ⏳     |       |
+| 4. Create in warehouse  | ⏳     |       |
+| 5. Setup stories        | ⏳     |       |
+| 6. Write MDX docs       | ⏳     |       |
+| 7. Export component     | ⏳     |       |
+| 8. Lint & fix           | ⏳     |       |
+| 9. Setup local sync     | ⏳     |       |
+| 10. Replace & delete    | ⏳     |       |
+| 11. Run tests           | ⏳     |       |
 
 ## Component Files
 
 ### Source (viya-app)
-| File | Type | Notes |
-|------|------|-------|
+
+| File                | Type | Notes             |
+| ------------------- | ---- | ----------------- |
 | `ComponentName.vue` | Main | Primary component |
 
 ### Target (viya-ui-warehouse)
-| File | Status | Notes |
-|------|--------|-------|
-| `ComponentName.vue` | ⏳ | |
-| `ComponentName.stories.ts` | ⏳ | |
-| `ComponentName.mdx` | ⏳ | |
-| `index.ts` | ⏳ | |
+
+| File                       | Status | Notes |
+| -------------------------- | ------ | ----- |
+| `ComponentName.vue`        | ⏳     |       |
+| `ComponentName.stories.ts` | ⏳     |       |
+| `ComponentName.mdx`        | ⏳     |       |
+| `index.ts`                 | ⏳     |       |
 
 ## Dependencies
-- **Subcomponents:** 
-- **Composables:** 
-- **Helpers:** 
-- **External:** 
+
+- **Subcomponents:**
+- **Composables:**
+- **Helpers:**
+- **External:**
 
 ## Usages in viya-app
+
 | File | Usage | Notes |
-|------|-------|-------|
+| ---- | ----- | ----- |
 
 ## Test Coverage
+
 - [ ] Searched for relevant tests
-- [ ] Identified tests: 
+- [ ] Identified tests:
 - [ ] All tests pass after transfer
 
 ## Lessons Learned
@@ -161,12 +171,14 @@ If NOT running, start these terminals with `isBackground: true`:
 ```
 
 **Startup Order:**
+
 1. **Storybook** - can start immediately (independent)
 2. **watch:lib** (viya-app) - START FIRST in sync chain
 3. **library:watch** (warehouse) - AFTER watch:lib is ready
 4. **serve** (viya-app) - AFTER library:watch shows "Build completed"
 
 **Commands:**
+
 ```bash
 # Terminal 1: Storybook (viya-ui-warehouse)
 printf '\033]0;storybook\007' && npm run storybook
@@ -182,6 +194,7 @@ printf '\033]0;app-serve\007' && npm run serve
 ```
 
 **Important:** After using `watch:lib`, revert `package.json` before committing:
+
 ```bash
 git checkout package.json
 ```
@@ -246,9 +259,9 @@ npx playwright test tests/app-tests/{feature}/{feature}.spec.ts --no-deps --proj
 
 ## Troubleshooting
 
-| Issue | Solution |
-|-------|----------|
+| Issue                  | Solution                                                     |
+| ---------------------- | ------------------------------------------------------------ |
 | Changes not in browser | Check build succeeded, try hard refresh, clear `.vite` cache |
-| Build fails | Run `npm run lint` in warehouse |
-| Watch not detecting | Ensure repos are sibling directories |
-| Module not found | Run `npm run build` in warehouse |
+| Build fails            | Run `npm run lint` in warehouse                              |
+| Watch not detecting    | Ensure repos are sibling directories                         |
+| Module not found       | Run `npm run build` in warehouse                             |
