@@ -115,6 +115,18 @@ Commands are shortcuts that start specific workflows.
 | `/i-normalize` | Align with design system |
 | `/i-teach-impeccable` | Set up project design context |
 
+### Agents
+
+Agents are specialized personas for different types of work. Select an agent to change how AI approaches your task.
+
+| Agent | What it's for |
+|-------|---------------|
+| `architect` | Technical planning, architecture reviews, infrastructure decisions. Critical and concise - asks "what's the simplest thing that could work?" |
+| `senior-reviewer` | Thorough code review (Vue/TypeScript or C#/.NET). Analyzes full commit history, uncompromising on tests and types, educational feedback. |
+| `retro` | Retrospectives on AI-assisted work. Analyzes what went wrong, identifies root causes with Five Whys, proposes improvements to skills/agents/commands. |
+| `frontend` | Frontend development specialist for Vue/TypeScript work. |
+| `research` | Research tasks without shell access (safer for exploration). |
+
 ---
 
 ## How It Works

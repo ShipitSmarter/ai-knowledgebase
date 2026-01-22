@@ -298,7 +298,7 @@ What are you trying to automate?
 │
 └─ A specialized persona with restricted tool access?
     └─ **AGENT** - Custom personality + tool permissions
-       Examples: research agent (no bash), frontend agent
+       Examples: architect, senior-reviewer, retro, research (no bash)
 ```
 
 ### Comparison Table
@@ -414,10 +414,12 @@ You are a <role>. Your responsibilities are...
 - /frontend-diff-refactor - Refactor frontend code
 - /i-* commands - Impeccable design refinement commands
 
-**Agents** (3 total in `agents/`):
-- research - Research specialist (no bash)
+**Agents** (5 total in `agents/`):
+- architect - Senior architect for technical planning and architecture reviews
 - frontend - Frontend development specialist
-- review-agent - Code review specialist
+- research - Research specialist (no bash)
+- retro - Retrospective facilitator for improving AI automation
+- senior-reviewer - Thorough code reviewer (frontend & backend)
 
 ### Quick Reference: File Locations
 
