@@ -54,8 +54,12 @@ Skills teach AI how to do specific tasks the ShipitSmarter way.
 | `designer` | Working with Penpot designs |
 | `competitive-ads-extractor` | Analyzing competitor advertising |
 | `frontend-design` | Creating distinctive UI that avoids AI slop |
+| `github-workflow` | Pull requests and commits |
+| `viya-dev-environment` | Managing local dev environment, testing PR builds |
 
-**Development (viya-app, Vue/TypeScript):**
+**Frontend Development (viya-app, Vue/TypeScript):**  
+*Located in `skills/frontend/`*
+
 | Skill | What it helps with |
 |-------|-------------------|
 | `vue-component` | Writing Vue 3 components our way |
@@ -65,10 +69,17 @@ Skills teach AI how to do specific tasks the ShipitSmarter way.
 | `typescript-helpers` | TypeScript types and utilities |
 | `codebase-navigation` | Understanding project structure |
 | `docs-writing` | User-facing documentation |
-| `github-workflow` | Pull requests and commits |
 | `pr-review` | Reviewing code |
 | `browser-debug` | Debugging browser issues |
-| `viya-dev-environment` | Managing local dev environment, testing PR builds |
+| `rates-feature` | Rates module development |
+
+**App Structure (viya-app, viya-ui-warehouse):**  
+*Located in `skills/structures/`*
+
+| Skill | What it helps with |
+|-------|-------------------|
+| `viya-app-structure` | viya-app codebase structure |
+| `viya-ui-warehouse-structure` | UI component library structure |
 
 ### Commands
 
@@ -149,7 +160,9 @@ ai-knowledgebase/
 ├── .opencode/               # OpenCode configuration
 │   ├── command/             # Slash commands (21 commands)
 │   └── skill/               # Active skills
-├── skills/                  # Skill definitions (19 skills)
+├── skills/                  # Skill definitions
+│   ├── frontend/            # Vue/TypeScript frontend skills (12 skills)
+│   └── ...                  # General skills (9 skills)
 ├── commands/                # Legacy command location
 ├── copilot/                 # Copilot instructions
 ├── docs/
@@ -168,7 +181,7 @@ ai-knowledgebase/
 
 ### Add a New Skill
 
-1. Create a folder: `skills/my-skill-name/`
+1. Create a folder: `skills/my-skill-name/` (or `skills/frontend/my-skill-name/` for Vue/TypeScript skills)
 2. Create `SKILL.md` inside with frontmatter:
 
 ```markdown

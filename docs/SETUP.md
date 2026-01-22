@@ -36,8 +36,9 @@ Available in all repos via the `/skill` command or automatically loaded by OpenC
 | `research` | Conduct web research with sources |
 | `skill-writer` | Create new skills following the spec |
 | `product-documentation` | Write product documentation |
+| `github-workflow` | PR and commit conventions |
 
-**viya-app specific skills** (also available globally):
+**viya-app specific skills** (in `skills/frontend/`, also available globally):
 - `vue-component` - Vue 3 component conventions
 - `unit-testing` - Vitest test patterns
 - `playwright-test` - E2E test patterns
@@ -45,9 +46,13 @@ Available in all repos via the `/skill` command or automatically loaded by OpenC
 - `typescript-helpers` - TypeScript patterns
 - `codebase-navigation` - Project structure guide
 - `docs-writing` - User-facing documentation
-- `github-workflow` - PR and commit conventions
 - `pr-review` - Code review patterns
 - `browser-debug` - Headless browser debugging
+- `rates-feature` - Rates module development
+
+**App structure skills** (in `skills/structures/`):
+- `viya-app-structure` - viya-app codebase structure
+- `viya-ui-warehouse-structure` - UI component library structure
 
 ### Commands
 
@@ -109,7 +114,7 @@ Project configs override shared configs, so you can customize per-project while 
 
 ## Adding New Skills
 
-1. Create a folder in `skills/<skill-name>/`
+1. Create a folder in `skills/<skill-name>/` (or `skills/frontend/<skill-name>/` for Vue/TypeScript skills)
 2. Add a `SKILL.md` file with YAML frontmatter:
 
 ```yaml

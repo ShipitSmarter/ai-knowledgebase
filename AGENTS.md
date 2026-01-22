@@ -48,7 +48,13 @@ Examples from this repo:
 ```
 ai-knowledgebase/
 ├── skills/                 # Skill definitions (source of truth)
-│   └── <skill-name>/       # Each skill in its own folder
+│   ├── frontend/           # Vue/TypeScript frontend skills
+│   │   └── <skill-name>/   # Each frontend skill in its own folder
+│   │       └── SKILL.md
+│   ├── structures/         # App structure skills (viya-app, warehouse)
+│   │   └── <app-name>/
+│   │       └── SKILL.md
+│   └── <skill-name>/       # General skills in root
 │       └── SKILL.md        # Skill definition
 ├── commands/               # Slash commands (e.g., /research)
 │   └── <command>.md        # Command definition
