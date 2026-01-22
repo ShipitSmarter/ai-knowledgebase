@@ -1,6 +1,6 @@
 ---
 description: Conducts thorough research with source attribution, memory integration, and organized findings. Use for exploring topics, gathering information, or building knowledge base entries.
-mode: subagent
+mode: primary
 tools:
   write: true
   edit: true
