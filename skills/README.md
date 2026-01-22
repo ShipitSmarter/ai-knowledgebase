@@ -16,7 +16,8 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 |-------|-------------|----------|
 | [api-integration](./frontend-development/api-integration/SKILL.md) | API types and service integration | frontend-development |
 | [browser-debug](./testing/browser-debug/SKILL.md) | Headless browser debugging and visual testing | testing |
-| [code-review](./testing/code-review/SKILL.md) | Code review patterns and checklists | testing |
+| [code-review](./github-workflow/code-review/SKILL.md) | Code review patterns and checklists | github-workflow |
+| [diff-refactor](./frontend-development/diff-refactor/SKILL.md) | Diff branch and refactor to standards | frontend-development |
 | [deep-research](./research-strategy/deep-research/SKILL.md) | Multi-phase exploration and synthesis | research-strategy |
 | [designer](./design/designer/SKILL.md) | Penpot MCP integration for design workflows | design |
 | [docs-writing](./documentation/docs-writing/SKILL.md) | User-facing documentation for non-technical users | documentation |
@@ -30,7 +31,7 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [pr-review](./github-workflow/pr-review/SKILL.md) | Senior engineer PR review patterns | github-workflow |
 | [product-documentation](./documentation/product-documentation/SKILL.md) | Product docs for Viya TMS | documentation |
 | [product-strategy](./research-strategy/product-strategy/SKILL.md) | Playing to Win strategy framework | research-strategy |
-| [rates-feature](./frontend-development/rates-feature/SKILL.md) | Rates module development patterns | frontend-development |
+| [rates-feature](./codebase-structures/rates-feature/SKILL.md) | Rates module development patterns | codebase-structures |
 | [rates-structure](./codebase-structures/rates-structure/SKILL.md) | Rates codebase structure | codebase-structures |
 | [research](./research-strategy/research/SKILL.md) | Online research with source attribution | research-strategy |
 | [shipping-structure](./codebase-structures/shipping-structure/SKILL.md) | Shipping microservice structure | codebase-structures |
@@ -64,6 +65,7 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [github-workflow](./github-workflow/github-workflow/SKILL.md) | PR workflow, commit messages, release notes |
 | [git-branch-update](./github-workflow/git-branch-update/SKILL.md) | Branch management, rebasing, conflict resolution |
 | [pr-review](./github-workflow/pr-review/SKILL.md) | Senior engineer code review patterns |
+| [code-review](./github-workflow/code-review/SKILL.md) | Code review patterns and checklists |
 
 ### Frontend Development (`frontend-development/`)
 
@@ -71,9 +73,9 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 |-------|-------------|
 | [vue-component](./frontend-development/vue-component/SKILL.md) | Vue 3 components following project conventions |
 | [viya-app-coding-standards](./frontend-development/viya-app-coding-standards/SKILL.md) | Coding standards for TypeScript, Vue, and Playwright |
+| [diff-refactor](./frontend-development/diff-refactor/SKILL.md) | Diff branch and refactor changed files |
 | [api-integration](./frontend-development/api-integration/SKILL.md) | API types and service integration patterns |
 | [typescript-helpers](./frontend-development/typescript-helpers/SKILL.md) | TypeScript patterns, interfaces, type guards |
-| [rates-feature](./frontend-development/rates-feature/SKILL.md) | Rates module development patterns |
 
 > **Note**: Large skills have reference material in `reference/` subfolders. For example:
 > - `typescript-helpers/reference/utility-types.md` - detailed type patterns
@@ -86,7 +88,6 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [unit-testing](./testing/unit-testing/SKILL.md) | Vitest and vue-test-utils patterns |
 | [playwright-test](./testing/playwright-test/SKILL.md) | Playwright E2E testing patterns |
 | [browser-debug](./testing/browser-debug/SKILL.md) | Headless browser debugging for QA failures |
-| [code-review](./testing/code-review/SKILL.md) | Code review patterns and checklists |
 
 > **Note**: `playwright-test/reference/patterns.md` contains detailed locator strategies and common patterns.
 
@@ -128,6 +129,7 @@ The `frontend-design` skill includes reference files for:
 | [viya-app-structure](./codebase-structures/viya-app-structure/SKILL.md) | Main viya-app codebase structure (includes navigation patterns) |
 | [viya-ui-warehouse-structure](./codebase-structures/viya-ui-warehouse-structure/SKILL.md) | Warehouse UI structure |
 | [rates-structure](./codebase-structures/rates-structure/SKILL.md) | Rates microservice codebase structure |
+| [rates-feature](./codebase-structures/rates-feature/SKILL.md) | Rates module development patterns |
 | [shipping-structure](./codebase-structures/shipping-structure/SKILL.md) | Shipping microservice codebase structure |
 
 ## Using Skills in OpenCode
@@ -172,41 +174,43 @@ skills/
 │   ├── research/
 │   ├── product-strategy/
 │   └── technical-architect/
-├── github-workflow/            # GitHub & Workflow (5 skills)
+├── github-workflow/            # GitHub & Workflow (6 skills)
+│   ├── code-review/
 │   ├── github-issue-creator/
 │   ├── github-issue-tracker/
 │   ├── github-workflow/
 │   ├── git-branch-update/
 │   └── pr-review/
-├── frontend-development/       # Frontend Development (4 skills)
-│   ├── vue-component/
-│   │   └── reference/          # Conventions, lessons learned
+├── frontend-development/       # Frontend Development (5 skills)
 │   ├── api-integration/
+│   ├── diff-refactor/
 │   ├── typescript-helpers/
 │   │   └── reference/          # Utility types
-│   └── rates-feature/
-├── testing/                    # Testing (4 skills)
-│   ├── unit-testing/
+│   ├── viya-app-coding-standards/
+│   └── vue-component/
+│       └── reference/          # Conventions, lessons learned
+├── testing/                    # Testing (3 skills)
+│   ├── browser-debug/
 │   ├── playwright-test/
 │   │   └── reference/          # Locator patterns
-│   ├── browser-debug/
-│   └── code-review/
+│   └── unit-testing/
 ├── documentation/              # Documentation (3 skills)
-│   ├── product-documentation/
 │   ├── docs-writing/
+│   ├── product-documentation/
 │   └── skill-writer/
 ├── design/                     # Design (2 skills)
-│   ├── frontend-design/
-│   │   └── reference/          # Design guides
-│   └── designer/
+│   ├── designer/
+│   └── frontend-design/
+│       └── reference/          # Design guides
 ├── infrastructure/             # Infrastructure & Tools (2 skills)
 │   ├── mongodb-development/
 │   └── viya-dev-environment/
-└── codebase-structures/        # Codebase Structures (4 skills)
-    ├── viya-app-structure/
-    ├── viya-ui-warehouse-structure/
+└── codebase-structures/        # Codebase Structures (5 skills)
+    ├── rates-feature/
     ├── rates-structure/
-    └── shipping-structure/
+    ├── shipping-structure/
+    ├── viya-app-structure/
+    └── viya-ui-warehouse-structure/
 ```
 
 ## Contributing
