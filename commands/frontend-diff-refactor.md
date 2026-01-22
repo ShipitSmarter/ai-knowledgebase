@@ -1,8 +1,26 @@
 ---
-description: Diff branch to main and refactor changed files to match coding standards
+description: Diff branch to main and refactor changed Vue/TypeScript files to match frontend coding standards (Vue repos only)
 ---
 
+# Frontend Diff Refactor
+
 Apply coding standards, comment guidelines, and best practices to all changed files in the current branch compared to `main`.
+
+## Prerequisite Check
+
+**This command is only for Vue.js frontend repositories.**
+
+Before executing, verify this is a Vue frontend codebase by checking for:
+- `src/` directory with `.vue` files
+- `package.json` with `vue` as a dependency
+- Typical Vue project structure (`src/components/`, `src/views/`, etc.)
+
+**If this is NOT a Vue frontend repository:**
+> This command is only available for Vue frontend repositories. The coding standards and refactoring rules are specific to Vue 3 with TypeScript and Composition API.
+>
+> For other codebases, please use a different refactoring approach appropriate to your tech stack.
+
+**Do not proceed** with any analysis or changes if the prerequisite check fails.
 
 ## Workflow
 
