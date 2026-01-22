@@ -77,9 +77,9 @@ ai-knowledgebase/
 │   └── <agent>.md          # Agent definition
 ├── .opencode/              # OpenCode-specific config (symlinks to above)
 │   ├── config.json         # Main OpenCode config
-│   ├── skills -> ../skills
-│   ├── command -> ../commands
-│   └── agent -> ../agents
+│   ├── skills/             # Flat symlinks to each skill (required for loading)
+│   ├── commands -> ../commands
+│   └── agents -> ../agents
 ├── opencode/               # OpenCode documentation & examples
 │   ├── ide/                # IDE-specific setups
 │   ├── mcp-servers/        # MCP server configurations
@@ -276,6 +276,158 @@ After architect review, update the plan with:
 - Trade-offs accepted
 - Risks identified and mitigations
 - Open questions for further investigation
+
+## Designing AI Automation (Skills, Commands, Agents)
+
+When the user wants to create new AI automation, help them choose the right mechanism and guide them through creation.
+
+### Decision Framework: Skill vs Command vs Agent
+
+Use this decision tree to choose the right mechanism:
+
+```
+What are you trying to automate?
+│
+├─ A reusable workflow or specialized knowledge?
+│   └─ **SKILL** - Detailed instructions loaded on-demand
+│      Examples: vue-component, playwright-test, technical-architect
+│
+├─ A quick trigger for an existing skill or simple action?
+│   └─ **COMMAND** - Short trigger that loads a skill + adds context
+│      Examples: /deep-research, /test-pr
+│
+└─ A specialized persona with restricted tool access?
+    └─ **AGENT** - Custom personality + tool permissions
+       Examples: research agent (no bash), frontend agent
+```
+
+### Comparison Table
+
+| Aspect | Skill | Command | Agent |
+|--------|-------|---------|-------|
+| **Length** | 100-500 lines | 5-50 lines | 50-200 lines |
+| **Purpose** | Detailed workflow instructions | Quick trigger/shortcut | Specialized persona |
+| **When loaded** | On-demand via `skill` tool | User types `/command` | User selects agent |
+| **Tool restrictions** | No | No | Yes (can limit tools) |
+| **Best for** | Complex multi-step workflows | Starting common tasks | Role-specific work |
+
+### When to Create Each
+
+**Create a SKILL when:**
+- Task requires detailed step-by-step guidance
+- Workflow has many conventions or patterns to follow
+- Knowledge needs to be reusable across projects
+- Content would be too long for a command
+
+**Create a COMMAND when:**
+- You want a quick shortcut to load a skill with preset context
+- Task is simple but repeated often
+- Combining multiple skills into one trigger
+- Adding project-specific parameters to a generic skill
+
+**Create an AGENT when:**
+- You want to restrict which tools are available
+- Task benefits from a specific persona/role
+- Different work modes need different capabilities
+- Safety is important (e.g., research agent without bash)
+
+### Creation Workflow
+
+#### For Skills
+
+Load the `skill-writer` skill and follow its 11-step process:
+
+1. Check for existing similar skills (avoid duplicates)
+2. Understand the skill's purpose
+3. Choose the category folder
+4. Choose the skill name
+5. Write the description (critical for discovery)
+6. Structure the SKILL.md
+7. Apply size guidelines (<500 lines)
+8. Create the skill files
+9. **Create the symlink in `.opencode/skills/`**
+10. **Test the skill loads and works**
+11. Update documentation (README.md, USAGE.md)
+
+#### For Commands
+
+1. Create `commands/<command-name>.md`
+2. Add frontmatter with description
+3. Write brief instructions that reference skills
+4. Create symlink: `ln -s ../commands .opencode/commands` (if not exists)
+
+**Command template:**
+```markdown
+---
+description: Brief description shown in command list
+---
+
+Load the `<skill-name>` skill and <specific context for this use case>.
+
+<Any additional instructions or parameters>
+```
+
+#### For Agents
+
+1. Create `agents/<agent-name>.md`
+2. Define persona, tools, and mode
+3. List available skills
+4. Create symlink: `ln -s ../agents .opencode/agents` (if not exists)
+
+**Agent template:**
+```markdown
+---
+description: What this agent specializes in
+mode: primary | secondary
+tools:
+  write: true
+  edit: true
+  bash: false  # Restrict dangerous tools if needed
+---
+
+You are a <role>. Your responsibilities are...
+
+## Approach
+
+<How this agent should work>
+
+## Skills Available
+
+- **skill-name**: When to use it
+```
+
+### Existing Inventory
+
+**Skills** (27 total in `skills/`):
+- research-strategy: deep-research, research, product-strategy, technical-architect
+- github-workflow: pr-review, github-issue-creator, github-workflow, etc.
+- frontend-development: vue-component, typescript-helpers, api-integration, etc.
+- testing: playwright-test, unit-testing, browser-debug, code-review
+- documentation: skill-writer, docs-writing, product-documentation
+- design: frontend-design, designer
+- infrastructure: mongodb-development, viya-dev-environment
+- codebase-structures: viya-app-structure, rates-structure
+
+**Commands** (20 total in `commands/`):
+- /deep-research - Multi-phase research exploration
+- /test-pr - Test backend PR locally
+- /frontend-diff-refactor - Refactor frontend code
+- /i-* commands - Impeccable design refinement commands
+
+**Agents** (3 total in `agents/`):
+- research - Research specialist (no bash)
+- frontend - Frontend development specialist
+- review-agent - Code review specialist
+
+### Quick Reference: File Locations
+
+```
+skills/<category>/<skill-name>/SKILL.md  → .opencode/skills/<skill-name> (symlink)
+commands/<command-name>.md               → .opencode/commands (symlinked dir)
+agents/<agent-name>.md                   → .opencode/agents (symlinked dir)
+```
+
+---
 
 ## Common Tasks
 
