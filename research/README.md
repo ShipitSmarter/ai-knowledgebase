@@ -22,11 +22,20 @@ research/
 
 ## Projects
 
-<!-- This section is auto-updated by the research agent -->
-
-| Project | Description | Documents | Last Updated |
-|---------|-------------|-----------|--------------|
-| *No projects yet* | Use `/research <topic>` to start | - | - |
+| Project | Description | Documents |
+|---------|-------------|-----------|
+| [agent-skills](./agent-skills/) | Agent Skills specification and best practices | 2 |
+| [company-context](./company-context/) | ShipitSmarter/Viya company overview and competitors | 2 |
+| [github-copilot](./github-copilot/) | GitHub Copilot custom instructions research | 1 |
+| [marketing-content](./marketing-content/) | AI prompting and copywriting for marketing | 2 |
+| [mongodb-development](./mongodb-development/) | MongoDB AI development tools (MCP servers) | 1 |
+| [mongodb-kubernetes](./mongodb-kubernetes/) | MongoDB deployment options for Kubernetes | 1 |
+| [product-strategy](./product-strategy/) | Writing product strategy, team organization | 4 |
+| [shipitsmarter-repos](./shipitsmarter-repos/) | Repository catalog and service architecture | 2 |
+| [testing-strategy](./testing-strategy/) | Modern testing with Playwright and Vitest | 2 |
+| [tms-competitors](./tms-competitors/) | TMS competitor analysis (Transporeon, etc.) | 1 |
+| [viya-data-model](./viya-data-model/) | MongoDB data model documentation | 1 |
+| [viya-reporting](./viya-reporting/) | Reporting and materialized views research | 1 |
 
 ## Best Practices
 

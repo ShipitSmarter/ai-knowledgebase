@@ -305,11 +305,75 @@ Data isolation is achieved through:
 | 3 | `shipping/src/Shipping.Api/appsettings.Development.json` | Service dependencies config |
 | 4 | `shipping/src/Shipping.Events/*.cs` | Event type definitions |
 | 5 | `authorizing/src/Authorizing.API/` | Auth controller structure |
+| 6 | `helm-charts/charts/tenant/oathkeeper/` | Oathkeeper authentication config |
+| 7 | `helm-charts/charts/tenant/templates/` | ArgoCD Application definitions |
+| 8 | `shipping/charts/shipping/values.yaml` | OpenTelemetry/monitoring config |
 
-## Questions for Further Research
+## Answers to Research Questions
 
-- [ ] What identity provider is used in production (Ory Kratos?)?
-- [ ] How are tenant configurations managed across services?
-- [ ] What is the deployment pipeline (ArgoCD, Helm)?
-- [ ] How do services handle distributed transactions/sagas?
-- [ ] What monitoring/alerting is in place (Grafana dashboards)?
+### Identity Provider: Ory (Ory Network / Ory Cloud)
+
+ShipitSmarter uses **Ory** as their identity provider:
+- **Ory Kratos** for identity management (sessions, login, user traits) - hosted externally on Ory Cloud
+- **Ory Oathkeeper** for API authentication gateway - deployed in-cluster
+
+**Key configuration:**
+- Production hostname: `auth.viya.me`
+- JWKS hostname: `jwks.viya.me`
+- Session cookies: `ory_session_*`
+- User context headers: `X-User-Id`, `X-User-Email`, `X-User-Name`
+
+**Files:**
+- `helm-charts/charts/tenant/oathkeeper/config.yaml` - Main Oathkeeper config
+- `helm-charts/charts/tenant/oathkeeper/access-rules.yaml` - Access rules
+- `aws-ng-apps/apps/system/varnish-cache-ory/` - Ory session cache
+
+### Tenant Configuration
+
+Tenants are managed through:
+- **Oathkeeper headers**: `X-User-Id` identifies the user/tenant context
+- **IUserContext interface**: Injected into services via `UserContextMiddleware`
+- **Helm values**: Per-tenant configuration in `helm-charts/charts/tenant/values.yaml`
+- **TenantProfile**: MongoDB document storing tenant-specific settings
+
+### Deployment Pipeline: ArgoCD + Helm + GitHub Actions
+
+**CI (GitHub Actions):**
+1. Build Docker images (multi-arch: arm64/amd64)
+2. Push to AWS ECR (`528239395291.dkr.ecr.eu-central-1.amazonaws.com`)
+3. Package and push Helm charts to ECR OCI registry
+
+**CD (ArgoCD - GitOps):**
+1. `tenant` Helm chart creates ArgoCD `Application` CRDs for each service
+2. Auto-sync enabled with `prune: true` and `selfHeal: true`
+3. PR environments deployed automatically
+
+**Files:**
+- `viya-app/.github/workflows/pipeline.yml` - CI pipeline
+- `helm-charts/charts/tenant/` - Master deployment chart
+- `helm-charts/charts/tenant/templates/shipping.yaml` - ArgoCD Application
+
+### Monitoring: OpenTelemetry + Grafana
+
+**Stack:**
+- **OpenTelemetry** for traces, metrics, logs
+- **Grafana Tempo** for distributed tracing
+- **Dash0** for shipping API observability
+- **Serilog** with Elasticsearch JSON formatter for logging
+
+**Custom metrics (shipping):**
+- `viya.shipping.shipments.created.count`
+- `viya.shipping.consignments.ordered.count`
+- `viya.shipping.tracking_event.count`
+
+**Files:**
+- `shipping/src/Shipping.Core/Framework/AppInstrumentationSource.cs` - Custom metrics
+- `shipping/test/compose.yaml` - Local Jaeger setup
+
+### Distributed Transactions
+
+Services use **eventual consistency** via events rather than distributed transactions:
+- Events published to SNS topics
+- Subscribers process independently
+- No saga orchestration found - services designed for idempotency
+

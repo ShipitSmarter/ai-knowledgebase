@@ -4,10 +4,22 @@ This project documents the ShipitSmarter GitHub organization repositories, their
 
 ## Documents
 
-| Date | Document | Description |
-|------|----------|-------------|
-| 2026-01-19 | [Repository Catalog](./2026-01-19-repository-catalog.md) | Complete catalog of all repos |
-| 2026-01-19 | [Service Architecture](./2026-01-19-service-architecture.md) | How services connect and communicate |
+| Date | Document | Description | Status |
+|------|----------|-------------|--------|
+| 2026-01-19 | [Repository Catalog](./2026-01-19-repository-catalog.md) | Complete catalog of all repos | draft |
+| 2026-01-19 | [Service Architecture](./2026-01-19-service-architecture.md) | How services connect and communicate | **final** |
+
+## Key Findings
+
+From Service Architecture research:
+
+| Question | Answer |
+|----------|--------|
+| Identity Provider | Ory (Kratos + Oathkeeper) hosted on Ory Cloud |
+| Deployment Pipeline | GitHub Actions (CI) + ArgoCD + Helm (CD) |
+| Monitoring | OpenTelemetry + Grafana Tempo + Dash0 |
+| Tenant Config | IUserContext middleware + Oathkeeper headers |
+| Transactions | Eventual consistency via events (no sagas) |
 
 ## Quick Reference
 

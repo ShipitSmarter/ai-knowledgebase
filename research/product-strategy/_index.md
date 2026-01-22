@@ -10,6 +10,7 @@ This research project explores best practices for writing product strategy, with
 |------|-------|--------|
 | 2026-01-13 | [Writing Product Strategy for Viya TMS](./2026-01-13-writing-product-strategy.md) | draft |
 | 2026-01-13 | [Skills for Writing Product Strategy](./2026-01-13-product-strategy-skills.md) | draft |
+| 2026-01-13 | [PostHog Handbook: Team Strategy & Organization](./2026-01-13-posthog-handbook-strategy.md) | draft |
 | 2026-01-16 | [Team Organization: Personas vs Domains](./2026-01-16-team-organization-personas.md) | draft |
 
 ## Key Insights

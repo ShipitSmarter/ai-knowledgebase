@@ -61,6 +61,8 @@ ai-knowledgebase/
 │   └── <project-name>/     # Each project in its own folder
 │       ├── _index.md       # Project overview
 │       └── YYYY-MM-DD-*.md # Research documents
+├── architect-reviews/      # Technical architecture reviews
+│   └── YYYY-MM-DD-*.md     # Review documents
 ├── agents/                 # Generic agent configurations
 ├── workflows/              # Reusable AI workflow patterns
 ├── ideas/                  # Ideas backlog
@@ -74,6 +76,7 @@ ai-knowledgebase/
 |------|------------|---------|
 | General files | `kebab-case.md` | `code-review.md` |
 | Research docs | `YYYY-MM-DD-topic.md` | `2026-01-12-atlas-operator.md` |
+| Architect reviews | `YYYY-MM-DD-topic.md` | `2026-01-21-mv-implementation-plan.md` |
 | Index files | `_index.md` or `README.md` | `research/mongodb/_index.md` |
 | Directories | `lowercase` | `mcp-servers/` |
 

@@ -1,10 +1,10 @@
 ---
 title: Shipping / Consignment Strategy
 product_team: Shipping / Consignment
-owner: "[TODO: PM name]"
+owner: Roel
 team_members: Sjoerd, Harris, Fatjon, Michael, Joel, Robin, Roel
 version: 1.0
-last_updated: 2026-01-13
+last_updated: 2026-01-20
 status: draft
 ---
 
@@ -170,11 +170,13 @@ We are explicitly deprioritizing:
 
 | Metric | Current | Target | Rationale |
 |--------|---------|--------|-----------|
-| **Time saved per user/week** | [TODO] | 5+ hours | North star - directly contributes to "10K professionals impacted" |
-| **Zero-touch shipment rate** | [TODO] | 70% | Measures automation success |
-| **Flow creation time** | [TODO] | <30 min | Measures visual builder usability |
-| **Exception auto-resolution rate** | [TODO] | 40% | Measures proactive value |
-| **Enterprise/Mid-market win rate** | [TODO] | +20% | Business impact of strategy |
+| **Time saved per user/week** | No baseline data | 5+ hours | North star - directly contributes to "10K professionals impacted" |
+| **Zero-touch shipment rate** | No baseline data | 70% | Measures automation success |
+| **Flow creation time** | No baseline data | <30 min | Measures visual builder usability |
+| **Exception auto-resolution rate** | No baseline data | 40% | Measures proactive value |
+| **Enterprise/Mid-market win rate** | No baseline data | +20% | Business impact of strategy |
+
+*Note: Establishing baselines is a prerequisite for measuring strategy success. Consider instrumenting these metrics in Q1 2026.*
 
 ## Review Cadence
 
@@ -197,10 +199,14 @@ We are explicitly deprioritizing:
 
 ### Customer Evidence
 
-[TODO: Add quotes from customer interviews that validate pain points and bets]
+*Customer interview quotes to be added as research is conducted. Example format below:*
 
-Example format:
 > "We spend 2 hours per day just selecting carriers and generating paperwork. If that was automated, my team could focus on exceptions." — Logistics Manager, [Customer]
+
+Suggested next steps:
+- Schedule 3-5 customer interviews focused on flow creation pain points
+- Review support tickets for exception-related complaints
+- Analyze usage data for manual vs automated shipment patterns
 
 ### Open Questions
 

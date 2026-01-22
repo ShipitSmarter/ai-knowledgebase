@@ -264,7 +264,7 @@ Run these quality checks:
 **Clarity Check**
 - Could a new team member understand the priorities?
 - Are metrics specific and measurable?
-- Are timelines realistic?
+- Are success criteria well-defined?
 
 **Courage Check**
 - Are there genuine trade-offs (not just "do good things")?
@@ -311,7 +311,7 @@ After completing the strategy, provide:
 
 **If user is unsure about metrics**:
 - Start with leading indicators (can influence) vs lagging indicators (measure outcomes)
-- Ask: "How would you know in 3 months if this bet is working?"
+- Ask: "How would you know if this bet is working? What would you observe?"
 - Reference company KPIs and map product metrics to them
 
 ## Framework Quick Reference
