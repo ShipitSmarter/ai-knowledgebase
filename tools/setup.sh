@@ -171,6 +171,43 @@ detect_shell_config() {
   fi
 }
 
+# Ensure global package.json has plugin dependencies
+setup_plugin_dependencies() {
+  local repo_package="$REPO_ROOT/.opencode/package.json"
+  local global_package="$OPENCODE_CONFIG_HOME/package.json"
+  
+  if [[ ! -f "$repo_package" ]]; then
+    print_warning "No .opencode/package.json found in repo"
+    return 0
+  fi
+  
+  info "Syncing plugin dependencies to global config..."
+  
+  # If global package.json doesn't exist, copy it
+  if [[ ! -f "$global_package" ]]; then
+    cp "$repo_package" "$global_package"
+    print_success "Created global package.json with plugin dependencies"
+    return 0
+  fi
+  
+  # Merge dependencies from repo into global package.json
+  # Using a simple approach: if the global is missing deps from repo, add them
+  if command_exists jq; then
+    # Use jq for proper JSON merging
+    local merged=$(jq -s '.[0].dependencies * .[1].dependencies | {dependencies: .}' "$global_package" "$repo_package")
+    echo "$merged" > "$global_package"
+    print_success "Merged plugin dependencies into global package.json"
+  else
+    # Fallback: just copy if global doesn't have the required deps
+    if ! grep -q "@tarquinen/opencode-auth-provider" "$global_package" 2>/dev/null; then
+      cp "$repo_package" "$global_package"
+      print_success "Updated global package.json with plugin dependencies"
+    else
+      print_success "Global package.json already has plugin dependencies"
+    fi
+  fi
+}
+
 # Set up a directory symlink
 setup_directory_symlink() {
   local name="$1"
@@ -473,6 +510,9 @@ main() {
   
   echo "Setting up plugins..."
   setup_directory_symlink "plugins" "$REPO_ROOT/plugins"
+  
+  # Sync plugin dependencies to global package.json
+  setup_plugin_dependencies
   
   # Step 4: Set up local skill symlinks (for development in this repo)
   if [[ "$RUNNING_LOCALLY" == true ]]; then

@@ -85,7 +85,12 @@ Shared MCP server configurations, disabled by default. Enable in your project's 
 
 ### Plugins
 
-The `opencode-mem` plugin is enabled by default for persistent memory across sessions.
+The setup script symlinks `plugins/` to `~/.config/opencode/plugins/` for global availability.
+
+| Plugin | Description |
+|--------|-------------|
+| `opencode-mem` | Persistent memory across sessions (enabled by default) |
+| `session-title` | Auto-generates session titles using conventional commit style |
 
 ## Updating
 

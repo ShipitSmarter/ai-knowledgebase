@@ -70,6 +70,7 @@ When consulted about AI automation changes:
    - Skills: `skills/<category>/<name>/SKILL.md` + symlink in `.opencode/skills/`
    - Commands: `commands/<name>.md`
    - Agents: `agents/<name>.md`
+   - Plugins: `plugins/<name>.ts`
 
 ## Current Inventory
 

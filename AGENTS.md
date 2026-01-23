@@ -93,11 +93,14 @@ ai-knowledgebase/
 │   └── <command>.md        # Command definition
 ├── agents/                 # Agent configurations
 │   └── <agent>.md          # Agent definition
+├── plugins/                # OpenCode plugins (TypeScript)
+│   └── <plugin>.ts         # Plugin implementation
 ├── .opencode/              # OpenCode-specific config (symlinks to above)
 │   ├── config.json         # Main OpenCode config
 │   ├── skills/             # Flat symlinks to each skill (required for loading)
 │   ├── commands -> ../commands
-│   └── agents -> ../agents
+│   ├── agents -> ../agents
+│   └── plugins -> ../plugins
 ├── opencode/               # OpenCode documentation & examples
 │   ├── ide/                # IDE-specific setups
 │   ├── mcp-servers/        # MCP server configurations
@@ -452,6 +455,7 @@ You are a <role>. Your responsibilities are...
 skills/<category>/<skill-name>/SKILL.md  → .opencode/skills/<skill-name> (symlink)
 commands/<command-name>.md               → .opencode/commands (symlinked dir)
 agents/<agent-name>.md                   → .opencode/agents (symlinked dir)
+plugins/<plugin-name>.ts                 → .opencode/plugins (symlinked dir)
 ```
 
 ---

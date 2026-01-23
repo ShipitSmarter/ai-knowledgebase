@@ -215,7 +215,7 @@ async function generateTitle(
   }
 }
 
-const SessionTitlePlugin: Plugin = async (ctx) => {
+export const SessionTitlePlugin: Plugin = async (ctx) => {
   const { client } = ctx
 
   await client.app.log({
@@ -287,5 +287,3 @@ const SessionTitlePlugin: Plugin = async (ctx) => {
     }
   }
 }
-
-export default SessionTitlePlugin
