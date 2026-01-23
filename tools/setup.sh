@@ -14,16 +14,53 @@
 
 set -e
 
+# Version
+VERSION="1.0.0"
+
 # Colors
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
+CYAN='\033[0;36m'
 BOLD='\033[1m'
+DIM='\033[2m'
 NC='\033[0m'
 
 ok() { echo -e "  ${GREEN}✓${NC} $1"; }
 warn() { echo -e "  ${YELLOW}!${NC} $1"; }
 info() { echo -e "  ${BLUE}→${NC} $1"; }
+
+# Show intro screen
+show_intro() {
+  echo ""
+  echo -e "${CYAN}"
+  cat << 'EOF'
+       _____ _     _       _ _   _____                      _            
+      / ____| |   (_)     (_) | / ____|                    | |           
+     | (___ | |__  _ _ __  _| || (___  _ __ ___   __ _ _ __| |_ ___ _ __ 
+      \___ \| '_ \| | '_ \| | __\___ \| '_ ` _ \ / _` | '__| __/ _ \ '__|
+      ____) | | | | | |_) | | |_____) | | | | | | (_| | |  | ||  __/ |   
+     |_____/|_| |_|_| .__/|_|\__|_____/|_| |_| |_|\__,_|_|   \__\___|_|   
+                    | |                                                  
+                    |_|                                                  
+EOF
+  echo -e "${NC}"
+  echo -e "        ${BOLD}AI Knowledgebase${NC} ${DIM}v${VERSION}${NC}"
+  echo ""
+  echo -e "                  ${YELLOW}     🚀${NC}"
+  echo -e "                  ${DIM}    /|${NC}"
+  echo -e "                  ${DIM}   / |${NC}"
+  echo -e "                  ${DIM}  /  |${NC}"
+  echo -e "                  ${DIM} /   |${NC}"
+  echo -e "                  ${DIM}/____|${NC}"
+  echo -e "                  ${YELLOW}  ||${NC}"
+  echo -e "                  ${YELLOW} \\||/${NC}"
+  echo -e "                  ${YELLOW}  \\/${NC}"
+  echo ""
+  echo -e "  ${DIM}Skills, commands, and agents for OpenCode${NC}"
+  echo -e "  ${DIM}https://github.com/ShipitSmarter/ai-knowledgebase${NC}"
+  echo ""
+}
 
 # Configuration
 REPO_URL="https://github.com/ShipitSmarter/ai-knowledgebase"
@@ -144,11 +181,7 @@ verify() {
 
 # Main
 main() {
-  echo ""
-  echo -e "${BOLD}╭─────────────────────────────────────────╮${NC}"
-  echo -e "${BOLD}│  ShipitSmarter AI Knowledgebase Setup   │${NC}"
-  echo -e "${BOLD}╰─────────────────────────────────────────╯${NC}"
-  echo ""
+  show_intro
   
   [[ "$VERIFY_ONLY" == true ]] && { verify; exit 0; }
   
