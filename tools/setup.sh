@@ -164,6 +164,51 @@ setup_link() {
   ok "$name → $target"
 }
 
+# List items in a directory
+list_items() {
+  local dir="$1"
+  local type="$2"
+  local items=()
+  
+  if [[ ! -d "$dir" ]]; then
+    return
+  fi
+  
+  case "$type" in
+    skills)
+      # Skills are directories containing SKILL.md (can be nested)
+      while IFS= read -r skill_file; do
+        local skill_dir=$(dirname "$skill_file")
+        local skill_name=$(basename "$skill_dir")
+        items+=("$skill_name")
+      done < <(find "$dir" -name "SKILL.md" -type f 2>/dev/null | sort)
+      ;;
+    commands)
+      # Commands are .md files
+      for f in "$dir"/*.md; do
+        [[ -f "$f" ]] && items+=("$(basename "$f" .md)")
+      done
+      ;;
+    agents)
+      # Agents are .md files
+      for f in "$dir"/*.md; do
+        [[ -f "$f" ]] && items+=("$(basename "$f" .md)")
+      done
+      ;;
+    plugins)
+      # Plugins are .ts files
+      for f in "$dir"/*.ts; do
+        [[ -f "$f" ]] && items+=("$(basename "$f" .ts)")
+      done
+      ;;
+  esac
+  
+  # Print items
+  if [[ ${#items[@]} -gt 0 ]]; then
+    printf '%s\n' "${items[@]}"
+  fi
+}
+
 # Verify setup
 verify() {
   echo ""
@@ -172,11 +217,63 @@ verify() {
   
   command -v opencode &>/dev/null && ok "OpenCode installed" || warn "OpenCode not installed"
   
-  for item in skills commands agents plugins; do
-    [[ -L "$CONFIG_DIR/$item" ]] && ok "$item linked" || warn "$item not linked"
-  done
-  
   [[ -f "$CONFIG_DIR/opencode.json" ]] && ok "Config exists" || warn "No config"
+  
+  echo ""
+  
+  # Skills
+  if [[ -L "$CONFIG_DIR/skills" ]]; then
+    local skills_dir=$(readlink "$CONFIG_DIR/skills")
+    local skills=($(list_items "$skills_dir" "skills"))
+    ok "Skills (${#skills[@]}):"
+    for skill in "${skills[@]}"; do
+      echo -e "     ${DIM}•${NC} $skill"
+    done
+  else
+    warn "skills not linked"
+  fi
+  
+  echo ""
+  
+  # Commands
+  if [[ -L "$CONFIG_DIR/commands" ]]; then
+    local commands_dir=$(readlink "$CONFIG_DIR/commands")
+    local commands=($(list_items "$commands_dir" "commands"))
+    ok "Commands (${#commands[@]}):"
+    for cmd in "${commands[@]}"; do
+      echo -e "     ${DIM}•${NC} /$cmd"
+    done
+  else
+    warn "commands not linked"
+  fi
+  
+  echo ""
+  
+  # Agents
+  if [[ -L "$CONFIG_DIR/agents" ]]; then
+    local agents_dir=$(readlink "$CONFIG_DIR/agents")
+    local agents=($(list_items "$agents_dir" "agents"))
+    ok "Agents (${#agents[@]}):"
+    for agent in "${agents[@]}"; do
+      echo -e "     ${DIM}•${NC} $agent"
+    done
+  else
+    warn "agents not linked"
+  fi
+  
+  echo ""
+  
+  # Plugins
+  if [[ -L "$CONFIG_DIR/plugins" ]]; then
+    local plugins_dir=$(readlink "$CONFIG_DIR/plugins")
+    local plugins=($(list_items "$plugins_dir" "plugins"))
+    ok "Plugins (${#plugins[@]}):"
+    for plugin in "${plugins[@]}"; do
+      echo -e "     ${DIM}•${NC} $plugin"
+    done
+  else
+    warn "plugins not linked"
+  fi
 }
 
 # Main
