@@ -211,12 +211,6 @@ list_items() {
         [[ -f "$f" ]] && items+=("$(basename "$f" .md)")
       done
       ;;
-    plugins)
-      # Plugins are .ts files
-      for f in "$dir"/*.ts; do
-        [[ -f "$f" ]] && items+=("$(basename "$f" .ts)")
-      done
-      ;;
   esac
   
   # Print items
@@ -277,19 +271,7 @@ verify() {
     warn "agents not linked"
   fi
   
-  printf '\n'
-  
-  # Plugins
-  if [[ -L "$CONFIG_DIR/plugins" ]]; then
-    local plugins_dir=$(readlink "$CONFIG_DIR/plugins")
-    local plugins=($(list_items "$plugins_dir" "plugins"))
-    ok "Plugins (${#plugins[@]}):"
-    for plugin in "${plugins[@]}"; do
-      printf '     %b•%b %s\n' "$DIM" "$NC" "$plugin"
-    done
-  else
-    warn "plugins not linked"
-  fi
+
 }
 
 # Main
@@ -410,65 +392,11 @@ main() {
   setup_link "skills" "$REPO_ROOT/skills"
   setup_link "commands" "$REPO_ROOT/commands"
   setup_link "agents" "$REPO_ROOT/agents"
-  setup_link "plugins" "$REPO_ROOT/plugins"
   
-  # Step 4: Config file
-  printf '\n'
-  printf '%b4. Configuration%b\n' "$BOLD" "$NC"
-  printf '\n'
-  local config_file="$CONFIG_DIR/opencode.json"
-  local config_updated=false
-  
-  if [[ ! -f "$config_file" ]]; then
-    cat > "$config_file" << 'EOF'
-{
-  "$schema": "https://opencode.ai/config.json",
-  "plugin": [
-    "opencode-mem",
-    "plugins/auto-session-name.ts"
-  ]
-}
-EOF
-    ok "Created config with plugins"
-    config_updated=true
-  else
-    # Check if auto-session-name plugin is registered
-    if ! grep -q "auto-session-name" "$config_file"; then
-      # Add the plugin to existing config using a simple approach
-      if grep -q '"plugin"' "$config_file"; then
-        # Config has plugin array - add to it
-        if command -v jq &>/dev/null; then
-          local tmp_file=$(mktemp)
-          jq '.plugin += ["plugins/auto-session-name.ts"] | .plugin |= unique' "$config_file" > "$tmp_file" && mv "$tmp_file" "$config_file"
-          ok "Added auto-session-name plugin to config"
-          config_updated=true
-        else
-          warn "Config exists but missing auto-session-name plugin"
-          info "Add \"plugins/auto-session-name.ts\" to the plugin array in $config_file"
-        fi
-      else
-        # Config doesn't have plugin array - add one
-        if command -v jq &>/dev/null; then
-          local tmp_file=$(mktemp)
-          jq '. + {"plugin": ["opencode-mem", "plugins/auto-session-name.ts"]}' "$config_file" > "$tmp_file" && mv "$tmp_file" "$config_file"
-          ok "Added plugins to config"
-          config_updated=true
-        else
-          warn "Config exists but has no plugins configured"
-          info "Add a plugin array to $config_file"
-        fi
-      fi
-    else
-      ok "Config already has auto-session-name plugin"
-    fi
-  fi
-  
-  [[ "$config_updated" == false ]] && ok "Config exists"
-  
-  # Step 5: Optional dependencies
+  # Step 4: Optional dependencies
   if [[ "$SKIP_DEPS" == false ]] && command -v npm &>/dev/null; then
     printf '\n'
-    printf '%b5. Optional: Playwright%b\n' "$BOLD" "$NC"
+    printf '%b4. Optional: Playwright%b\n' "$BOLD" "$NC"
     printf '\n'
     if command -v playwright &>/dev/null; then
       ok "Playwright already installed"
