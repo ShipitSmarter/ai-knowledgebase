@@ -15,13 +15,15 @@
 set -e
 
 # Version
-VERSION="0.1.1"
+VERSION="0.1.2"
 
 # Colors (using printf-compatible format)
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
+RED='\033[0;31m'
+WHITE='\033[1;37m'
 BOLD='\033[1m'
 DIM='\033[2m'
 NC='\033[0m'
@@ -35,21 +37,32 @@ info() { printf '  %b→%b %s\n' "$BLUE" "$NC" "$1"; }
 # Show intro screen
 show_intro() {
   printf '\n'
+  # Logo in Cyan
   printf '%b' "$CYAN"
   cat << 'EOF'
 
-          ██╗   ██╗██╗██╗   ██╗ █████╗          ▄▀▀▀▄
-          ██║   ██║██║╚██╗ ██╔╝██╔══██╗        █  ●  █
-          ██║   ██║██║ ╚████╔╝ ███████║        █     █
-          ╚██╗ ██╔╝██║  ╚██╔╝  ██╔══██║        █ ─── █
-           ╚████╔╝ ██║   ██║   ██║  ██║        █     █
-            ╚═══╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝        ▄█▄▄▄▄▄█▄
-                                               ◢██◣ ◢██◣
-             AI Knowledgebase                   ▀▀▀   ▀▀▀
-             Skills · Commands · Agents
-             for OpenCode
+          ██╗   ██╗██╗██╗   ██╗ █████╗
+          ██║   ██║██║╚██╗ ██╔╝██╔══██╗
+          ██║   ██║██║ ╚████╔╝ ███████║
+          ╚██╗ ██╔╝██║  ╚██╔╝  ██╔══██║
+           ╚████╔╝ ██║   ██║   ██║  ██║
+            ╚═══╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝
 EOF
-  printf '%b\n' "$NC"
+  # Rocket in Green/White/Red/Yellow
+  printf '%b' "$NC"
+  cat << EOF
+                                               ${GREEN}   ▄▄${NC}
+                                              ${GREEN}  ████${NC}
+                                             ${GREEN} ██████${NC}
+             ${CYAN}AI Knowledgebase${NC}                 ${GREEN}▐██████▌${NC}
+             ${CYAN}Skills · Commands · Agents${NC}       ${WHITE}▐██████▌${NC}
+             ${CYAN}for OpenCode${NC}                     ${WHITE}▐██████▌${NC}
+                                              ${WHITE}▐████▌${NC}
+                                             ${GREEN}▄██████▄${NC}
+                                            ${GREEN}▐██${NC}${YELLOW}▀${NC}${RED}▄▄${NC}${YELLOW}▀${NC}${GREEN}██▌${NC}
+                                             ${YELLOW}▀${NC}${RED}▀${NC}${YELLOW}▀▀${NC}${RED}▀${NC}${YELLOW}▀${NC}
+EOF
+  printf '\n'
   printf '                                         %bv%s%b\n\n' "$DIM" "$VERSION" "$NC"
 }
 
