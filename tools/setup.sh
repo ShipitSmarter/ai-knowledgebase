@@ -1,9 +1,10 @@
 #!/bin/bash
 #
 # setup.sh - Set up ShipitSmarter AI Knowledgebase for OpenCode
+# Version: 2026-01-23-v2
 #
 # This script:
-# 1. Clones ai-knowledgebase to ~/.shipitsmarter/ai-knowledgebase (if run remotely)
+# 1. Clones ai-knowledgebase (if run remotely)
 # 2. Symlinks skills, commands, and agents to ~/.config/opencode/ for global availability
 # 3. Sets up local .opencode/skill symlinks (for local development)
 # 4. Installs skill dependencies (Playwright, Google AI Search plugin)
@@ -22,6 +23,10 @@
 #   --deps-only     Only install skill dependencies (skip symlink setup)
 #   --verify        Just verify the current setup
 #
+
+# EARLY DEBUG - this should be the FIRST output
+echo "=== ShipitSmarter Setup Script v2026-01-23-v2 ==="
+echo "DEBUG: Script loaded successfully"
 
 set -e
 
