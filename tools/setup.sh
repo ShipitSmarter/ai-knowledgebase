@@ -122,32 +122,31 @@ find_existing_repo() {
   return 1
 }
 
-# Find the best default install location
-find_default_location() {
+# Find the best default git directory (for fresh install)
+find_default_git_dir() {
   # macOS: Check common locations
   if [[ "$OS" == "Darwin" ]]; then
-    # Prefer existing git folders
     for dir in "${HOME}/Developer" "${HOME}/Projects" "${HOME}/Code" "${HOME}/git" "${HOME}/repos" "${HOME}/Documents/GitHub" "${HOME}/Documents/git"; do
       if [[ -d "$dir" ]]; then
-        echo "$dir/ai-knowledgebase"
+        echo "$dir"
         return
       fi
     done
     # Default to Developer folder (Apple's recommended location)
-    echo "${HOME}/Developer/ai-knowledgebase"
+    echo "${HOME}/Developer"
     return
   fi
   
   # Linux: Check common locations
   for dir in "${HOME}/git" "${HOME}/repos" "${HOME}/code" "${HOME}/projects" "${HOME}/dev"; do
     if [[ -d "$dir" ]]; then
-      echo "$dir/ai-knowledgebase"
+      echo "$dir"
       return
     fi
   done
   
   # Fallback
-  echo "${HOME}/git/ai-knowledgebase"
+  echo "${HOME}/git"
 }
 
 # Setup a symlink
@@ -304,7 +303,7 @@ main() {
   # Step 2: Clone repo if needed
   if [[ -z "$REPO_ROOT" ]]; then
     printf '\n'
-    printf '%b2. Repository Location%b\n' "$BOLD" "$NC"
+    printf '%b2. Repository%b\n' "$BOLD" "$NC"
     printf '\n'
     
     # First, search for existing installation
@@ -322,30 +321,63 @@ main() {
       fi
     fi
     
-    # If still no repo (not found or user declined), prompt for location
+    # If still no repo (not found or user declined), ask which flow
     if [[ -z "$REPO_ROOT" ]]; then
-      local default=$(find_default_location)
-      
-      printf '   Where should we install the AI knowledgebase?\n'
+      printf '   Do you already have ai-knowledgebase cloned?\n'
       printf '\n'
-      if [[ "$OS" == "Darwin" ]]; then
-        printf '   %bTip:%b On Mac, ~/Developer is the recommended location for code\n' "$BLUE" "$NC"
-      fi
+      printf '   %b1%b) Yes - I have it cloned somewhere\n' "$BOLD" "$NC"
+      printf '   %b2%b) No  - Clone it for me (fresh install)\n' "$BOLD" "$NC"
       printf '\n'
-      read -p "   Location [$default]: " location </dev/tty
-      REPO_ROOT="${location:-$default}"
-      REPO_ROOT="${REPO_ROOT/#\~/$HOME}"
+      read -p "   Choice [2]: " choice </dev/tty
+      choice="${choice:-2}"
       
       printf '\n'
-      if [[ -d "$REPO_ROOT" ]] && detect_repo "$REPO_ROOT"; then
-        info "Updating existing repo..."
-        git -C "$REPO_ROOT" pull --quiet 2>/dev/null || true
+      
+      if [[ "$choice" == "1" ]]; then
+        # Flow 1: User has existing repo - ask for full path
+        printf '   Enter the path to your ai-knowledgebase folder:\n'
+        printf '\n'
+        read -p "   Path: " repo_path </dev/tty
+        repo_path="${repo_path/#\~/$HOME}"
+        
+        printf '\n'
+        if [[ -d "$repo_path" ]] && detect_repo "$repo_path"; then
+          REPO_ROOT="$repo_path"
+          info "Updating existing repo..."
+          git -C "$REPO_ROOT" pull --quiet 2>/dev/null || true
+          ok "Repository ready"
+        else
+          warn "Not a valid ai-knowledgebase folder: $repo_path"
+          printf '   Expected to find skills/, commands/, and AGENTS.md\n'
+          exit 1
+        fi
       else
-        info "Cloning to $REPO_ROOT..."
-        mkdir -p "$(dirname "$REPO_ROOT")"
-        git clone --quiet "$REPO_URL" "$REPO_ROOT"
+        # Flow 2: Fresh install - ask for git folder, we'll clone into it
+        local default_git_dir=$(find_default_git_dir)
+        
+        printf '   Where do you keep your git repositories?\n'
+        printf '\n'
+        if [[ "$OS" == "Darwin" ]]; then
+          printf '   %bTip:%b On Mac, ~/Developer is the recommended location\n' "$BLUE" "$NC"
+          printf '\n'
+        fi
+        read -p "   Git folder [$default_git_dir]: " git_dir </dev/tty
+        git_dir="${git_dir:-$default_git_dir}"
+        git_dir="${git_dir/#\~/$HOME}"
+        
+        REPO_ROOT="$git_dir/ai-knowledgebase"
+        
+        printf '\n'
+        if [[ -d "$REPO_ROOT" ]] && detect_repo "$REPO_ROOT"; then
+          info "Found existing repo, updating..."
+          git -C "$REPO_ROOT" pull --quiet 2>/dev/null || true
+        else
+          info "Cloning to $REPO_ROOT..."
+          mkdir -p "$git_dir"
+          git clone --quiet "$REPO_URL" "$REPO_ROOT"
+        fi
+        ok "Repository ready"
       fi
-      ok "Repository ready"
     fi
   else
     printf '\n'
