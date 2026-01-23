@@ -22,6 +22,7 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [designer](./design/designer/SKILL.md) | Penpot MCP integration for design workflows | design |
 | [docs-writing](./documentation/docs-writing/SKILL.md) | User-facing documentation for non-technical users | documentation |
 | [frontend-design](./design/frontend-design/SKILL.md) | Production-grade UI interfaces | design |
+| [opencode-knowledge](./documentation/opencode-knowledge/SKILL.md) | OpenCode concepts, configuration, best practices | documentation |
 | [git-branch-update](./github-workflow/git-branch-update/SKILL.md) | Branch management and rebasing | github-workflow |
 | [github-issue-creator](./github-workflow/github-issue-creator/SKILL.md) | Create focused GitHub issues | github-workflow |
 | [github-issue-tracker](./github-workflow/github-issue-tracker/SKILL.md) | Update and maintain GitHub issues | github-workflow |
@@ -98,6 +99,7 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [product-documentation](./documentation/product-documentation/SKILL.md) | Product docs for Viya TMS |
 | [docs-writing](./documentation/docs-writing/SKILL.md) | User-facing documentation for non-technical users |
 | [skill-writer](./documentation/skill-writer/SKILL.md) | Create and refine agent skills |
+| [opencode-knowledge](./documentation/opencode-knowledge/SKILL.md) | OpenCode concepts, configuration, best practices |
 
 ### Design (`design/`)
 
@@ -194,8 +196,9 @@ skills/
 │   ├── playwright-test/
 │   │   └── reference/          # Locator patterns
 │   └── unit-testing/
-├── documentation/              # Documentation (3 skills)
+├── documentation/              # Documentation (4 skills)
 │   ├── docs-writing/
+│   ├── opencode-knowledge/
 │   ├── product-documentation/
 │   └── skill-writer/
 ├── design/                     # Design (2 skills)

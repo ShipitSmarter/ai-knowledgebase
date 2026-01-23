@@ -281,6 +281,11 @@ After architect review, update the plan with:
 
 When the user wants to create new AI automation, help them choose the right mechanism and guide them through creation.
 
+**IMPORTANT**: Before creating any new skill, command, or agent, consult `@ai-coordinator` to:
+- Check for existing similar automation (prevent duplicates)
+- Confirm the right mechanism (skill vs command vs agent)
+- Get guidance on proper structure and naming
+
 ### Decision Framework: Skill vs Command vs Agent
 
 Use this decision tree to choose the right mechanism:
@@ -398,15 +403,15 @@ You are a <role>. Your responsibilities are...
 
 ### Existing Inventory
 
-**Skills** (27 total in `skills/`):
+**Skills** (32 total in `skills/`):
 - research-strategy: deep-research, research, product-strategy, technical-architect
 - github-workflow: pr-review, github-issue-creator, github-workflow, etc.
 - frontend-development: vue-component, typescript-helpers, api-integration, etc.
 - testing: playwright-test, unit-testing, browser-debug, code-review
-- documentation: skill-writer, docs-writing, product-documentation
+- documentation: skill-writer, docs-writing, product-documentation, opencode-knowledge
 - design: frontend-design, designer
-- infrastructure: mongodb-development, viya-dev-environment
-- codebase-structures: viya-app-structure, rates-structure
+- infrastructure: mongodb-development, viya-dev-environment, dotnet-testing
+- codebase-structures: viya-app-structure, rates-structure, etc.
 
 **Commands** (20 total in `commands/`):
 - /deep-research - Multi-phase research exploration
@@ -414,12 +419,14 @@ You are a <role>. Your responsibilities are...
 - /frontend-diff-refactor - Refactor frontend code
 - /i-* commands - Impeccable design refinement commands
 
-**Agents** (5 total in `agents/`):
+**Agents** (7 total in `agents/`):
+- ai-coordinator - Quality gate for AI automation, OpenCode expert
 - architect - Senior architect for technical planning and architecture reviews
 - frontend - Frontend development specialist
 - research - Research specialist (no bash)
 - retro - Retrospective facilitator for improving AI automation
 - senior-reviewer - Thorough code reviewer (frontend & backend)
+- review-agent - Review and improve agent definitions
 
 ### Quick Reference: File Locations
 
