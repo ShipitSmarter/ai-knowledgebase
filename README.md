@@ -151,6 +151,14 @@ Agents are specialized personas for different types of work. Select an agent to 
 | `research` | Research tasks without shell access (safer for exploration). |
 | `ai-coordinator` | Quality gate for AI automation. `@ai-coordinator` before creating new skills/agents/commands to check for duplicates. Also answers OpenCode questions. |
 
+### Plugins
+
+Plugins extend OpenCode with automatic behaviors.
+
+| Plugin | What it does |
+|--------|-------------|
+| `session-title` | Automatically names sessions based on your first message using AI. PR reviews become "review PR #123", feature work becomes "feat(scope): description", etc. |
+
 ---
 
 ## How It Works
@@ -199,6 +207,7 @@ ai-knowledgebase/
 ├── skills/                  # Skill definitions
 │   ├── frontend/            # Vue/TypeScript frontend skills (12 skills)
 │   └── ...                  # General skills (9 skills)
+├── plugins/                 # OpenCode plugins (auto-loaded)
 ├── commands/                # Legacy command location
 ├── copilot/                 # Copilot instructions
 ├── docs/

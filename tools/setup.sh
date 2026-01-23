@@ -269,7 +269,7 @@ verify_setup() {
   # Check global symlinks
   echo ""
   info "Global configuration (${OPENCODE_CONFIG_HOME}):"
-  for item in skills commands agents; do
+  for item in skills commands agents plugins; do
     link_path="${OPENCODE_CONFIG_HOME}/${item}"
     if [[ -L "$link_path" ]]; then
       target=$(readlink "$link_path")
@@ -298,12 +298,14 @@ verify_setup() {
   local skill_count=$(find "$REPO_ROOT/skills" -maxdepth 1 -type d ! -name "skills" 2>/dev/null | wc -l | tr -d ' ')
   local command_count=$(find "$REPO_ROOT/commands" -maxdepth 1 -type f -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
   local agent_count=$(find "$REPO_ROOT/agents" -maxdepth 1 -type f -name "*.md" 2>/dev/null | wc -l | tr -d ' ')
+  local plugin_count=$(find "$REPO_ROOT/plugins" -maxdepth 1 -type f \( -name "*.ts" -o -name "*.js" \) 2>/dev/null | wc -l | tr -d ' ')
   
   echo ""
   info "Available:"
   echo "  ${skill_count} skills"
   echo "  ${command_count} commands"
   echo "  ${agent_count} agents"
+  echo "  ${plugin_count} plugins"
   
   # Check plugins
   echo ""
@@ -320,6 +322,12 @@ verify_setup() {
     success "google-ai-search plugin installed"
   else
     warn "google-ai-search plugin not installed"
+  fi
+  
+  if [[ -L "${OPENCODE_CONFIG_HOME}/plugins" ]] || [[ -f "${OPENCODE_CONFIG_HOME}/plugins/session-title.ts" ]]; then
+    success "session-title plugin linked"
+  else
+    warn "session-title plugin not found"
   fi
   
   # Check dependencies
@@ -408,6 +416,9 @@ main() {
   
   echo "Setting up agents..."
   setup_directory_symlink "agents" "$REPO_ROOT/agents"
+  
+  echo "Setting up plugins..."
+  setup_directory_symlink "plugins" "$REPO_ROOT/plugins"
   
   # Step 4: Set up local skill symlinks (for development in this repo)
   if [[ "$RUNNING_LOCALLY" == true ]]; then
