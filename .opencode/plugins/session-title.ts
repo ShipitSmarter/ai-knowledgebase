@@ -6,6 +6,7 @@
  * - Development: "fix(scope): description", "feat(scope): description", etc.
  * 
  * Only generates title once per session (when title is not set).
+ * Uses OpenCode's unified auth - works with any configured provider.
  */
 
 import type { Plugin } from "@opencode-ai/plugin"
@@ -38,6 +39,17 @@ interface Message {
 
 // Track sessions we've already titled to avoid re-processing
 const titledSessions = new Set<string>()
+
+// Fallback models in priority order (cheap/fast models for title generation)
+const FALLBACK_MODELS: Record<string, string> = {
+  openai: 'gpt-4o-mini',
+  anthropic: 'claude-haiku-4-5',
+  google: 'gemini-2.0-flash',
+  deepseek: 'deepseek-chat',
+  opencode: 'big-pickle'
+}
+
+const PROVIDER_PRIORITY = ['openai', 'anthropic', 'google', 'deepseek', 'opencode']
 
 const TITLE_PROMPT = `You are a session title generator for a development assistant. Output ONLY the title, nothing else.
 
@@ -153,12 +165,33 @@ async function generateTitle(
   client: OpenCodeClient
 ): Promise<string | null> {
   try {
+    // Lazy import auth provider
+    const { OpencodeAI } = await import('@tarquinen/opencode-auth-provider')
     const { generateText } = await import('ai')
-    const { createOpenAI } = await import('@ai-sdk/openai')
     
-    // Use a cheap, fast model for title generation
-    const openai = createOpenAI({})
-    const model = openai('gpt-4o-mini')
+    const opencodeAI = new OpencodeAI()
+    const providers = await opencodeAI.listProviders()
+    const availableProviderIDs = Object.keys(providers)
+    
+    // Find first available provider from priority list
+    let model = null
+    for (const providerID of PROVIDER_PRIORITY) {
+      if (!providers[providerID]) continue
+      
+      const modelID = FALLBACK_MODELS[providerID]
+      if (!modelID) continue
+      
+      try {
+        model = await opencodeAI.getLanguageModel(providerID, modelID)
+        break
+      } catch {
+        continue
+      }
+    }
+    
+    if (!model) {
+      throw new Error('No available models')
+    }
     
     const result = await generateText({
       model,
