@@ -113,7 +113,7 @@ Every finding should lead to one of:
 | Action Type | Example |
 |-------------|---------|
 | **Update skill** | Add validation step to `code-review` skill |
-| **Update agent** | Add clarifying question to `senior-reviewer` agent |
+| **Update agent** | Add clarifying question to `reviewer` agent |
 | **Update command** | Fix parameter handling in `/test-pr` command |
 | **Create new automation** | New skill for handling X scenario |
 | **Document pattern** | Add to AGENTS.md or skill README |
@@ -131,8 +131,8 @@ Every finding should lead to one of:
   - Add: Rule that test files should also avoid `any`
 
 ### Medium Priority  
-- [ ] **Update `senior-reviewer` agent** - Ask about test file conventions
-  - File: `agents/senior-reviewer.md`
+- [ ] **Update `reviewer` agent** - Ask about test file conventions
+  - File: `agents/reviewer.md`
   - Add question: "Should test files follow the same type rules?"
 
 ### Low Priority / Future

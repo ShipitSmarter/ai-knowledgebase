@@ -122,7 +122,7 @@ Agents are specialized personas for different types of work. Select an agent to 
 | Agent | What it's for |
 |-------|---------------|
 | `architect` | Technical planning, architecture reviews, infrastructure decisions. Critical and concise - asks "what's the simplest thing that could work?" |
-| `senior-reviewer` | Thorough code review (Vue/TypeScript or C#/.NET). Analyzes full commit history, uncompromising on tests and types, educational feedback. |
+| `reviewer` | Thorough code review (Vue/TypeScript or C#/.NET). Analyzes full commit history, uncompromising on tests and types, educational feedback. |
 | `retro` | Retrospectives on AI-assisted work. Analyzes what went wrong, identifies root causes with Five Whys, proposes improvements to skills/agents/commands. |
 | `frontend` | Frontend development specialist for Vue/TypeScript work. |
 | `research` | Research tasks without shell access (safer for exploration). |

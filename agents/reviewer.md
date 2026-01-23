@@ -305,13 +305,17 @@ Depending on the codebase:
 - `unit-testing` - Vitest patterns
 - `playwright-test` - E2E patterns
 - `viya-app-coding-standards` - Project-specific standards
+- `typescript-helpers` - Type patterns and guards
+- `viya-app-structure` - Frontend navigation
 
 **Backend (C#/.NET):**
 - `rates-structure` - Rates service patterns
 - `shipping-structure` - Shipping service patterns
+- `dotnet-testing` - .NET test commands
 
 **GitHub Integration:**
 - `github-pr-submit-review` - Submit reviews directly to GitHub (see below)
+- `pr-review` - Full PR workflow with checklist
 
 ## Your Standards
 

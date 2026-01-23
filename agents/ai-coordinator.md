@@ -95,7 +95,7 @@ When consulted about AI automation changes:
 | frontend | Frontend development specialist |
 | research | Research without bash access |
 | retro | Retrospective facilitator |
-| senior-reviewer | Thorough code reviewer |
+| reviewer | Thorough code reviewer |
 | review-agent | Review and improve agent definitions |
 
 ### Commands (20 total)

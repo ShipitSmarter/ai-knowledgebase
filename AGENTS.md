@@ -303,7 +303,7 @@ What are you trying to automate?
 │
 └─ A specialized persona with restricted tool access?
     └─ **AGENT** - Custom personality + tool permissions
-       Examples: architect, senior-reviewer, retro, research (no bash)
+       Examples: architect, reviewer, retro, research (no bash)
 ```
 
 ### Comparison Table
@@ -425,7 +425,7 @@ You are a <role>. Your responsibilities are...
 - frontend - Frontend development specialist
 - research - Research specialist (no bash)
 - retro - Retrospective facilitator for improving AI automation
-- senior-reviewer - Thorough code reviewer (frontend & backend)
+- reviewer - Thorough code reviewer (frontend & backend)
 - review-agent - Review and improve agent definitions
 
 ### Quick Reference: File Locations

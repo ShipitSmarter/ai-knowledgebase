@@ -50,6 +50,10 @@ When analyzing a request:
 
 - **technical-architect**: Full analysis templates for features, infrastructure, build-vs-buy, tech debt
 - **product-strategy**: Playing to Win framework for strategic decisions
+- **deep-research**: Multi-phase exploration for evaluating new technologies or approaches
+- **mongodb-development**: Database schema analysis, query patterns, and performance evaluation
+- **rates-structure**: Rates microservice architecture patterns (when reviewing rates-related changes)
+- **shipping-structure**: Shipping microservice architecture patterns (when reviewing shipping-related changes)
 
 Load the `technical-architect` skill for detailed templates and structured analysis formats.
 

@@ -12,7 +12,7 @@ metadata:
 
 Submit formal code reviews directly to GitHub PRs with line-specific comments and verdicts.
 
-**This is for posting reviews TO GitHub.** For local-only review feedback, use the `senior-reviewer` agent default workflow or `pr-review` skill instead.
+**This is for posting reviews TO GitHub.** For local-only review feedback, use the `reviewer` agent default workflow or `pr-review` skill instead.
 
 ---
 
@@ -316,7 +316,7 @@ gh pr diff <number> | head -100
 
 ## Comment Formatting
 
-Use the senior-reviewer voice - polite, educational, with examples:
+Use the reviewer voice - polite, educational, with examples:
 
 ### Good comment examples
 
@@ -467,6 +467,6 @@ gh api repos/{owner}/{repo}/pulls/{number}/reviews \
 ## Safety Notes
 
 1. **Always confirm before submitting** - Reviews are visible to the whole team
-2. **Be constructive** - This is public feedback, maintain the senior-reviewer voice
+2. **Be constructive** - This is public feedback, maintain the reviewer voice
 3. **Check PR state** - Don't review closed or merged PRs
 4. **Avoid duplicate comments** - Check existing review comments first
