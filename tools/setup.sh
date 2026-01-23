@@ -17,7 +17,7 @@ set -e
 # Version
 VERSION="0.0.1"
 
-# Colors
+# Colors (using printf-compatible format)
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
@@ -26,14 +26,15 @@ BOLD='\033[1m'
 DIM='\033[2m'
 NC='\033[0m'
 
-ok() { echo -e "  ${GREEN}✓${NC} $1"; }
-warn() { echo -e "  ${YELLOW}!${NC} $1"; }
-info() { echo -e "  ${BLUE}→${NC} $1"; }
+# Use printf for cross-platform color support
+print() { printf '%b\n' "$1"; }
+ok() { printf '  %b✓%b %s\n' "$GREEN" "$NC" "$1"; }
+warn() { printf '  %b!%b %s\n' "$YELLOW" "$NC" "$1"; }
+info() { printf '  %b→%b %s\n' "$BLUE" "$NC" "$1"; }
 
 # Show intro screen
 show_intro() {
-  echo ""
-  echo -e "${CYAN}"
+  printf '\n%b' "$CYAN"
   cat << 'EOF'
        _____ _     _       _ _   _____                      _            
       / ____| |   (_)     (_) | / ____|                    | |           
@@ -44,22 +45,22 @@ show_intro() {
                     | |                                                  
                     |_|                                                  
 EOF
-  echo -e "${NC}"
-  echo -e "        ${BOLD}AI Knowledgebase${NC} ${DIM}v${VERSION}${NC}"
-  echo ""
-  echo -e "                  ${YELLOW}     🚀${NC}"
-  echo -e "                  ${DIM}    /|${NC}"
-  echo -e "                  ${DIM}   / |${NC}"
-  echo -e "                  ${DIM}  /  |${NC}"
-  echo -e "                  ${DIM} /   |${NC}"
-  echo -e "                  ${DIM}/____|${NC}"
-  echo -e "                  ${YELLOW}  ||${NC}"
-  echo -e "                  ${YELLOW} \\||/${NC}"
-  echo -e "                  ${YELLOW}  \\/${NC}"
-  echo ""
-  echo -e "  ${DIM}Skills, commands, and agents for OpenCode${NC}"
-  echo -e "  ${DIM}https://github.com/ShipitSmarter/ai-knowledgebase${NC}"
-  echo ""
+  printf '%b\n' "$NC"
+  printf '        %bAI Knowledgebase%b %bv%s%b\n' "$BOLD" "$NC" "$DIM" "$VERSION" "$NC"
+  printf '\n'
+  printf '                  %b     🚀%b\n' "$YELLOW" "$NC"
+  printf '                  %b    /|%b\n' "$DIM" "$NC"
+  printf '                  %b   / |%b\n' "$DIM" "$NC"
+  printf '                  %b  /  |%b\n' "$DIM" "$NC"
+  printf '                  %b /   |%b\n' "$DIM" "$NC"
+  printf '                  %b/____|%b\n' "$DIM" "$NC"
+  printf '                  %b  ||%b\n' "$YELLOW" "$NC"
+  printf '                  %b \\||/%b\n' "$YELLOW" "$NC"
+  printf '                  %b  \\/%b\n' "$YELLOW" "$NC"
+  printf '\n'
+  printf '  %bSkills, commands, and agents for OpenCode%b\n' "$DIM" "$NC"
+  printf '  %bhttps://github.com/ShipitSmarter/ai-knowledgebase%b\n' "$DIM" "$NC"
+  printf '\n'
 }
 
 # Configuration
@@ -212,15 +213,15 @@ list_items() {
 
 # Verify setup
 verify() {
-  echo ""
-  echo -e "${BOLD}Setup Status${NC}"
-  echo ""
+  printf '\n'
+  printf '%bSetup Status%b\n' "$BOLD" "$NC"
+  printf '\n'
   
   command -v opencode &>/dev/null && ok "OpenCode installed" || warn "OpenCode not installed"
   
   [[ -f "$CONFIG_DIR/opencode.json" ]] && ok "Config exists" || warn "No config"
   
-  echo ""
+  printf '\n'
   
   # Skills
   if [[ -L "$CONFIG_DIR/skills" ]]; then
@@ -228,13 +229,13 @@ verify() {
     local skills=($(list_items "$skills_dir" "skills"))
     ok "Skills (${#skills[@]}):"
     for skill in "${skills[@]}"; do
-      echo -e "     ${DIM}•${NC} $skill"
+      printf '     %b•%b %s\n' "$DIM" "$NC" "$skill"
     done
   else
     warn "skills not linked"
   fi
   
-  echo ""
+  printf '\n'
   
   # Commands
   if [[ -L "$CONFIG_DIR/commands" ]]; then
@@ -242,13 +243,13 @@ verify() {
     local commands=($(list_items "$commands_dir" "commands"))
     ok "Commands (${#commands[@]}):"
     for cmd in "${commands[@]}"; do
-      echo -e "     ${DIM}•${NC} /$cmd"
+      printf '     %b•%b /%s\n' "$DIM" "$NC" "$cmd"
     done
   else
     warn "commands not linked"
   fi
   
-  echo ""
+  printf '\n'
   
   # Agents
   if [[ -L "$CONFIG_DIR/agents" ]]; then
@@ -256,13 +257,13 @@ verify() {
     local agents=($(list_items "$agents_dir" "agents"))
     ok "Agents (${#agents[@]}):"
     for agent in "${agents[@]}"; do
-      echo -e "     ${DIM}•${NC} $agent"
+      printf '     %b•%b %s\n' "$DIM" "$NC" "$agent"
     done
   else
     warn "agents not linked"
   fi
   
-  echo ""
+  printf '\n'
   
   # Plugins
   if [[ -L "$CONFIG_DIR/plugins" ]]; then
@@ -270,7 +271,7 @@ verify() {
     local plugins=($(list_items "$plugins_dir" "plugins"))
     ok "Plugins (${#plugins[@]}):"
     for plugin in "${plugins[@]}"; do
-      echo -e "     ${DIM}•${NC} $plugin"
+      printf '     %b•%b %s\n' "$DIM" "$NC" "$plugin"
     done
   else
     warn "plugins not linked"
@@ -284,11 +285,11 @@ main() {
   [[ "$VERIFY_ONLY" == true ]] && { verify; exit 0; }
   
   # Step 1: OpenCode
-  echo -e "${BOLD}1. OpenCode${NC}"
-  echo ""
+  printf '%b1. OpenCode%b\n' "$BOLD" "$NC"
+  printf '\n'
   if ! command -v opencode &>/dev/null; then
     warn "OpenCode not installed"
-    echo ""
+    printf '\n'
     read -p "   Install OpenCode now? (Y/n) " -n 1 -r </dev/tty
     echo
     if [[ ! $REPLY =~ ^[Nn]$ ]]; then
@@ -302,15 +303,15 @@ main() {
   
   # Step 2: Clone repo if needed
   if [[ -z "$REPO_ROOT" ]]; then
-    echo ""
-    echo -e "${BOLD}2. Repository Location${NC}"
-    echo ""
+    printf '\n'
+    printf '%b2. Repository Location%b\n' "$BOLD" "$NC"
+    printf '\n'
     
     # First, search for existing installation
     local existing=$(find_existing_repo)
     if [[ -n "$existing" ]]; then
       ok "Found existing installation: $existing"
-      echo ""
+      printf '\n'
       read -p "   Use this location? (Y/n) " -n 1 -r </dev/tty
       echo
       if [[ ! $REPLY =~ ^[Nn]$ ]]; then
@@ -325,17 +326,17 @@ main() {
     if [[ -z "$REPO_ROOT" ]]; then
       local default=$(find_default_location)
       
-      echo "   Where should we install the AI knowledgebase?"
-      echo ""
+      printf '   Where should we install the AI knowledgebase?\n'
+      printf '\n'
       if [[ "$OS" == "Darwin" ]]; then
-        echo "   ${BLUE}Tip:${NC} On Mac, ~/Developer is the recommended location for code"
+        printf '   %bTip:%b On Mac, ~/Developer is the recommended location for code\n' "$BLUE" "$NC"
       fi
-      echo ""
+      printf '\n'
       read -p "   Location [$default]: " location </dev/tty
       REPO_ROOT="${location:-$default}"
       REPO_ROOT="${REPO_ROOT/#\~/$HOME}"
       
-      echo ""
+      printf '\n'
       if [[ -d "$REPO_ROOT" ]] && detect_repo "$REPO_ROOT"; then
         info "Updating existing repo..."
         git -C "$REPO_ROOT" pull --quiet 2>/dev/null || true
@@ -347,16 +348,16 @@ main() {
       ok "Repository ready"
     fi
   else
-    echo ""
-    echo -e "${BOLD}2. Repository${NC}"
-    echo ""
+    printf '\n'
+    printf '%b2. Repository%b\n' "$BOLD" "$NC"
+    printf '\n'
     ok "Using local repo: $REPO_ROOT"
   fi
   
   # Step 3: Create symlinks
-  echo ""
-  echo -e "${BOLD}3. Linking to OpenCode${NC}"
-  echo ""
+  printf '\n'
+  printf '%b3. Linking to OpenCode%b\n' "$BOLD" "$NC"
+  printf '\n'
   mkdir -p "$CONFIG_DIR"
   
   setup_link "skills" "$REPO_ROOT/skills"
@@ -365,9 +366,9 @@ main() {
   setup_link "plugins" "$REPO_ROOT/plugins"
   
   # Step 4: Config file
-  echo ""
-  echo -e "${BOLD}4. Configuration${NC}"
-  echo ""
+  printf '\n'
+  printf '%b4. Configuration%b\n' "$BOLD" "$NC"
+  printf '\n'
   local config_file="$CONFIG_DIR/opencode.json"
   local config_updated=false
   
@@ -419,9 +420,9 @@ EOF
   
   # Step 5: Optional dependencies
   if [[ "$SKIP_DEPS" == false ]] && command -v npm &>/dev/null; then
-    echo ""
-    echo -e "${BOLD}5. Optional: Playwright${NC}"
-    echo ""
+    printf '\n'
+    printf '%b5. Optional: Playwright%b\n' "$BOLD" "$NC"
+    printf '\n'
     if command -v playwright &>/dev/null; then
       ok "Playwright already installed"
     else
@@ -431,19 +432,19 @@ EOF
   fi
   
   # Done
-  echo ""
-  echo -e "${BOLD}╭─────────────────────────────────────────╮${NC}"
-  echo -e "${BOLD}│            Setup Complete!              │${NC}"
-  echo -e "${BOLD}╰─────────────────────────────────────────╯${NC}"
+  printf '\n'
+  printf '%b╭─────────────────────────────────────────╮%b\n' "$BOLD" "$NC"
+  printf '%b│            Setup Complete!              │%b\n' "$BOLD" "$NC"
+  printf '%b╰─────────────────────────────────────────╯%b\n' "$BOLD" "$NC"
   
   verify
   
-  echo ""
-  echo -e "  ${GREEN}Ready!${NC} Run ${BOLD}opencode${NC} in any project folder."
-  echo ""
-  echo "  To update later:"
-  echo "    cd $REPO_ROOT && git pull"
-  echo ""
+  printf '\n'
+  printf '  %bReady!%b Run %bopencode%b in any project folder.\n' "$GREEN" "$NC" "$BOLD" "$NC"
+  printf '\n'
+  printf '  To update later:\n'
+  printf '    cd %s && git pull\n' "$REPO_ROOT"
+  printf '\n'
 }
 
 main "$@"
