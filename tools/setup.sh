@@ -447,17 +447,33 @@ main() {
   else
     print_warning "OpenCode is not installed"
     echo ""
-    echo "Install OpenCode first:"
-    echo "  curl -fsSL https://opencode.ai/install | bash"
-    echo ""
+    
     if [[ "$INTERACTIVE" == true ]]; then
-      read -p "Continue without OpenCode? (y/N) " -n 1 -r </dev/tty
+      read -p "Would you like to install OpenCode now? (Y/n) " -n 1 -r </dev/tty
       echo
-      if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        exit 1
+      if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+        echo "Installing OpenCode..."
+        curl -fsSL https://opencode.ai/install | bash
+        # Reload PATH to find opencode
+        export PATH="$HOME/.local/bin:$PATH"
+        if command_exists opencode; then
+          print_success "OpenCode installed successfully!"
+        else
+          print_warning "OpenCode installed but not in PATH. Restart your terminal after setup."
+        fi
+      else
+        echo "Skipping OpenCode installation. You can install it later:"
+        echo "  curl -fsSL https://opencode.ai/install | bash"
       fi
     else
-      echo "Non-interactive mode: continuing without OpenCode..."
+      echo "Non-interactive mode: Installing OpenCode automatically..."
+      curl -fsSL https://opencode.ai/install | bash
+      export PATH="$HOME/.local/bin:$PATH"
+      if command_exists opencode; then
+        print_success "OpenCode installed successfully!"
+      else
+        print_warning "OpenCode installed but not in PATH. Restart your terminal after setup."
+      fi
     fi
   fi
   
