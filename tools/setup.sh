@@ -105,6 +105,7 @@ SEARCH_DIRS=(
   "${HOME}/code/ai-knowledgebase"
   "${HOME}/projects/ai-knowledgebase"
   "${HOME}/dev/ai-knowledgebase"
+  "${HOME}/Documents/ai-knowledgebase"
   "${HOME}/Documents/GitHub/ai-knowledgebase"
   "${HOME}/Documents/git/ai-knowledgebase"
 )
