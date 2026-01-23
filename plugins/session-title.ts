@@ -226,9 +226,8 @@ export const SessionTitlePlugin: Plugin = async (ctx) => {
 
   return {
     event: async ({ event }) => {
-      // @ts-ignore - session.status event type
-      if (event.type === "session.status" && event.properties.status.type === "idle") {
-        // @ts-ignore
+      // Use session.idle event - fires when session becomes idle after processing
+      if (event.type === "session.idle") {
         const sessionId = event.properties.sessionID
 
         // Skip if we've already titled this session
