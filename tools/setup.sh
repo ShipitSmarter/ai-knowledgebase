@@ -58,6 +58,31 @@ for arg in "$@"; do
   esac
 done
 
+# Common directories to search for existing installations
+SEARCH_DIRS=(
+  "${HOME}/Developer/ai-knowledgebase"
+  "${HOME}/Projects/ai-knowledgebase"
+  "${HOME}/Code/ai-knowledgebase"
+  "${HOME}/git/ai-knowledgebase"
+  "${HOME}/repos/ai-knowledgebase"
+  "${HOME}/code/ai-knowledgebase"
+  "${HOME}/projects/ai-knowledgebase"
+  "${HOME}/dev/ai-knowledgebase"
+  "${HOME}/Documents/GitHub/ai-knowledgebase"
+  "${HOME}/Documents/git/ai-knowledgebase"
+)
+
+# Find existing ai-knowledgebase installation
+find_existing_repo() {
+  for dir in "${SEARCH_DIRS[@]}"; do
+    if detect_repo "$dir"; then
+      echo "$dir"
+      return 0
+    fi
+  done
+  return 1
+}
+
 # Find the best default install location
 find_default_location() {
   # macOS: Check common locations
@@ -150,28 +175,46 @@ main() {
     echo -e "${BOLD}2. Repository Location${NC}"
     echo ""
     
-    local default=$(find_default_location)
-    
-    echo "   Where should we install the AI knowledgebase?"
-    echo ""
-    if [[ "$OS" == "Darwin" ]]; then
-      echo "   ${BLUE}Tip:${NC} On Mac, ~/Developer is the recommended location for code"
+    # First, search for existing installation
+    local existing=$(find_existing_repo)
+    if [[ -n "$existing" ]]; then
+      ok "Found existing installation: $existing"
+      echo ""
+      read -p "   Use this location? (Y/n) " -n 1 -r </dev/tty
+      echo
+      if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+        REPO_ROOT="$existing"
+        info "Updating existing repo..."
+        git -C "$REPO_ROOT" pull --quiet 2>/dev/null || true
+        ok "Repository ready"
+      fi
     fi
-    echo ""
-    read -p "   Location [$default]: " location </dev/tty
-    REPO_ROOT="${location:-$default}"
-    REPO_ROOT="${REPO_ROOT/#\~/$HOME}"
     
-    echo ""
-    if [[ -d "$REPO_ROOT" ]]; then
-      info "Updating existing repo..."
-      git -C "$REPO_ROOT" pull --quiet
-    else
-      info "Cloning to $REPO_ROOT..."
-      mkdir -p "$(dirname "$REPO_ROOT")"
-      git clone --quiet "$REPO_URL" "$REPO_ROOT"
+    # If still no repo (not found or user declined), prompt for location
+    if [[ -z "$REPO_ROOT" ]]; then
+      local default=$(find_default_location)
+      
+      echo "   Where should we install the AI knowledgebase?"
+      echo ""
+      if [[ "$OS" == "Darwin" ]]; then
+        echo "   ${BLUE}Tip:${NC} On Mac, ~/Developer is the recommended location for code"
+      fi
+      echo ""
+      read -p "   Location [$default]: " location </dev/tty
+      REPO_ROOT="${location:-$default}"
+      REPO_ROOT="${REPO_ROOT/#\~/$HOME}"
+      
+      echo ""
+      if [[ -d "$REPO_ROOT" ]] && detect_repo "$REPO_ROOT"; then
+        info "Updating existing repo..."
+        git -C "$REPO_ROOT" pull --quiet 2>/dev/null || true
+      else
+        info "Cloning to $REPO_ROOT..."
+        mkdir -p "$(dirname "$REPO_ROOT")"
+        git clone --quiet "$REPO_URL" "$REPO_ROOT"
+      fi
+      ok "Repository ready"
     fi
-    ok "Repository ready"
   else
     echo ""
     echo -e "${BOLD}2. Repository${NC}"
