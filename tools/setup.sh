@@ -15,7 +15,7 @@
 set -e
 
 # Version
-VERSION="0.0.1"
+VERSION="0.0.2"
 
 # Colors (using printf-compatible format)
 GREEN='\033[0;32m'
