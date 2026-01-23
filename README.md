@@ -242,21 +242,35 @@ Explain what this skill helps with...
 
 ### "Skills aren't showing up"
 
-Check that setup worked:
+Check the symlinks exist:
 ```bash
-echo $OPENCODE_CONFIG_DIR
+ls -la ~/.config/opencode/
 ```
 
-Should print something like `~/.shipitsmarter/ai-knowledgebase`. If empty, restart your terminal.
+You should see symlinks for `skills`, `commands`, `agents`, `plugins` pointing to your ai-knowledgebase folder.
 
-### "Commands don't work"
+### "OpenCode won't start" or "Plugin errors"
 
-Same as above - check `$OPENCODE_CONFIG_DIR` and restart terminal.
+Reset by running the uninstall script, then reinstall:
+```bash
+# Uninstall (removes symlinks, keeps your config)
+curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/uninstall.sh | bash
+
+# Reinstall
+curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash
+```
 
 ### "Copilot ignores instructions"
 
 1. Ensure `.github/copilot-instructions.md` exists and is committed
 2. Restart VS Code
+
+### Verify Setup
+
+Run the setup script with `--verify` to check status:
+```bash
+./tools/setup.sh --verify
+```
 
 ---
 
