@@ -25,13 +25,9 @@
 #
 
 # EARLY DEBUG - this should be the FIRST output
-echo "=== ShipitSmarter Setup Script v2026-01-23-v2 ==="
-echo "DEBUG: Script loaded successfully"
+echo "=== ShipitSmarter Setup Script v2026-01-23-v3 ==="
 
 set -e
-
-# Debug mode - uncomment to enable verbose output
-# set -x
 
 # Colors for output
 RED='\033[0;31m'
@@ -39,16 +35,6 @@ GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
-
-# Detect if running interactively (can prompt user) or piped (curl | bash)
-if [[ -t 0 ]]; then
-  INTERACTIVE=true
-else
-  INTERACTIVE=false
-fi
-
-echo "DEBUG: Script starting..."
-echo "DEBUG: Interactive mode: $INTERACTIVE"
 
 # Configuration
 REPO_URL="https://github.com/ShipitSmarter/ai-knowledgebase"
@@ -71,17 +57,6 @@ prompt_install_location() {
     suggested_dir="${HOME}/code/ai-knowledgebase"
   elif [[ -d "${HOME}/projects" ]]; then
     suggested_dir="${HOME}/projects/ai-knowledgebase"
-  fi
-  
-  echo "DEBUG: Suggested directory: $suggested_dir"
-  echo "DEBUG: Interactive: $INTERACTIVE"
-  
-  # If not interactive (piped from curl), use default
-  if [[ "$INTERACTIVE" == false ]]; then
-    echo "Non-interactive mode detected, using default location..."
-    INSTALL_DIR="$suggested_dir"
-    print_success "Will install to: $INSTALL_DIR"
-    return
   fi
   
   echo ""
@@ -129,20 +104,15 @@ if [[ -n "$SCRIPT_DIR" ]] && detect_repo_root "$(dirname "$SCRIPT_DIR")" >/dev/n
   # Running from ./tools/setup.sh within the repo
   REPO_ROOT="$(dirname "$SCRIPT_DIR")"
   RUNNING_LOCALLY=true
-  echo "DEBUG: Detected local repo at $REPO_ROOT"
 elif detect_repo_root "$(pwd)" >/dev/null; then
   # Current working directory is the ai-knowledgebase repo
   REPO_ROOT="$(pwd)"
   RUNNING_LOCALLY=true
-  echo "DEBUG: Detected repo in current directory: $REPO_ROOT"
 else
   # Remote installation - REPO_ROOT will be set after user prompt
   REPO_ROOT=""
   RUNNING_LOCALLY=false
-  echo "DEBUG: Remote installation mode"
 fi
-
-echo "DEBUG: RUNNING_LOCALLY=$RUNNING_LOCALLY, REPO_ROOT=$REPO_ROOT"
 
 # Parse arguments
 SKIP_DEPS=false
@@ -439,7 +409,6 @@ main() {
   fi
   
   # Step 1: Check if OpenCode is installed
-  echo "DEBUG: Checking OpenCode..."
   echo "Checking OpenCode installation..."
   if command_exists opencode; then
     OPENCODE_VERSION=$(opencode --version 2>/dev/null || echo "unknown")
@@ -448,44 +417,30 @@ main() {
     print_warning "OpenCode is not installed"
     echo ""
     
-    if [[ "$INTERACTIVE" == true ]]; then
-      read -p "Would you like to install OpenCode now? (Y/n) " -n 1 -r </dev/tty
-      echo
-      if [[ ! $REPLY =~ ^[Nn]$ ]]; then
-        echo "Installing OpenCode..."
-        curl -fsSL https://opencode.ai/install | bash
-        # Reload PATH to find opencode
-        export PATH="$HOME/.local/bin:$PATH"
-        if command_exists opencode; then
-          print_success "OpenCode installed successfully!"
-        else
-          print_warning "OpenCode installed but not in PATH. Restart your terminal after setup."
-        fi
-      else
-        echo "Skipping OpenCode installation. You can install it later:"
-        echo "  curl -fsSL https://opencode.ai/install | bash"
-      fi
-    else
-      echo "Non-interactive mode: Installing OpenCode automatically..."
+    read -p "Would you like to install OpenCode now? (Y/n) " -n 1 -r </dev/tty
+    echo
+    if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+      echo "Installing OpenCode..."
       curl -fsSL https://opencode.ai/install | bash
+      # Reload PATH to find opencode
       export PATH="$HOME/.local/bin:$PATH"
       if command_exists opencode; then
         print_success "OpenCode installed successfully!"
       else
         print_warning "OpenCode installed but not in PATH. Restart your terminal after setup."
       fi
+    else
+      echo "Skipping OpenCode installation. You can install it later:"
+      echo "  curl -fsSL https://opencode.ai/install | bash"
     fi
   fi
   
   # Step 2: Clone or update ai-knowledgebase (only if running remotely)
-  echo "DEBUG: Step 2 - RUNNING_LOCALLY=$RUNNING_LOCALLY"
   if [[ "$RUNNING_LOCALLY" == false ]]; then
     print_header "AI Knowledgebase"
     
     # Ask user where to install
-    echo "DEBUG: About to call prompt_install_location"
     prompt_install_location
-    echo "DEBUG: INSTALL_DIR set to: $INSTALL_DIR"
     REPO_ROOT="$INSTALL_DIR"
     
     if [ -d "$INSTALL_DIR" ]; then
@@ -501,8 +456,6 @@ main() {
   else
     print_success "Running from local repository: $REPO_ROOT"
   fi
-  
-  echo "DEBUG: REPO_ROOT is now: $REPO_ROOT"
   
   # Step 3: Set up global OpenCode config with directory symlinks
   print_header "Setting up Global Configuration"
