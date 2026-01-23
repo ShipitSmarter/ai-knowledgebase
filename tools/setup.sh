@@ -15,17 +15,13 @@
 set -e
 
 # Version
-VERSION="0.0.5"
+VERSION="0.0.4"
 
 # Colors (using printf-compatible format)
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 CYAN='\033[0;36m'
-MAGENTA='\033[0;35m'
-RED='\033[0;31m'
-WHITE='\033[1;37m'
-ORANGE='\033[0;33m'
 BOLD='\033[1m'
 DIM='\033[2m'
 NC='\033[0m'
@@ -39,31 +35,24 @@ info() { printf '  %b→%b %s\n' "$BLUE" "$NC" "$1"; }
 # Show intro screen
 show_intro() {
   printf '\n'
-  # Viya logo in gradient colors
-  printf '       %b╦  ╦%b%b╦%b%b╦ ╦%b%b╔═╗%b\n' "$CYAN" "$NC" "$BLUE" "$NC" "$MAGENTA" "$NC" "$CYAN" "$NC"
-  printf '       %b╚╗╔╝%b%b║%b%b╚╦╝%b%b╠═╣%b\n' "$CYAN" "$NC" "$BLUE" "$NC" "$MAGENTA" "$NC" "$CYAN" "$NC"
-  printf '       %b ╚╝ %b%b╩%b%b ╩ %b%b╩ ╩%b\n' "$CYAN" "$NC" "$BLUE" "$NC" "$MAGENTA" "$NC" "$CYAN" "$NC"
+  printf '%b' "$CYAN"
+  cat << 'EOF'
+        ╭──────────────────────────────────────────────────╮
+        │                                                  │
+        │   ██╗   ██╗██╗██╗   ██╗ █████╗                   │
+        │   ██║   ██║██║╚██╗ ██╔╝██╔══██╗    🚀            │
+        │   ██║   ██║██║ ╚████╔╝ ███████║   /|\            │
+        │   ╚██╗ ██╔╝██║  ╚██╔╝  ██╔══██║  / | \           │
+        │    ╚████╔╝ ██║   ██║   ██║  ██║ /__|__\          │
+        │     ╚═══╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝   ╚╝             │
+        │                                                  │
+        ╰──────────────────────────────────────────────────╯
+EOF
+  printf '%b\n' "$NC"
+  printf '             %bAI Knowledgebase%b %bv%s%b\n' "$BOLD" "$NC" "$DIM" "$VERSION" "$NC"
   printf '\n'
-  printf '       %bAI Knowledgebase%b %bv%s%b\n' "$BOLD" "$NC" "$DIM" "$VERSION" "$NC"
-  printf '\n'
-  # Carrier pigeon riding a rocket
-  printf '                %b__%b\n' "$WHITE" "$NC"
-  printf '               %b(  )%b   %b~%b\n' "$WHITE" "$NC" "$DIM" "$NC"
-  printf '              %b(    )%b  %b~~%b  %b♪%b\n' "$WHITE" "$NC" "$DIM" "$NC" "$YELLOW" "$NC"
-  printf '               %b(__\\ \\%b%b°>%b\n' "$WHITE" "$NC" "$YELLOW" "$NC"
-  printf '              %b,━━━%b%b/Ω\\%b%b━.%b\n' "$ORANGE" "$NC" "$RED" "$NC" "$ORANGE" "$NC"
-  printf '             %b╱%b %b▓▓▓▓▓%b %b╲%b\n' "$RED" "$NC" "$ORANGE" "$NC" "$RED" "$NC"
-  printf '            %b╱%b  %b▓▓▓▓▓%b  %b╲%b\n' "$RED" "$NC" "$ORANGE" "$NC" "$RED" "$NC"
-  printf '           %b╱%b   %b▓▓▓▓▓%b   %b╲%b\n' "$RED" "$NC" "$YELLOW" "$NC" "$RED" "$NC"
-  printf '          %b╱%b    %b▓▓▓▓▓%b    %b╲%b\n' "$RED" "$NC" "$YELLOW" "$NC" "$RED" "$NC"
-  printf '         %b<%b%b━━━━━%b%b▼▼▼%b%b━━━━━%b%b>%b\n' "$WHITE" "$NC" "$RED" "$NC" "$ORANGE" "$NC" "$RED" "$NC" "$WHITE" "$NC"
-  printf '              %b╲%b %b║%b %b╱%b\n' "$YELLOW" "$NC" "$RED" "$NC" "$YELLOW" "$NC"
-  printf '               %b╲%b%b║%b%b╱%b\n' "$YELLOW" "$NC" "$RED" "$NC" "$YELLOW" "$NC"
-  printf '              %b·%b %b⋁%b %b·%b\n' "$ORANGE" "$NC" "$YELLOW" "$NC" "$ORANGE" "$NC"
-  printf '             %b· · ·%b\n' "$YELLOW" "$NC"
-  printf '\n'
-  printf '  %bSkills, commands & agents for OpenCode%b\n' "$DIM" "$NC"
-  printf '  %bhttps://github.com/ShipitSmarter/ai-knowledgebase%b\n' "$DIM" "$NC"
+  printf '     %bSkills, commands, and agents for OpenCode%b\n' "$DIM" "$NC"
+  printf '     %bhttps://github.com/ShipitSmarter/ai-knowledgebase%b\n' "$DIM" "$NC"
   printf '\n'
 }
 
