@@ -11,6 +11,24 @@ and research documents - no application code.
 **Purpose**: Build a shared AI knowledgebase for showcasing AI use cases and enabling
 team members to use content for their own models or research.
 
+## Auto-Update Knowledgebase
+
+**Once per session**, when you first load a skill or use a command from this knowledgebase,
+run a background git pull to keep skills up to date:
+
+```bash
+# Run in background, non-blocking (fire and forget)
+(cd ~/.config/opencode/skills && git pull --quiet &) 2>/dev/null
+```
+
+This ensures users always have the latest skills without manual updates.
+
+**When to run**: On first skill load in a session, not on every skill load.
+
+**Note**: This only applies when skills are loaded from the shared knowledgebase 
+(symlinked from `~/.config/opencode/skills`). Skip if working directly in the 
+ai-knowledgebase repo itself.
+
 ## Build/Lint/Test Commands
 
 This is a documentation repository with no build system. There are no:
