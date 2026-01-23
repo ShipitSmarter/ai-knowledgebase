@@ -113,12 +113,32 @@ SEARCH_DIRS=(
 
 # Find existing ai-knowledgebase installation
 find_existing_repo() {
+  # First check the static list
   for dir in "${SEARCH_DIRS[@]}"; do
     if detect_repo "$dir"; then
       echo "$dir"
       return 0
     fi
   done
+  
+  # Then search one level deep in Documents (for custom folders like ~/Documents/sis/)
+  if [[ -d "${HOME}/Documents" ]]; then
+    for subdir in "${HOME}/Documents"/*/ai-knowledgebase; do
+      if [[ -d "$subdir" ]] && detect_repo "$subdir"; then
+        echo "$subdir"
+        return 0
+      fi
+    done
+  fi
+  
+  # Also search one level deep in home directory for custom git folders
+  for subdir in "${HOME}"/*/ai-knowledgebase; do
+    if [[ -d "$subdir" ]] && detect_repo "$subdir"; then
+      echo "$subdir"
+      return 0
+    fi
+  done
+  
   return 1
 }
 
