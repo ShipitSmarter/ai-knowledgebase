@@ -33,10 +33,47 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-INSTALL_DIR="${HOME}/.shipitsmarter/ai-knowledgebase"
 REPO_URL="https://github.com/ShipitSmarter/ai-knowledgebase"
 OPENCODE_CONFIG_HOME="${HOME}/.config/opencode"
 OPENCODE_PLUGINS="${HOME}/.opencode/plugins"
+
+# Default install location - will be overridden by user prompt
+DEFAULT_INSTALL_DIR="${HOME}/git/ai-knowledgebase"
+INSTALL_DIR=""
+
+# Prompt user for install location
+prompt_install_location() {
+  echo ""
+  echo "Where would you like to clone ai-knowledgebase?"
+  echo ""
+  echo "It's best to place it alongside your other git repositories."
+  echo "For example, if your repos are in ~/git/, place it at ~/git/ai-knowledgebase"
+  echo ""
+  
+  # Try to detect existing git directory
+  local suggested_dir="$DEFAULT_INSTALL_DIR"
+  if [[ -d "${HOME}/git" ]]; then
+    suggested_dir="${HOME}/git/ai-knowledgebase"
+  elif [[ -d "${HOME}/repos" ]]; then
+    suggested_dir="${HOME}/repos/ai-knowledgebase"
+  elif [[ -d "${HOME}/code" ]]; then
+    suggested_dir="${HOME}/code/ai-knowledgebase"
+  elif [[ -d "${HOME}/projects" ]]; then
+    suggested_dir="${HOME}/projects/ai-knowledgebase"
+  fi
+  
+  read -p "Location [$suggested_dir]: " user_input
+  
+  if [[ -z "$user_input" ]]; then
+    INSTALL_DIR="$suggested_dir"
+  else
+    # Expand ~ to home directory
+    INSTALL_DIR="${user_input/#\~/$HOME}"
+  fi
+  
+  echo ""
+  print_success "Will install to: $INSTALL_DIR"
+}
 
 # Determine script location and repo root
 # Priority:
@@ -68,8 +105,8 @@ elif detect_repo_root "$(pwd)" >/dev/null; then
   REPO_ROOT="$(pwd)"
   RUNNING_LOCALLY=true
 else
-  # Remote installation - will clone to INSTALL_DIR
-  REPO_ROOT="$INSTALL_DIR"
+  # Remote installation - REPO_ROOT will be set after user prompt
+  REPO_ROOT=""
   RUNNING_LOCALLY=false
 fi
 
@@ -389,13 +426,17 @@ main() {
   if [[ "$RUNNING_LOCALLY" == false ]]; then
     print_header "AI Knowledgebase"
     
+    # Ask user where to install
+    prompt_install_location
+    REPO_ROOT="$INSTALL_DIR"
+    
     if [ -d "$INSTALL_DIR" ]; then
       echo "Updating existing installation..."
       git -C "$INSTALL_DIR" pull --quiet
       print_success "Updated ai-knowledgebase"
     else
       echo "Cloning ai-knowledgebase..."
-      mkdir -p "${HOME}/.shipitsmarter"
+      mkdir -p "$(dirname "$INSTALL_DIR")"
       git clone --quiet "$REPO_URL" "$INSTALL_DIR"
       print_success "Cloned ai-knowledgebase to $INSTALL_DIR"
     fi

@@ -6,19 +6,13 @@ This repository contains ready-to-use AI skills, commands, and settings that wor
 
 ---
 
-## Getting Started by Role
+## Quick Setup (2 minutes)
 
-Pick your guide:
+```bash
+curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash
+```
 
-| Role | Guide |
-|------|-------|
-| **Designer** | [AI Tools for Designers](docs/getting-started/designers.md) - Frontend design, UI quality commands |
-| **Engineer** | [AI Tools for Engineers](docs/getting-started/engineers.md) - Vue, testing, GitHub workflow |
-| **Analyst / Integration Specialist** | [AI Tools for Analysts](docs/getting-started/analysts.md) - Carrier data, troubleshooting |
-| **Product** | [AI Tools for Product](docs/getting-started/product.md) - Strategy, documentation, user research |
-| **Research** | [AI Tools for Research](docs/getting-started/research.md) - Finding information, citing sources |
-
-Or keep reading for a quick overview.
+Restart your terminal. **Done!** All skills and commands now work in any project folder.
 
 ---
 
@@ -36,7 +30,7 @@ Research → Plan → Architect Review → Build → Code Review → Improve
 | **Plan** | Default agent | Break down the work, create implementation plan |
 | **Architect Review** | `architect` agent | Critical review of the plan - simplicity, trade-offs, risks |
 | **Build** | `frontend` agent (or default) | Implement in phases, check work between each phase |
-| **Code Review** | `reviewer` agent | Thorough review - tests, types, patterns, educational feedback |
+| **Code Review** | `reviewer` agent | Strict review - tests, types, patterns. Missing tests = blocked. |
 | **Improve** | `retro` agent | If unhappy with results, analyze what went wrong |
 
 **After a retro:** Use `@ai-coordinator` to implement learnings into skills/agents/commands.
@@ -45,17 +39,15 @@ Research → Plan → Architect Review → Build → Code Review → Improve
 
 ---
 
-## Quick Setup (2 minutes)
+## Getting Started by Role
 
-Run this in your terminal:
-
-```bash
-curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash
-```
-
-Then restart your terminal. **That's it!** 
-
-All skills and commands now work in any project folder.
+| Role | Guide |
+|------|-------|
+| **Designer** | [AI Tools for Designers](docs/getting-started/designers.md) - Frontend design, UI quality commands |
+| **Engineer** | [AI Tools for Engineers](docs/getting-started/engineers.md) - Vue, testing, GitHub workflow |
+| **Analyst / Integration Specialist** | [AI Tools for Analysts](docs/getting-started/analysts.md) - Carrier data, troubleshooting |
+| **Product** | [AI Tools for Product](docs/getting-started/product.md) - Strategy, documentation, user research |
+| **Research** | [AI Tools for Research](docs/getting-started/research.md) - Finding information, citing sources |
 
 ---
 
@@ -192,7 +184,7 @@ git add .github/copilot-instructions.md && git commit -m "Add Copilot instructio
 ## Keeping Up to Date
 
 ```bash
-cd ~/.shipitsmarter/ai-knowledgebase && git pull
+cd ~/git/ai-knowledgebase && git pull  # or wherever you installed it
 ```
 
 ---
