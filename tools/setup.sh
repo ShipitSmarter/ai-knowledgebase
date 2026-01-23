@@ -39,11 +39,36 @@ OPENCODE_CONFIG_HOME="${HOME}/.config/opencode"
 OPENCODE_PLUGINS="${HOME}/.opencode/plugins"
 
 # Determine script location and repo root
+# Priority:
+# 1. Script is run from within ai-knowledgebase repo (./tools/setup.sh)
+# 2. Current directory is ai-knowledgebase repo (curl | bash while in repo)
+# 3. Fall back to cloning to ~/.shipitsmarter/ai-knowledgebase
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd)" || SCRIPT_DIR=""
-if [[ -n "$SCRIPT_DIR" && -d "$(dirname "$SCRIPT_DIR")/skills" ]]; then
+
+detect_repo_root() {
+  local dir="$1"
+  # Check if directory has the expected ai-knowledgebase structure
+  if [[ -d "$dir/skills" && -d "$dir/commands" && -d "$dir/agents" && -d "$dir/.opencode" ]]; then
+    # Also verify it's actually our repo by checking for a unique file
+    if [[ -f "$dir/AGENTS.md" ]] || [[ -f "$dir/tools/setup.sh" ]]; then
+      echo "$dir"
+      return 0
+    fi
+  fi
+  return 1
+}
+
+if [[ -n "$SCRIPT_DIR" ]] && detect_repo_root "$(dirname "$SCRIPT_DIR")" >/dev/null; then
+  # Running from ./tools/setup.sh within the repo
   REPO_ROOT="$(dirname "$SCRIPT_DIR")"
   RUNNING_LOCALLY=true
+elif detect_repo_root "$(pwd)" >/dev/null; then
+  # Current working directory is the ai-knowledgebase repo
+  REPO_ROOT="$(pwd)"
+  RUNNING_LOCALLY=true
 else
+  # Remote installation - will clone to INSTALL_DIR
   REPO_ROOT="$INSTALL_DIR"
   RUNNING_LOCALLY=false
 fi

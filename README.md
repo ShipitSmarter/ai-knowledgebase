@@ -22,6 +22,29 @@ Or keep reading for a quick overview.
 
 ---
 
+## Recommended Workflow
+
+Our recommended workflow for building features with AI assistance:
+
+```
+Research → Plan → Architect Review → Build → Code Review → Improve
+```
+
+| Step | Agent/Tool | What happens |
+|------|------------|--------------|
+| **Research** | `research` agent | Gather context, explore options, cite sources |
+| **Plan** | Default agent | Break down the work, create implementation plan |
+| **Architect Review** | `architect` agent | Critical review of the plan - simplicity, trade-offs, risks |
+| **Build** | `frontend` agent (or default) | Implement in phases, check work between each phase |
+| **Code Review** | `reviewer` agent | Thorough review - tests, types, patterns, educational feedback |
+| **Improve** | `retro` agent | If unhappy with results, analyze what went wrong |
+
+**After a retro:** Use `@ai-coordinator` to implement learnings into skills/agents/commands.
+
+**Tip:** For frontend work, the `frontend` agent has access to both viya-app and viya-ui-warehouse.
+
+---
+
 ## Quick Setup (2 minutes)
 
 Run this in your terminal:
@@ -124,8 +147,9 @@ Agents are specialized personas for different types of work. Select an agent to 
 | `architect` | Technical planning, architecture reviews, infrastructure decisions. Critical and concise - asks "what's the simplest thing that could work?" |
 | `reviewer` | Thorough code review (Vue/TypeScript or C#/.NET). Analyzes full commit history, uncompromising on tests and types, educational feedback. |
 | `retro` | Retrospectives on AI-assisted work. Analyzes what went wrong, identifies root causes with Five Whys, proposes improvements to skills/agents/commands. |
-| `frontend` | Frontend development specialist for Vue/TypeScript work. |
+| `frontend` | Frontend development specialist for Vue/TypeScript work. Has access to both viya-app and viya-ui-warehouse. |
 | `research` | Research tasks without shell access (safer for exploration). |
+| `ai-coordinator` | Quality gate for AI automation. `@ai-coordinator` before creating new skills/agents/commands to check for duplicates. Also answers OpenCode questions. |
 
 ---
 
