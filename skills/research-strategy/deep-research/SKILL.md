@@ -76,6 +76,51 @@ During discovery, explicitly flag:
 - Outdated information (note source dates)
 - Marketing claims vs technical facts
 
+### Step 1.5: Validate Discovery Source Quality
+
+**Before proceeding to planning, classify each discovery source by tier:**
+
+| Tier | Classification | Examples |
+|------|----------------|----------|
+| **Tier 1** | Official documentation, peer-reviewed papers, pattern creators | MongoDB docs, RFCs, Martin Fowler |
+| **Tier 2** | Vendor documentation, framework maintainers | Microsoft Learn, library official docs |
+| **Tier 3** | Reputable publications, known experts, vendor blogs | Major tech blogs, conference talks |
+| **Tier 4** | Community content, personal blogs, forum posts | Dev.to, Medium, Stack Overflow |
+
+**Quality Check:**
+
+Count sources by tier:
+- Tier 1-2 (High confidence): X sources
+- Tier 3-4 (Lower confidence): Y sources
+
+**If more than 50% of discovery sources are Tier 3-4**, warn the user:
+
+> ⚠️ **Discovery Source Quality Warning**
+> 
+> The initial discovery sources are weighted toward lower-confidence content:
+> - High confidence (Tier 1-2): X sources (Y%)
+> - Lower confidence (Tier 3-4): Z sources (W%)
+> 
+> **Lower-confidence sources found:**
+> | Source | Tier | Reason |
+> |--------|------|--------|
+> | [Source](url) | 3 | Vendor blog |
+> | [Source](url) | 4 | Personal blog |
+> 
+> This may indicate:
+> - The topic is emerging/niche (less official documentation exists)
+> - Search terms could be refined to find authoritative sources
+> - The topic may require more cautious conclusions
+> 
+> **Options:**
+> 1. Proceed with planning (subtopic research may find better sources)
+> 2. Refine search terms to find more authoritative sources first
+> 3. Acknowledge this is a lower-confidence research area
+> 
+> How would you like to proceed?
+
+**Wait for user confirmation before continuing to Phase 2.**
+
 ---
 
 ## Phase 2: Planning
@@ -206,11 +251,19 @@ Focus on:
 - Note the date of sources - flag anything older than 2 years as potentially outdated
 - Answer the specific questions identified in the exploration plan
 
+**Source Quality Validation:**
+Classify each source by tier:
+- Tier 1-2: Official docs, peer-reviewed, vendor docs, framework maintainers
+- Tier 3-4: Blogs, community content, forum posts
+
 Return a JSON summary:
 {
   "subtopic": "<name>",
   "file_created": "<path>",
   "sources_count": <number>,
+  "sources_tier_1_2": <number>,
+  "sources_tier_3_4": <number>,
+  "source_quality_warning": <true if >50% are Tier 3-4>,
   "key_findings": ["finding 1", "finding 2", "finding 3"],
   "uncertainties": ["any flagged items"],
   "gaps": ["areas needing more research"]
@@ -238,6 +291,41 @@ When all subtopic research completes:
    - Review individual documents first
 
 **Do NOT automatically proceed to synthesis.** Wait for user to request it.
+
+### Step 3.4: Aggregate Source Quality Check
+
+After all subtopics complete, aggregate source quality metrics:
+
+```
+Total sources across all subtopics: X
+- Tier 1-2 (High confidence): Y (Z%)
+- Tier 3-4 (Lower confidence): W (V%)
+
+Subtopics with quality warnings: [list any with >50% Tier 3-4]
+```
+
+**If overall research has >50% Tier 3-4 sources**, warn the user:
+
+> ⚠️ **Overall Source Quality Warning**
+> 
+> Across all subtopic research, sources are weighted toward lower-confidence content:
+> - High confidence (Tier 1-2): Y sources (Z%)
+> - Lower confidence (Tier 3-4): W sources (V%)
+> 
+> **Subtopics with lower-confidence sources:**
+> | Subtopic | Tier 1-2 | Tier 3-4 | Warning |
+> |----------|----------|----------|---------|
+> | <name> | 2 | 4 | ⚠️ |
+> | <name> | 3 | 1 | ✓ |
+> 
+> The synthesis document will include a confidence assessment reflecting this.
+> 
+> **Options:**
+> 1. Proceed to synthesis (findings will note confidence levels)
+> 2. Research specific subtopics further with refined search terms
+> 3. Accept lower confidence for this topic area
+> 
+> How would you like to proceed?
 
 ---
 

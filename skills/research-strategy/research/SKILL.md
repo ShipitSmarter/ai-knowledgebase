@@ -54,7 +54,52 @@ Gather at least 3-5 sources, prioritizing:
 - Reputable tech blogs
 - Primary sources over aggregators
 
-### Step 4: Synthesize Findings
+### Step 4: Validate Source Quality
+
+**Before proceeding, classify each gathered source by tier:**
+
+| Tier | Classification | Examples |
+|------|----------------|----------|
+| **Tier 1** | Official documentation, peer-reviewed papers, pattern creators | MongoDB docs, RFCs, Martin Fowler |
+| **Tier 2** | Vendor documentation, framework maintainers | Microsoft Learn, library official docs |
+| **Tier 3** | Reputable publications, known experts, vendor blogs | Major tech blogs, conference talks |
+| **Tier 4** | Community content, personal blogs, forum posts | Dev.to, Medium, Stack Overflow |
+
+**Quality Check:**
+
+Count sources by tier:
+- Tier 1-2 (High confidence): X sources
+- Tier 3-4 (Lower confidence): Y sources
+
+**If more than 50% of sources are Tier 3-4**, pause and warn the user:
+
+> ⚠️ **Source Quality Warning**
+> 
+> The gathered sources are weighted toward lower-confidence content:
+> - High confidence (Tier 1-2): X sources (Y%)
+> - Lower confidence (Tier 3-4): Z sources (W%)
+> 
+> **Lower-confidence sources:**
+> | Source | Tier | Why Lower Confidence |
+> |--------|------|---------------------|
+> | [Source](url) | 3 | Vendor blog, potential bias |
+> | [Source](url) | 4 | Personal blog, unverified |
+> 
+> **Options:**
+> 1. Proceed anyway (findings will be flagged as lower confidence)
+> 2. Search for more authoritative sources first
+> 3. Narrow the topic to find more official documentation
+> 
+> How would you like to proceed?
+
+**Wait for user confirmation before continuing.**
+
+If user proceeds, add a confidence warning to the final document's frontmatter:
+```yaml
+confidence: low  # >50% sources are Tier 3-4
+```
+
+### Step 5: Synthesize Findings
 
 Combine information from all sources:
 - Memory (prior research context)
@@ -63,7 +108,7 @@ Combine information from all sources:
 
 Note contradictions or updates to prior understanding.
 
-### Step 5: Create Research Document
+### Step 6: Create Research Document
 
 Create file: `research/<project>/<YYYY-MM-DD>-<topic-slug>.md`
 
@@ -75,6 +120,7 @@ topic: <Full Topic Title>
 date: <YYYY-MM-DD>
 project: <project-name>
 sources_count: <number>
+confidence: high | medium | low  # Based on source tier distribution
 notion_refs: [<page-ids if any>]
 status: draft
 tags: [<relevant>, <tags>]
@@ -137,7 +183,7 @@ tags: [<relevant>, <tags>]
 - Link to related projects
 ```
 
-### Step 6: Store Key Findings in Memory
+### Step 7: Store Key Findings in Memory
 
 After creating the document, store important findings for future recall:
 ```javascript
@@ -149,7 +195,7 @@ memory({
 })
 ```
 
-### Step 7: Update Project Index
+### Step 8: Update Project Index
 
 If this is a new project, create `research/<project>/_index.md`:
 
