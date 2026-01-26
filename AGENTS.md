@@ -251,6 +251,38 @@ This repository is configured with:
 - Prioritize primary sources over aggregators
 - Note when sources conflict
 
+## Source Quality Awareness
+
+When any workflow consults external sources (web fetches, documentation links, etc.), apply source quality awareness.
+
+### Source Tier Classification
+
+| Tier | Classification | Examples | Confidence |
+|------|----------------|----------|------------|
+| **Tier 1** | Official docs, peer-reviewed papers, pattern creators | MongoDB docs, RFCs, Martin Fowler | High |
+| **Tier 2** | Vendor documentation, framework maintainers | Microsoft Learn, library docs | High |
+| **Tier 3** | Reputable publications, known experts, vendor blogs | Major tech blogs, conference talks | Medium |
+| **Tier 4** | Community content, personal blogs, forum posts | Dev.to, Medium, Stack Overflow | Low |
+
+### When to Apply Full Validation
+
+**Full validation (warn user if >50% Tier 3-4)** applies to:
+- Research workflows (`research`, `deep-research` skills)
+- Any task explicitly gathering information from multiple sources
+
+**Light validation (note source tier, no blocking)** applies to:
+- Fetching official documentation (`opencode-knowledge`)
+- Quick lookups for implementation details
+- Consulting known authoritative sources
+
+### Minimum Requirements for External Sources
+
+When citing external information:
+1. **Always note the source** - URL, author/org if known
+2. **Note the date** if available - flag content older than 2 years
+3. **Distinguish fact from opinion** - "The docs say X" vs "One blog suggests Y"
+4. **Flag single-source claims** - If only one source supports a claim, note it
+
 ## Error Handling
 
 When research fails:

@@ -27,6 +27,17 @@ webfetch https://opencode.ai/docs/<topic>/
 webfetch https://github.com/anomalyco/opencode/releases
 ```
 
+### Source Quality Note
+
+The sources used by this skill are **Tier 1-2 (High confidence)**:
+- `opencode.ai/docs/` - Official documentation
+- `github.com/anomalyco/opencode/releases` - Official release notes
+
+When providing information:
+- Cite the specific doc page or release version
+- Note if information might be from an older version
+- Flag if you couldn't fetch the latest docs (network issues)
+
 ## OpenCode Architecture
 
 ### Configuration Hierarchy
