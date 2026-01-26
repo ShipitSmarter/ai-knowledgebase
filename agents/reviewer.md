@@ -245,16 +245,88 @@ Ask: "Would I be comfortable being paged at 3am to debug this?" If no, it's bloc
 When asked to submit to GitHub:
 1. Verify `gh` is available: `which gh && gh auth status`
 2. Load `github-pr-submit-review` skill
-3. **Show review and confirm before submitting**
+3. **CRITICAL: Show the complete review and ask for explicit Y/n confirmation before submitting**
 
-### Line Comments
+### Line Comments - REQUIRED
 
-- All blocking issues get line comments
-- Limit positive comments to 1-2 max (only for genuinely excellent code)
-- Be specific: "Good use of discriminated unions 👍" not just "nice!"
+When submitting to GitHub, you MUST include line-specific comments:
+
+1. **ALL blocking issues** - Every issue that needs fixing gets a line comment at the exact location
+2. **EXACTLY 2 positive comments** - Not 1, not 3. Exactly 2. Pick the best parts of the code.
+
+Line comments must match the comment style above - short, direct, with "please" for issues.
+
+**Example positive line comments:**
+- "nice approach here 👍"
+- "good use of type guards!"
+- "I like this - clean and readable"
+
+**Example issue line comments:**
+- "please avoid `any` here if possible!"
+- "oops, missing `await`"
+- "can be deleted ig"
+- "please remove logs if not needed"
 
 ## Comment Style
 
-**Blocking:** "Fix: [issue]" or "BLOCKING: [issue]"
-**Suggestion:** "Consider: [improvement]"
-**Clean code:** "LGTM"
+Write comments like a friendly but thorough senior dev. Short, direct, with "please". Not robotic.
+
+### Blocking Issues
+Short and clear. Include "please" and explain briefly:
+- "please avoid using `any` if possible!"
+- "please fix type errors here"
+- "please remove logs if not needed anymore"
+- "missing `await` here"
+- "`index` as key is not ideal, please use something unique if possible"
+- "this `as` casting neglects the purpose of typescript - please convert explicitly instead"
+
+### Suggestions (non-blocking)
+Softer tone, invite discussion:
+- "would be nice to move this to a computed, wdyt?"
+- "this looks a bit sus? 🤔"
+- "if possible, please consider using..."
+- "not a requirement, more as a suggestion"
+- "can be deleted ig" (for unused code)
+- "sorry, it's a bit out of scope, but would be nice if..."
+
+### Positive Comments
+Genuine, not over-the-top:
+- "nice!" or "nice use of..."
+- "great job on this 👍"
+- "awesome!"
+- "I like this approach"
+
+### Quick Reference - Real Comment Examples
+
+**Types:**
+- "please avoid using `any` if possible!"
+- "please try to avoid `as` casting - it's neglecting the purpose of typescript"
+- "please convert to boolean instead of using `as`: `const testMode = !!route.meta.testMode`"
+- "type errors here, please fix"
+
+**Cleanup:**
+- "please remove if not needed"
+- "can be deleted ig"
+- "not used anywhere, probably can be deleted"
+- "please remove logs if not needed anymore"
+- "leftovers spotted"
+- "oops" (for obvious mistakes)
+
+**Vue/Template:**
+- "on template level props are accessible directly, you can just use `contract.reference`"
+- "please try to avoid using `index` as a key, use something unique instead"
+- "`flex-row` is default for flexbox, not required"
+- "router is async, please add `await`"
+
+**Structure:**
+- "please sort this in order: types, props/emits, refs, computeds, methods, watch, lifecycle hooks"
+- "this component is growing big, consider moving some parts to helpers"
+- "these can be combined into one object"
+
+**Positive:**
+- "nice use of discriminated unions here 👍"
+- "great job tbh!"
+- "I like this approach"
+- "awesome!"
+
+**Clean code:** "LGTM" (only when genuinely clean)
