@@ -193,20 +193,39 @@ cd ~/git/ai-knowledgebase && git pull  # or wherever you installed it
 
 ```
 ai-knowledgebase/
-├── .opencode/               # OpenCode configuration
-│   ├── command/             # Slash commands (21 commands)
-│   └── skill/               # Active skills
-├── skills/                  # Skill definitions
-│   ├── frontend/            # Vue/TypeScript frontend skills (12 skills)
-│   └── ...                  # General skills (9 skills)
-├── plugins/                 # OpenCode plugins (auto-loaded)
-├── commands/                # Legacy command location
-├── copilot/                 # Copilot instructions
+├── .opencode/               # OpenCode project configuration
+│   ├── agents -> ../agents  # Symlink to agents
+│   ├── commands -> ../commands
+│   ├── plugins -> ../plugins
+│   ├── skill/               # Individual skill symlinks
+│   └── config.json          # OpenCode settings
+├── agents/                  # Agent definitions (7 agents)
+├── commands/                # Slash commands (21 commands)
+├── skills/                  # Skill definitions (33 skills)
+│   ├── codebase-structures/ # App structure skills (rates, shipping, viya-app, etc.)
+│   ├── design/              # Design skills (designer, frontend-design)
+│   ├── documentation/       # Docs skills (docs-writing, skill-writer, etc.)
+│   ├── frontend-development/# Vue/TypeScript skills (vue-component, api-integration, etc.)
+│   ├── github-workflow/     # GitHub skills (pr-review, issue-creator, etc.)
+│   ├── infrastructure/      # Infrastructure skills (mongodb, dev-environment)
+│   ├── research-strategy/   # Research & planning skills
+│   └── testing/             # Testing skills (unit, playwright, browser-debug)
+├── opencode/                # OpenCode ecosystem documentation
+│   ├── github/              # GitHub integration docs
+│   ├── ide/                 # IDE integration (VSCode, terminal)
+│   ├── mcp-servers/         # MCP server configurations
+│   └── plugins/             # Plugin documentation
+├── copilot/                 # GitHub Copilot instructions
 ├── docs/
 │   ├── getting-started/     # Role-specific guides
 │   └── repository-map.md    # All ShipitSmarter repositories explained
-├── research/                # Research documents we've created
-├── knowledgebase/           # Company context, personas
+├── research/                # Research documents (14 topics)
+├── knowledgebase/           # Company context, personas, competitors
+├── architecture/            # Architecture decisions
+├── architect-reviews/       # Architecture review documents
+├── ideas/                   # Feature ideas and proposals
+├── plan/                    # Planning documents
+├── prompts/                 # Reusable prompt templates
 └── tools/                   # Setup and update scripts
 ```
 
