@@ -224,7 +224,7 @@ ai-knowledgebase/
 ├── docs/
 │   ├── getting-started/     # Role-specific guides
 │   └── repository-map.md    # All ShipitSmarter repositories explained
-├── research/                # Research documents (14 topics)
+├── research/                # Research documents (15 topics)
 ├── knowledgebase/           # Company context, personas, competitors
 ├── architecture/            # Architecture decisions
 ├── architect-reviews/       # Architecture review documents

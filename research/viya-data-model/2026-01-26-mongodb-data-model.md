@@ -11,13 +11,14 @@ tags: [mongodb, data-model, entity-relationships, architecture]
 
 ## Summary
 
-This document maps the MongoDB data structure across all Viya TMS services, documenting entity relationships, data patterns, and cross-service integration points. The system uses a **microservices architecture** where each service owns its database with complete isolation. Services communicate through **events** (AWS SNS/SQS) rather than direct database access.
+This document maps the MongoDB data structure across all Viya TMS services, documenting entity relationships, data patterns, and cross-service integration points. The system uses a **microservices architecture** where each service owns its database with complete isolation. Services communicate through **synchronous HTTP APIs** for real-time operations and **asynchronous events** (AWS SNS/SQS) for eventual consistency - never through direct database access.
 
 Key architectural decisions:
 1. **Database-per-service** - No shared databases between services
-2. **Event-driven integration** - Cross-service data flows via async events
-3. **Embedded vs Referenced** - Strategic mix based on query patterns
-4. **Multi-tenancy** - All entities include `TenantId` for isolation
+2. **Synchronous HTTP APIs** - Real-time cross-service calls (e.g., shipping → rates for pricing)
+3. **Event-driven integration** - Async events for eventual consistency (e.g., ShipmentCreated → hooks, auditor)
+4. **Embedded vs Referenced** - Strategic mix based on query patterns
+5. **Database-per-tenant** - Multi-tenancy via separate databases, not document-level filtering
 
 ## Database Overview
 
@@ -73,76 +74,76 @@ The largest and most complex database, containing the core logistics entities.
 │  │                           shipments                                   │   │
 │  │─────────────────────────────────────────────────────────────────────│   │
 │  │ _id: UUID                                                            │   │
-│  │ TenantId: string                        ┌─────────────────────────┐  │   │
-│  │ CreatedOn: ISODate                      │ EMBEDDED: Addresses     │  │   │
-│  │ Data: {                                 │  ├─ Sender {}           │  │   │
-│  │   Status: enum ─────────────────────────│  ├─ Receiver {}         │  │   │
-│  │   Reference: string                     │  └─ Collection {}       │  │   │
-│  │   CarrierReference: string ◄────────────┼─────────────────────────┘  │   │
-│  │   CarrierLabel: string                  │                            │   │
-│  │   ServiceLevelReference: string         │ EMBEDDED: TimeWindows      │   │
-│  │   Addresses: { ... } ◄──────────────────│  ├─ Pickup.Planned/Req    │   │
-│  │   TimeWindows: { ... }                  │  └─ Delivery.Planned/Req  │   │
-│  │   Rate: { ... } ◄───────────────────────┼─────────────────────────┐ │   │
-│  │   HandlingUnitReferences: [UUID] ●──────┼──┐ EMBEDDED: Rate       │ │   │
-│  │   Inbound: boolean                      │  │  ├─ Price.Total      │ │   │
-│  │ }                                       │  │  └─ Weights.Billable │ │   │
-│  └─────────────────────────────────────────┼──┼──────────────────────┘ │   │
-│                          │                 │  │                        │   │
-│                          │ 1:N             │  │ N:1 (by ref)           │   │
-│                          ▼                 │  ▼                        │   │
-│  ┌──────────────────────────────────────┐  │  ┌───────────────────┐   │   │
-│  │          consignments                 │  │  │  handling_units    │   │   │
-│  │──────────────────────────────────────│  │  │───────────────────│   │   │
-│  │ _id: UUID                            │  │  │ _id: UUID         │   │   │
-│  │ TenantId                             │  │  │ TenantId          │   │   │
-│  │ CreatedOn                            │  │  │ Reference         │   │   │
-│  │ Data: {                              │  │  │ Weight            │   │   │
-│  │   Status: enum                       │  │  │ Dimensions: {     │   │   │
-│  │   CarrierReference                   │  └──│   Length, Width,  │   │   │
-│  │   Addresses: { Sender, Receiver }    │     │   Height          │   │   │
-│  │   Loaded: [ ◄────────────────────────┤     │ }                 │   │   │
-│  │     {                                │     │ Barcode           │   │   │
-│  │       ShipmentId: UUID ●─────────────┼───► │ ShipmentId ●──────│──►│   │
-│  │       ShipmentReference              │     └───────────────────┘   │   │
-│  │       HandlingUnits: [ embedded ]    │                             │   │
-│  │     }                                │                             │   │
-│  │   ]                                  │                             │   │
-│  │   CarrierBookingRef                  │                             │   │
-│  │ }                                    │                             │   │
-│  └──────────────────────────────────────┘                             │   │
-│                          │                                            │   │
-│                          │ 1:N (via MatchingEntities)                 │   │
-│                          ▼                                            │   │
-│  ┌──────────────────────────────────────┐      ┌────────────────────┐│   │
-│  │      carrier_tracking_events          │      │  pickup_requests   ││   │
-│  │──────────────────────────────────────│      │────────────────────││   │
-│  │ _id: UUID                            │      │ _id: UUID          ││   │
-│  │ CreatedOn                            │      │ TenantId           ││   │
-│  │ Data: {                              │      │ ConsignmentId ●────┼┼──►│
-│  │   Event: {                           │      │ RequestedDate      ││   │
-│  │     EventDateTime                    │      │ Status             ││   │
-│  │     EventType: { Code, Desc }        │      │ CarrierResponse    ││   │
-│  │     Reason: { Code }                 │      └────────────────────┘│   │
-│  │   }                                  │                            │   │
-│  │   Mappings.StandardizedCode          │      ┌────────────────────┐│   │
-│  │   MatchingEntities: [                │      │     invoices       ││   │
-│  │     { LogisticsUnitType, _id } ●─────┼──►   │────────────────────││   │
-│  │   ]                                  │      │ _id: UUID          ││   │
-│  │ }                                    │      │ TenantId           ││   │
-│  └──────────────────────────────────────┘      │ CarrierReference   ││   │
-│                                                │ InvoiceLines: []   ││   │
-│  ┌──────────────────────────────────────┐      └────────────────────┘│   │
-│  │              events                   │                            │   │
-│  │──────────────────────────────────────│ INTERNAL EVENT STORE       │   │
-│  │ _id: UUID                            │ (Event Sourcing)           │   │
-│  │ Type: string                         │                            │   │
-│  │ EntityId: UUID                       │                            │   │
-│  │ Timestamp: ISODate                   │                            │   │
-│  │ Payload: { ... }                     │                            │   │
-│  └──────────────────────────────────────┘                            │   │
-│                                                                       │   │
-└───────────────────────────────────────────────────────────────────────────┘
+│  │ CreatedOn: ISODate                        ┌─────────────────────────┐│   │
+│  │ SchemaVersion: int                        │ EMBEDDED: Addresses     ││   │
+│  │ Data: {                                   │  ├─ Sender {}           ││   │
+│  │   Status: enum ───────────────────────────│  ├─ Receiver {}         ││   │
+│  │   Reference: string                       │  └─ Collection {}       ││   │
+│  │   CarrierReference: string ◄──────────────┼─────────────────────────┘│   │
+│  │   CarrierLabel: string                    │                          │   │
+│  │   ServiceLevelReference: string           │ EMBEDDED: TimeWindows    │   │
+│  │   Addresses: { ... } ◄────────────────────│  ├─ Pickup.Planned/Req  │   │
+│  │   TimeWindows: { ... }                    │  └─ Delivery.Planned/Req│   │
+│  │   Rate: { ... } ◄─────────────────────────┼───────────────────────┐ │   │
+│  │   HandlingUnitReferences: [UUID] ●────────┼──┐ EMBEDDED: Rate     │ │   │
+│  │   Inbound: boolean                        │  │  ├─ Price.Total    │ │   │
+│  │ }                                         │  │  └─ Weights.Billable│ │   │
+│  └───────────────────────────────────────────┼──┼────────────────────┘ │   │
+│                          │                   │  │                      │   │
+│                          │ 1:N               │  │ N:1 (by ref)         │   │
+│                          ▼                   │  ▼                      │   │
+│  ┌──────────────────────────────────────┐    │  ┌───────────────────┐  │   │
+│  │          consignments                 │    │  │  handling_units    │  │   │
+│  │──────────────────────────────────────│    │  │───────────────────│  │   │
+│  │ _id: UUID                            │    │  │ _id: UUID         │  │   │
+│  │ CreatedOn                            │    │  │ Reference         │  │   │
+│  │ SchemaVersion                        │    │  │ Weight            │  │   │
+│  │ Data: {                              │    │  │ Dimensions: {     │  │   │
+│  │   Status: enum                       │    │  │   Length, Width,  │  │   │
+│  │   CarrierReference                   │    └──│   Height          │  │   │
+│  │   Addresses: { Sender, Receiver }    │       │ }                 │  │   │
+│  │   Loaded: [ ◄────────────────────────┤       │ Barcode           │  │   │
+│  │     {                                │       │ ShipmentId ●──────│──►   │
+│  │       ShipmentId: UUID ●─────────────┼───►   └───────────────────┘  │   │
+│  │       ShipmentReference              │                              │   │
+│  │       HandlingUnits: [ embedded ]    │                              │   │
+│  │     }                                │                              │   │
+│  │   ]                                  │                              │   │
+│  │   CarrierBookingRef                  │                              │   │
+│  │ }                                    │                              │   │
+│  └──────────────────────────────────────┘                              │   │
+│                          │                                             │   │
+│                          │ 1:N (via MatchingEntities)                  │   │
+│                          ▼                                             │   │
+│  ┌──────────────────────────────────────┐      ┌────────────────────┐  │   │
+│  │      carrier_tracking_events          │      │  pickup_requests   │  │   │
+│  │──────────────────────────────────────│      │────────────────────│  │   │
+│  │ _id: UUID                            │      │ _id: UUID          │  │   │
+│  │ CreatedOn                            │      │ ConsignmentId ●────┼──┼──►│
+│  │ Data: {                              │      │ RequestedDate      │  │   │
+│  │   Event: {                           │      │ Status             │  │   │
+│  │     EventDateTime                    │      │ CarrierResponse    │  │   │
+│  │     EventType: { Code, Desc }        │      └────────────────────┘  │   │
+│  │     Reason: { Code }                 │                              │   │
+│  │   }                                  │      ┌────────────────────┐  │   │
+│  │   Mappings.StandardizedCode          │      │     invoices       │  │   │
+│  │   MatchingEntities: [                │      │────────────────────│  │   │
+│  │     { LogisticsUnitType, _id } ●─────┼──►   │ _id: UUID          │  │   │
+│  │   ]                                  │      │ CarrierReference   │  │   │
+│  │ }                                    │      │ InvoiceLines: []   │  │   │
+│  └──────────────────────────────────────┘      └────────────────────┘  │   │
+│                                                                        │   │
+│  ┌──────────────────────────────────────┐                              │   │
+│  │              events                   │                              │   │
+│  │──────────────────────────────────────│ INTERNAL EVENT STORE         │   │
+│  │ _id: UUID                            │ (Event Sourcing)             │   │
+│  │ Type: string                         │                              │   │
+│  │ EntityId: UUID                       │                              │   │
+│  │ Timestamp: ISODate                   │                              │   │
+│  │ Payload: { ... }                     │                              │   │
+│  └──────────────────────────────────────┘                              │   │
+│                                                                        │   │
+└────────────────────────────────────────────────────────────────────────────┘
 
 LEGEND:
   ●────►  Reference (by ID)
@@ -166,8 +167,8 @@ LEGEND:
 ```javascript
 {
   _id: "550e8400-e29b-41d4-a716-446655440000",
-  TenantId: "tenant_abc",
   CreatedOn: ISODate("2026-01-20T10:30:00Z"),
+  SchemaVersion: 1,
   Data: {
     Status: "Confirmed",              // Created | Ordered | Confirmed | Delivered
     Reference: "REF-2026-00123",
@@ -229,8 +230,8 @@ LEGEND:
 ```javascript
 {
   _id: "770e8400-e29b-41d4-a716-446655440000",
-  TenantId: "tenant_abc",
   CreatedOn: ISODate("2026-01-20T10:35:00Z"),
+  SchemaVersion: 1,
   Data: {
     Status: "Ordered",
     CarrierReference: "DHLPX",
@@ -331,11 +332,10 @@ Manages identity, access control, and API tokens.
 │  │                        users                              │   │
 │  │─────────────────────────────────────────────────────────│   │
 │  │ _id: UUID                                                │   │
-│  │ TenantId: string ●────────────────────────────────────► │   │
 │  │ Email: string                                            │   │
 │  │ DisplayName: string                                      │   │
-│  │ PermissionGroupIds: [UUID] ●─────────────────────────► │   │
-│  │ DataGroupIds: [UUID] ●───────────────────────────────► │   │
+│  │ PermissionGroupIds: [UUID] ●─────────────────────────►  │   │
+│  │ DataGroupIds: [UUID] ●───────────────────────────────►  │   │
 │  │ Preferences: { embedded }                                │   │
 │  └─────────────────────────────────────────────────────────┘   │
 │            ▲                           ▲                        │
@@ -345,12 +345,12 @@ Manages identity, access control, and API tokens.
 │  │      tokens        │       │   data_groups     │              │
 │  │───────────────────│       │───────────────────│              │
 │  │ _id               │       │ _id               │              │
-│  │ TenantId          │       │ Name              │              │
-│  │ UserId ●──────────│──►    │ Filters: {        │              │
-│  │ HashedToken       │       │   CustomerIds     │              │
-│  │ Scopes: []        │       │   CarrierRefs     │              │
-│  │ ExpiresAt         │       │ }                 │              │
-│  └───────────────────┘       └───────────────────┘              │
+│  │ UserId ●──────────│──►    │ Name              │              │
+│  │ HashedToken       │       │ Filters: {        │              │
+│  │ Scopes: []        │       │   CustomerIds     │              │
+│  │ ExpiresAt         │       │   CarrierRefs     │              │
+│  └───────────────────┘       │ }                 │              │
+│                              └───────────────────┘              │
 │                                                                  │
 └─────────────────────────────────────────────────────────────────┘
 ```
@@ -395,7 +395,6 @@ Manages carrier contracts, pricing rules, and zone definitions.
 │  │                      contracts                            │   │
 │  │─────────────────────────────────────────────────────────│   │
 │  │ _id: UUID                                                │   │
-│  │ TenantId                                                 │   │
 │  │ CarrierReference ●──────────────────────────────────►   │   │
 │  │ ValidFrom: ISODate                                       │   │
 │  │ ValidTo: ISODate                                         │   │
@@ -432,7 +431,6 @@ Manages carrier contracts, pricing rules, and zone definitions.
 │  │       audit_logs           │  │
 │  │───────────────────────────│  │
 │  │ _id                       │  │
-│  │ TenantId                  │  │
 │  │ Timestamp                 │  │
 │  │ Service: string           │  │  ◄── All services publish here
 │  │ Action: string            │  │
@@ -454,7 +452,6 @@ Manages carrier contracts, pricing rules, and zone definitions.
 │  │        webhooks            │  │
 │  │───────────────────────────│  │
 │  │ _id                       │  │
-│  │ TenantId                  │  │
 │  │ Url: string               │  │
 │  │ Events: []                │  │  ◄── ShipmentCreated, etc.
 │  │ Secret: string            │  │
@@ -465,7 +462,6 @@ Manages carrier contracts, pricing rules, and zone definitions.
 │  │     scheduled_jobs         │  │
 │  │───────────────────────────│  │
 │  │ _id                       │  │
-│  │ TenantId                  │  │
 │  │ CronExpression            │  │
 │  │ Action: { ... }           │  │
 │  │ LastRun / NextRun         │  │
@@ -483,7 +479,6 @@ Manages carrier contracts, pricing rules, and zone definitions.
 │  │        printers            │  │
 │  │───────────────────────────│  │
 │  │ _id                       │  │
-│  │ TenantId                  │  │
 │  │ PrintNodeId               │  │  ◄── External PrintNode ID
 │  │ Name                      │  │
 │  │ DefaultFor: []            │  │
@@ -551,7 +546,7 @@ IMPORTANT: No direct database access between services!
 
 | Service A | Service B | Reference Type | Notes |
 |-----------|-----------|----------------|-------|
-| shipping | authorizing | `UserId`, `TenantId` | Filter queries |
+| shipping | authorizing | `UserId` | User context from JWT |
 | shipping | rates | `CarrierReference`, `ServiceLevelReference` | String keys |
 | printing | shipping | `ShipmentId` | Store for later API call |
 | hooks | shipping | `ShipmentId` | Fetch data for webhook payload |
@@ -573,8 +568,8 @@ erDiagram
     
     shipments {
         uuid _id PK
-        string TenantId
         datetime CreatedOn
+        int SchemaVersion
         string Status
         string Reference
         string CarrierReference FK
@@ -587,8 +582,8 @@ erDiagram
     
     consignments {
         uuid _id PK
-        string TenantId
         datetime CreatedOn
+        int SchemaVersion
         string Status
         string CarrierReference FK
         object Addresses
@@ -598,7 +593,6 @@ erDiagram
     
     handling_units {
         uuid _id PK
-        string TenantId
         string Reference
         object Weight
         object Dimensions
@@ -623,7 +617,6 @@ erDiagram
     
     pickup_requests {
         uuid _id PK
-        string TenantId
         uuid ConsignmentId FK
         datetime RequestedDate
         string Status
@@ -637,7 +630,6 @@ erDiagram
     
     users {
         uuid _id PK
-        string TenantId FK
         string Email
         string DisplayName
         array PermissionGroupIds
@@ -647,7 +639,6 @@ erDiagram
     
     tokens {
         uuid _id PK
-        string TenantId
         uuid UserId FK
         string HashedToken
         array Scopes
@@ -679,7 +670,6 @@ erDiagram
     
     contracts {
         uuid _id PK
-        string TenantId
         string CarrierReference
         datetime ValidFrom
         datetime ValidTo
@@ -712,7 +702,6 @@ erDiagram
     %% AUDITOR DATABASE
     audit_logs {
         uuid _id PK
-        string TenantId
         datetime Timestamp
         string Service
         string Action
@@ -725,7 +714,6 @@ erDiagram
     %% HOOKS DATABASE
     webhooks {
         uuid _id PK
-        string TenantId
         string Url
         array Events
         string Secret
@@ -747,19 +735,33 @@ erDiagram
 
 ### 2. Multi-Tenancy
 
-Every document includes `TenantId` at the root level:
-```javascript
-{
-  _id: "...",
-  TenantId: "tenant_abc",  // ALWAYS PRESENT
-  // ... rest of document
-}
+Viya uses **database-per-tenant isolation** rather than document-level tenant filtering:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    MongoDB Cluster                           │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────┐ │
+│  │ shipping_acme   │  │ shipping_globex │  │ shipping_... │ │
+│  │ (Tenant: Acme)  │  │ (Tenant: Globex)│  │             │ │
+│  └─────────────────┘  └─────────────────┘  └─────────────┘ │
+│  ┌─────────────────┐  ┌─────────────────┐                  │
+│  │ rates_acme      │  │ rates_globex    │  ...             │
+│  └─────────────────┘  └─────────────────┘                  │
+└─────────────────────────────────────────────────────────────┘
 ```
 
-All queries MUST filter by TenantId:
-```javascript
-db.shipments.find({ TenantId: "tenant_abc", Status: "Created" })
-```
+**Key characteristics:**
+- Each tenant has their own set of databases (one per service)
+- No `TenantId` field exists in documents - isolation is at the database level
+- Service instances connect to tenant-specific databases via configuration
+- Queries do not need tenant filters - the connection itself determines the tenant
+
+This approach provides:
+- **Strong isolation** - No risk of cross-tenant data leakage
+- **Simpler queries** - No need to remember TenantId filters
+- **Independent scaling** - Large tenants can have dedicated resources
+- **Easier compliance** - Data residency requirements per tenant
 
 ### 3. Soft References (String Keys)
 
