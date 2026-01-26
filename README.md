@@ -14,6 +14,11 @@ curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main
 
 Restart your terminal. **Done!** All skills and commands now work in any project folder.
 
+**Safety features included:**
+- Blocks all `kubectl` commands (prevent accidental cluster changes)
+- Asks before git operations (commit, push, pull, rebase, etc.)
+- Allows safe git reads (status, log, diff)
+
 ---
 
 ## Recommended Workflow

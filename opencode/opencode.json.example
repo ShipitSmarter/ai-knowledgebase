@@ -1,0 +1,68 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": "This is the AI knowledgebase repository - the central source for skills and configurations. When conducting research, use the /research skill and organize findings in research/<project>/. Always include source URLs. When creating skills, use the skill-writer skill.",
+  
+  "permission": {
+    "bash": {
+      "*": "allow",
+      
+      "kubectl*": "deny",
+      "kubectl *": "deny",
+      
+      "git commit*": "ask",
+      "git push*": "ask",
+      "git pull*": "ask",
+      "git rebase*": "ask",
+      "git merge*": "ask",
+      "git reset*": "ask",
+      "git checkout*": "ask",
+      "git switch*": "ask",
+      "git fetch*": "ask",
+      "git cherry-pick*": "ask",
+      "git stash*": "ask",
+      "git tag*": "ask",
+      "git branch*": "ask",
+      
+      "git status*": "allow",
+      "git log*": "allow",
+      "git diff*": "allow",
+      "git show*": "allow",
+      "git ls-files*": "allow",
+      "git remote*": "allow",
+      "git config --get*": "allow",
+      "git rev-parse*": "allow",
+      
+      "rm -rf*": "ask",
+      "sudo*": "ask"
+    },
+    
+    "read": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow"
+    }
+  },
+  
+  "mcp": {
+    "notion": { 
+      "enabled": true 
+    },
+    "google-ai-search": { 
+      "enabled": true 
+    },
+    "penpot": {
+      "type": "remote",
+      "url": "http://localhost:4401/mcp",
+      "enabled": true
+    },
+    "mongodb": {
+      "command": "npx",
+      "args": ["-y", "mongodb-mcp-server@latest"],
+      "env": {
+        "MDB_MCP_CONNECTION_STRING": "mongodb://localhost:27017/shipping"
+      },
+      "enabled": true
+    }
+  }
+}

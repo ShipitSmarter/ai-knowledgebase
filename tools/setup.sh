@@ -227,6 +227,123 @@ list_items() {
   fi
 }
 
+# Generate default config JSON
+get_default_config() {
+  cat << 'EOF'
+{
+  "$schema": "https://opencode.ai/config.json",
+  "permission": {
+    "bash": {
+      "*": "allow",
+      "kubectl*": "deny",
+      "kubectl *": "deny",
+      "git commit*": "ask",
+      "git push*": "ask",
+      "git pull*": "ask",
+      "git rebase*": "ask",
+      "git merge*": "ask",
+      "git reset*": "ask",
+      "git checkout*": "ask",
+      "git switch*": "ask",
+      "git fetch*": "ask",
+      "git cherry-pick*": "ask",
+      "git stash*": "ask",
+      "git tag*": "ask",
+      "git branch*": "ask",
+      "git status*": "allow",
+      "git log*": "allow",
+      "git diff*": "allow",
+      "git show*": "allow",
+      "git ls-files*": "allow",
+      "git remote*": "allow",
+      "git config --get*": "allow",
+      "git rev-parse*": "allow",
+      "rm -rf*": "ask",
+      "sudo*": "ask"
+    }
+  }
+}
+EOF
+}
+
+# Normalize JSON for comparison (remove whitespace, sort keys)
+normalize_json() {
+  local file="$1"
+  if command -v jq &>/dev/null; then
+    jq -S -c . "$file" 2>/dev/null
+  else
+    # Fallback: just remove all whitespace
+    tr -d ' \n\t\r' < "$file"
+  fi
+}
+
+# Setup safety permissions
+setup_permissions() {
+  local config_file="$CONFIG_DIR/opencode.json"
+  local temp_default=$(mktemp)
+  local temp_existing=$(mktemp)
+  
+  # Clean up temp files on exit
+  trap "rm -f '$temp_default' '$temp_existing'" RETURN
+  
+  # Generate default config to temp file
+  get_default_config > "$temp_default"
+  
+  # If config doesn't exist, create it with safety defaults
+  if [[ ! -f "$config_file" ]]; then
+    cat "$temp_default" > "$config_file"
+    ok "Safety permissions configured"
+  else
+    # Config exists - check if it's different from defaults
+    
+    # First check if it has permission settings at all
+    if ! grep -q '"permission"' "$config_file" 2>/dev/null; then
+      warn "Existing config found without safety permissions"
+      printf '\n'
+      read -p "   Replace with recommended safety config? (Y/n) " -n 1 -r </dev/tty
+      echo
+      if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+        # Backup old config
+        cp "$config_file" "$config_file.backup"
+        info "Backed up old config to opencode.json.backup"
+        cat "$temp_default" > "$config_file"
+        ok "Safety permissions configured"
+      else
+        info "Keeping existing config (no safety permissions)"
+        warn "You can manually add permissions from: opencode/opencode.json.example"
+      fi
+      return
+    fi
+    
+    # Config has permissions - check if it matches defaults
+    local default_normalized=$(normalize_json "$temp_default")
+    local existing_normalized=$(normalize_json "$config_file")
+    
+    if [[ "$default_normalized" != "$existing_normalized" ]]; then
+      # Configs are different
+      warn "Existing config differs from recommended defaults"
+      printf '\n'
+      info "Your config has custom settings or outdated permissions"
+      printf '\n'
+      read -p "   Replace with latest recommended config? (y/N) " -n 1 -r </dev/tty
+      echo
+      if [[ $REPLY =~ ^[Yy]$ ]]; then
+        # Backup old config
+        cp "$config_file" "$config_file.backup"
+        info "Backed up old config to opencode.json.backup"
+        cat "$temp_default" > "$config_file"
+        ok "Updated to latest safety permissions"
+      else
+        ok "Keeping existing config"
+        info "Compare with opencode/opencode.json.example to see latest defaults"
+      fi
+    else
+      # Configs match
+      ok "Safety permissions up to date"
+    fi
+  fi
+}
+
 # Verify setup
 verify() {
   printf '\n'
@@ -400,6 +517,12 @@ main() {
   setup_link "skills" "$REPO_ROOT/skills"
   setup_link "commands" "$REPO_ROOT/commands"
   setup_link "agents" "$REPO_ROOT/agents"
+  
+  # Step 3.5: Setup safety permissions
+  printf '\n'
+  printf '%b3.5. Safety Permissions%b\n' "$BOLD" "$NC"
+  printf '\n'
+  setup_permissions
   
   # Step 4: Optional dependencies
   if [[ "$SKIP_DEPS" == false ]] && command -v npm &>/dev/null; then
