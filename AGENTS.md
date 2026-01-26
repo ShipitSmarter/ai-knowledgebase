@@ -306,7 +306,34 @@ plan/YYYY-MM-DD-<topic-slug>.md
 
 **Note**: We don't include timelines in plans - focus on what and how, not when.
 
-### Step 2: Validate with Architect Review
+### Step 2: Validate External Sources (If Any)
+
+If the plan references or was informed by external sources (web searches, documentation, blog posts, etc.):
+
+1. **List all external sources** consulted during planning
+2. **Classify each by tier** (see Source Quality Awareness section above)
+3. **Check the distribution**:
+   - If >50% are Tier 3-4, add a confidence note to the plan
+   - Consider whether key decisions rely on lower-confidence sources
+
+**Add to plan document:**
+
+```markdown
+## Sources & Confidence
+
+| Source | Tier | Key Contribution |
+|--------|------|------------------|
+| [Official Docs](url) | 1 | Core approach |
+| [Tech Blog](url) | 3 | Implementation pattern |
+
+**Confidence**: High / Medium / Low (based on source distribution)
+
+**Note**: [Any caveats about source quality, e.g., "Pattern X is based on a single blog post - verify before implementing"]
+```
+
+If all information comes from internal sources (codebase, architecture docs, team knowledge), skip this step.
+
+### Step 3: Validate with Architect Review
 
 Before finalizing any significant plan, consult the `technical-architect` skill:
 
@@ -322,7 +349,7 @@ Questions to address in architect review:
 - What happens when this fails?
 - How do we roll this back?
 
-### Step 3: Document Key Decisions
+### Step 4: Document Key Decisions
 
 After architect review, update the plan with:
 - Design decisions made and rationale
