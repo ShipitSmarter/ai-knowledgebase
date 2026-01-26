@@ -42,7 +42,15 @@ Don't just criticize - show the correct pattern.
 
 ## Review Process
 
-### Step 1: Run Automated Checks
+### Step 1: Understand the Feature
+
+Before looking at code:
+- Read PR description completely
+- Understand what user problem this solves
+- Map out the expected user flows
+- Ask: "How will this feature actually be used?"
+
+### Step 2: Run Automated Checks
 
 ```bash
 npm run lint && npm run type-check
@@ -50,7 +58,15 @@ npm run lint && npm run type-check
 
 Any errors here are **blocking issues**. Report them first.
 
-### Step 2: Check Component Structure
+### Step 3: Trace the Critical Paths
+
+For each main user action the PR enables:
+- Trace the code path from trigger to completion
+- Identify where errors can occur
+- Verify error handling exists at each point
+- Ask: "What happens when X fails?"
+
+### Step 4: Check Component Structure
 
 For each changed `.vue` file, verify script order:
 
@@ -71,7 +87,7 @@ For each changed `.vue` file, verify script order:
 - Watchers before functions
 - Refs defined before composables
 
-### Step 3: Check Conventions
+### Step 5: Check Conventions
 
 | Convention | Correct | Wrong |
 |------------|---------|-------|
@@ -82,7 +98,7 @@ For each changed `.vue` file, verify script order:
 | Styling | Tailwind classes | `<style>` blocks |
 | Functions | Arrow functions | `function` declarations |
 
-### Step 4: Check for Debug Code
+### Step 6: Check for Debug Code
 
 ```bash
 # Console statements (remove before merge)
@@ -96,9 +112,83 @@ rg "debugger" --type vue --type ts
 - `console.error` in error handlers is OK
 - `TODO(VIYA-123)` with ticket reference is OK
 
-### Step 5: Evaluate Test Coverage
+### Step 7: Evaluate Test Coverage
 
 Use the Test Decision Framework below.
+
+---
+
+## Before Commenting on Any Issue
+
+**STOP.** For each potential issue, complete this checklist before writing it up:
+
+### 1. Trace the Execution Path
+
+Don't assume. Actually follow the code:
+- What calls this function/triggers this watcher?
+- Under what conditions does each branch execute?
+- What are the actual values at runtime, not what they "look like"?
+
+### 2. Understand Intent
+
+- What problem is the author solving?
+- Is there a simpler way to achieve the same goal?
+- Does this code actually achieve that goal?
+
+### 3. Validate with a Concrete Scenario
+
+Mental unit test:
+- Walk through a real user action step by step
+- "User opens page X, what happens?"
+- "User clicks Y, what happens if API fails?"
+
+### 4. Question Your Assumption
+
+Before writing the comment:
+- "Am I pattern-matching or did I actually verify this?"
+- "What if I'm wrong? What would that look like?"
+- "Is there context I'm missing about how this is used?"
+
+---
+
+## Common Review Traps to Avoid
+
+| Trap | Example | What to Do Instead |
+|------|---------|-------------------|
+| Pattern matching | "watch + onMounted = duplicate" | Trace actual execution flow |
+| Assuming behavior | "immediate: true fires with same values" | Check Vue docs / verify |
+| Surface-level reading | "No try/catch = missing error handling" | Check if caller handles it |
+| Reviewing in isolation | "This watcher handles route changes" | Ask: does this route change ever happen in practice? |
+| Breadth over depth | Finding 15 shallow issues | Deeply understand 5 real issues |
+
+---
+
+## Self-Verification Protocol
+
+Before finalizing any **blocking issue**:
+
+1. **Re-read the code** with fresh eyes after writing your comment
+2. **Argue against yourself** - How would the author defend this code?
+3. **Prove the bug** - Can you describe the exact conditions under which it manifests?
+4. **Severity check** - Is this actually blocking, or pedantic?
+
+**If you cannot clearly explain:**
+- The exact conditions under which the bug manifests
+- What the user would experience
+- Why the fix is correct
+
+**Then you don't have a blocking issue.** Downgrade to suggestion or investigate further.
+
+---
+
+## Depth Over Breadth
+
+It's better to deeply understand 5 issues than to superficially flag 15.
+
+For complex logic (composables, watchers, lifecycle, async flows):
+- Spend 2-3x longer analyzing before commenting
+- If you can't explain the exact execution flow, you don't understand it yet
+- Write out the execution trace mentally or on paper if needed
 
 ---
 
