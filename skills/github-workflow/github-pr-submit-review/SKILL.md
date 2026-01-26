@@ -168,21 +168,29 @@ Apply the same thorough review process as local reviews:
 
 ## Step 4: Prepare Review Comments
 
+**MANDATORY: Every GitHub review submission MUST include line-specific comments.**
+
 Structure your review into:
 
-### A. Line-specific comments (review comments)
+### A. Line-specific comments (REQUIRED)
 
-For each issue found, note:
+You MUST include:
+1. **ALL issues found** - Every blocking issue and suggestion gets a line comment at the exact location
+2. **EXACTLY 2 positive comments** - Not 1, not 3, not 0. Pick the 2 best parts of the code.
+
+For each comment, note:
 - **File path** (exact path as shown in diff)
 - **Line number** (in the new version of the file)
-- **Comment body** (markdown formatted)
+- **Comment body** (short, direct, friendly - see comment style below)
 
 ### B. Overall review comment
 
-Summary of the review with:
+**Keep it CONCISE** - 3-5 sentences max summarizing:
 - What was reviewed
-- Key findings
-- Verdict rationale
+- Key findings (brief list)
+- What needs to be addressed
+
+Do NOT repeat all the line comments in the summary - that's what line comments are for.
 
 ### C. Review verdict
 
@@ -193,9 +201,11 @@ One of:
 
 ---
 
-## Step 5: Confirm Before Submitting
+## Step 5: MANDATORY Confirmation Before Submitting
 
-**Always show the user what will be posted and ask for confirmation:**
+**CRITICAL: You MUST ask the user for explicit Y/n confirmation before submitting ANY review to GitHub. Never skip this step.**
+
+Show the complete review and use the question tool to ask:
 
 ```markdown
 ## Review Ready to Submit
@@ -204,17 +214,25 @@ One of:
 **Verdict:** REQUEST_CHANGES
 
 ### Overall Comment:
-[Summary that will be posted]
+[The exact summary that will be posted - keep it CONCISE, 3-5 sentences max]
 
-### Line Comments (3):
-1. `src/components/ShipmentList.vue:45` - Type safety issue
-2. `src/composables/useBulkActions.ts:23` - Missing error handling  
-3. `src/composables/useBulkActions.ts:67` - Suggestion for improvement
+### Line Comments ([total count]):
+
+**Issues ([count]):**
+1. `src/components/ShipmentList.vue:45` - please avoid `any` here if possible!
+2. `src/composables/useBulkActions.ts:23` - missing `await` here
+3. `src/composables/useBulkActions.ts:67` - please remove logs if not needed
+
+**Positive ([count] - must be exactly 2):**
+1. `src/utils/validation.ts:12` - nice approach here 👍
+2. `src/composables/useBulkActions.ts:45` - good use of type guards!
 
 ---
 
-**Submit this review to GitHub?** [y/N]
+**Submit this review to GitHub? (Y/n)**
 ```
+
+**Wait for explicit "Y" or "yes" before proceeding. If user says "n", "no", or anything else, do NOT submit.**
 
 ---
 
@@ -316,41 +334,81 @@ gh pr diff <number> | head -100
 
 ## Comment Formatting
 
-Use the reviewer voice - polite, educational, with examples:
+**Keep comments SHORT and DIRECT.** Use "please" for issues. Be friendly but concise.
 
-### Good comment examples
+### Issue Comments (for blocking/suggestions)
 
+**Good - short and direct:**
 ```markdown
-Please avoid using `any` here if possible! You could type this as:
-
-\`\`\`typescript
-const shipments: Shipment[] = await fetchShipments()
-\`\`\`
-
-This helps catch errors at compile time rather than runtime.
+please avoid using `any` here if possible!
 ```
 
 ```markdown
-This looks a bit sus? I think you're missing `await` here:
-
-\`\`\`typescript
-await router.push('/shipments')
-\`\`\`
-
-Router navigation is async, so without await the redirect might not complete before the next line runs.
+missing `await` here - router navigation is async
 ```
 
 ```markdown
-Nice use of discriminated unions here! Just a small suggestion - you could simplify this with a type guard:
+please remove logs if not needed anymore
+```
+
+```markdown
+oops, this looks like a leftover
+```
+
+```markdown
+`index` as key is not ideal, please use something unique if possible
+```
+
+```markdown
+please try to avoid `as` casting - convert explicitly instead:
+`const testMode = !!route.meta.testMode`
+```
+
+```markdown
+can be deleted ig
+```
+
+```markdown
+this looks a bit sus? 🤔
+```
+
+**Only add code examples when truly helpful, keep them minimal:**
+```markdown
+please add error handling here:
 
 \`\`\`typescript
-function isLoaded(state: ShipmentState): state is LoadedState {
-  return state.status === 'loaded'
+try {
+  await performAction()
+} catch (error) {
+  // handle error
 }
 \`\`\`
-
-Not a blocker, just a thought for improved readability.
 ```
+
+### Positive Comments (EXACTLY 2 per review)
+
+**Short and genuine - not over-the-top:**
+```markdown
+nice approach here 👍
+```
+
+```markdown
+good use of type guards!
+```
+
+```markdown
+I like this - clean and readable
+```
+
+```markdown
+nice!
+```
+
+```markdown
+great job on this 👍
+```
+
+**Pick comments that highlight genuinely good patterns, not just "code exists".**
 
 ---
 
@@ -409,17 +467,32 @@ gh pr diff 456 --repo ShipitSmarter/viya-app
 cat > /tmp/review.json << 'EOF'
 {
   "event": "REQUEST_CHANGES",
-  "body": "## Review: Add bulk shipment actions\n\nThanks for working on this! The overall approach looks good, but I found a few issues that should be addressed before merging.\n\n### Summary\n- Type safety issue in ShipmentList component\n- Missing error handling in useBulkActions composable\n- Test coverage needed for the new composable\n\nPlease address these and ping me for re-review!",
+  "body": "Thanks for this! Found a few things to address - type safety issue and missing error handling. Also needs test coverage for the new composable. Please fix and ping me for re-review!",
   "comments": [
     {
       "path": "src/components/ShipmentList.vue",
       "line": 45,
-      "body": "Please avoid using `any` here if possible! You could type this as `Shipment[]` to get proper type checking."
+      "body": "please avoid using `any` here if possible!"
     },
     {
       "path": "src/composables/useBulkActions.ts",
       "line": 23,
-      "body": "This async operation needs error handling. What happens if the API call fails?\n\n```typescript\ntry {\n  await performBulkAction(ids)\n} catch (error) {\n  // Handle error appropriately\n}\n```"
+      "body": "missing error handling here - what happens if the API call fails?"
+    },
+    {
+      "path": "src/composables/useBulkActions.ts",
+      "line": 89,
+      "body": "please remove logs if not needed anymore"
+    },
+    {
+      "path": "src/utils/validation.ts",
+      "line": 12,
+      "body": "nice approach here 👍"
+    },
+    {
+      "path": "src/composables/useBulkActions.ts",
+      "line": 67,
+      "body": "good use of type guards!"
     }
   ]
 }
@@ -429,6 +502,8 @@ gh api repos/ShipitSmarter/viya-app/pulls/456/reviews \
   --method POST \
   --input /tmp/review.json
 ```
+
+**Note:** The example has 3 issue comments + exactly 2 positive comments = 5 total line comments.
 
 ---
 
@@ -466,7 +541,9 @@ gh api repos/{owner}/{repo}/pulls/{number}/reviews \
 
 ## Safety Notes
 
-1. **Always confirm before submitting** - Reviews are visible to the whole team
-2. **Be constructive** - This is public feedback, maintain the reviewer voice
-3. **Check PR state** - Don't review closed or merged PRs
-4. **Avoid duplicate comments** - Check existing review comments first
+1. **ALWAYS ask Y/n confirmation before submitting** - Never submit without explicit user approval
+2. **ALWAYS include line comments** - All issues + exactly 2 positive comments
+3. **Keep comments SHORT** - Direct and friendly, not verbose essays
+4. **Be constructive** - This is public feedback visible to the whole team
+5. **Check PR state** - Don't review closed or merged PRs
+6. **Avoid duplicate comments** - Check existing review comments first
