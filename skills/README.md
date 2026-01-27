@@ -18,6 +18,7 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [browser-debug](./testing/browser-debug/SKILL.md) | Headless browser debugging and visual testing | testing |
 | [code-review](./github-workflow/code-review/SKILL.md) | Code review patterns and checklists | github-workflow |
 | [diff-refactor](./frontend-development/diff-refactor/SKILL.md) | Diff branch and refactor to standards | frontend-development |
+| [logistics-entities](./frontend-development/logistics-entities/SKILL.md) | Shipment, consignment, handling unit patterns | frontend-development |
 | [deep-research](./research-strategy/deep-research/SKILL.md) | Multi-phase exploration and synthesis | research-strategy |
 | [designer](./design/designer/SKILL.md) | Penpot MCP integration for design workflows | design |
 | [docs-writing](./documentation/docs-writing/SKILL.md) | User-facing documentation for non-technical users | documentation |
@@ -75,6 +76,7 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [vue-component](./frontend-development/vue-component/SKILL.md) | Vue 3 components following project conventions |
 | [viya-app-coding-standards](./frontend-development/viya-app-coding-standards/SKILL.md) | Coding standards for TypeScript, Vue, and Playwright |
 | [diff-refactor](./frontend-development/diff-refactor/SKILL.md) | Diff branch and refactor changed files |
+| [logistics-entities](./frontend-development/logistics-entities/SKILL.md) | Shipment, consignment, handling unit entity patterns |
 | [api-integration](./frontend-development/api-integration/SKILL.md) | API types and service integration patterns |
 | [typescript-helpers](./frontend-development/typescript-helpers/SKILL.md) | TypeScript patterns, interfaces, type guards |
 
@@ -183,9 +185,10 @@ skills/
 │   ├── github-workflow/
 │   ├── git-branch-update/
 │   └── pr-review/
-├── frontend-development/       # Frontend Development (5 skills)
+├── frontend-development/       # Frontend Development (6 skills)
 │   ├── api-integration/
 │   ├── diff-refactor/
+│   ├── logistics-entities/
 │   ├── typescript-helpers/
 │   │   └── reference/          # Utility types
 │   ├── viya-app-coding-standards/
