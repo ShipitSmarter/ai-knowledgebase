@@ -30,13 +30,11 @@ From `research/testing-strategy/`:
 - Test data management for integration tests
 - Measuring and reducing test flakiness
 
-### Git Co-Author Attribution for AI Sessions
-- How to use `Co-authored-by` trailers in git commits
-- Best practices for attributing AI-assisted code
-- Options for saving session metadata (AI model, conversation context)
-- Potential formats: commit trailers, `.ai-session` files, PR descriptions
-- Team conventions for transparency about AI involvement
-- Reference: [GitHub docs on commits with multiple authors](https://docs.github.com/en/pull-requests/committing-changes-to-your-project/creating-and-editing-commits/creating-a-commit-with-multiple-authors)
+### ~~Git Co-Author Attribution for AI Sessions~~ - DONE
+- **Completed**: See [research/ai-commit-attribution/](../research/ai-commit-attribution/)
+- Implementation includes: git trailers, environment variables, hooks, git notes
+- Auto-cleanup of env vars after commit (defaults to human-authored)
+- Multiple approaches for contribution percentage tracking
 
 ### AI Primitives: Skills, Agents, and Commands
 - **Atomic skills**: How to decompose skills into smaller, composable units

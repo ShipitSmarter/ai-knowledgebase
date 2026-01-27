@@ -15,7 +15,7 @@
 set -e
 
 # Version
-VERSION="0.1.2"
+VERSION="0.2.0"
 
 # Colors (using printf-compatible format)
 GREEN='\033[0;32m'
@@ -344,6 +344,22 @@ setup_permissions() {
   fi
 }
 
+# Setup AI commit attribution
+setup_ai_attribution() {
+  # Source the dedicated script
+  local script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  local attribution_script="$script_dir/setup-ai-attribution.sh"
+  
+  if [[ -f "$attribution_script" ]]; then
+    # Source to get access to functions, then call install
+    source "$attribution_script"
+    install_attribution
+  else
+    warn "AI attribution script not found: $attribution_script"
+    info "Run setup from the repository root or download the full package"
+  fi
+}
+
 # Verify setup
 verify() {
   printf '\n'
@@ -396,6 +412,40 @@ verify() {
     warn "agents not linked"
   fi
   
+  printf '\n'
+  
+  # Plugins
+  if [[ -L "$CONFIG_DIR/plugins" ]]; then
+    local plugins_dir=$(readlink "$CONFIG_DIR/plugins")
+    local plugins=()
+    for f in "$plugins_dir"/*.ts "$plugins_dir"/*.js; do
+      [[ -f "$f" ]] && plugins+=("$(basename "${f%.*}")")
+    done
+    if [[ ${#plugins[@]} -gt 0 ]]; then
+      ok "Plugins (${#plugins[@]}):"
+      for plugin in "${plugins[@]}"; do
+        printf '     %b•%b %s\n' "$DIM" "$NC" "$plugin"
+      done
+    else
+      ok "Plugins linked (none found)"
+    fi
+  else
+    info "Plugins: not linked"
+  fi
+  
+  printf '\n'
+  
+  # AI Attribution
+  local hooks_path=$(git config --global core.hooksPath 2>/dev/null || echo "")
+  if [[ "$hooks_path" == "$CONFIG_DIR/git-hooks" ]] && [[ -f "$CONFIG_DIR/git-hooks/prepare-commit-msg" ]]; then
+    ok "AI commit attribution enabled"
+    printf '     %b•%b Git hooks: %s\n' "$DIM" "$NC" "$hooks_path"
+    if grep -q "# AI Commit Attribution" "$HOME/.bashrc" 2>/dev/null || grep -q "# AI Commit Attribution" "$HOME/.zshrc" 2>/dev/null; then
+      printf '     %b•%b Shell integration: installed\n' "$DIM" "$NC"
+    fi
+  else
+    info "AI commit attribution: not installed"
+  fi
 
 }
 
@@ -517,6 +567,7 @@ main() {
   setup_link "skills" "$REPO_ROOT/skills"
   setup_link "commands" "$REPO_ROOT/commands"
   setup_link "agents" "$REPO_ROOT/agents"
+  setup_link "plugins" "$REPO_ROOT/plugins"
   
   # Step 3.5: Setup safety permissions
   printf '\n'
@@ -524,10 +575,30 @@ main() {
   printf '\n'
   setup_permissions
   
-  # Step 4: Optional dependencies
+  # Step 4: AI Commit Attribution (optional)
+  printf '\n'
+  printf '%b4. AI Commit Attribution%b\n' "$BOLD" "$NC"
+  printf '\n'
+  info "Track AI involvement in git commits with automatic trailers and notes."
+  printf '\n'
+  printf '   This will:\n'
+  printf '   • Add shell functions to your shell config (~/.bashrc or ~/.zshrc)\n'
+  printf '   • Configure global git hooks for AI attribution\n'
+  printf '   • Add commands: ai-session-start, ai-session-end, ai-session-status\n'
+  printf '\n'
+  read -p "   Enable AI commit attribution? (y/N) " -n 1 -r </dev/tty
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    setup_ai_attribution
+  else
+    info "Skipping AI commit attribution"
+    info "You can set this up later - see: research/ai-commit-attribution/"
+  fi
+  
+  # Step 5: Optional dependencies
   if [[ "$SKIP_DEPS" == false ]] && command -v npm &>/dev/null; then
     printf '\n'
-    printf '%b4. Optional: Playwright%b\n' "$BOLD" "$NC"
+    printf '%b5. Optional: Playwright%b\n' "$BOLD" "$NC"
     printf '\n'
     if command -v playwright &>/dev/null; then
       ok "Playwright already installed"

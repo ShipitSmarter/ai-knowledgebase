@@ -8,7 +8,7 @@ Configuration guides for OpenCode plugins used in this repository.
 |--------|-------------|---------------|
 | opencode-mem | Persistent memory with vector search | [Setup Guide](./opencode-mem.md) |
 | Google AI Search | Web search via Google AI Mode | [Setup Guide](./google-ai-search.md) |
-| session-title | Auto-generates session titles | [Source](../../plugins/session-title.ts) |
+| ai-attribution | Tracks AI file modifications for git commit attribution | [Research](../../research/ai-commit-attribution/) |
 
 ## Configuration
 
@@ -28,14 +28,14 @@ Custom TypeScript plugins live in the `plugins/` directory at the repo root. The
 
 | Plugin | Location | Description |
 |--------|----------|-------------|
-| session-title | `plugins/session-title.ts` | Auto-generates session titles using conventional commit style |
+| ai-attribution | `plugins/ai-attribution.ts` | Tracks AI file modifications for git commit attribution |
 
 ### Creating a New Plugin
 
 1. Create a `.ts` file in `plugins/`
 2. Export a default object implementing the OpenCode Plugin interface
 3. Run `./tools/setup.sh` to ensure the symlink is in place
-4. Add to the `plugin` array in your `opencode.json` config
+4. Plugins in the plugins directory are auto-loaded (no config needed)
 
 ## Plugin vs MCP Server
 
