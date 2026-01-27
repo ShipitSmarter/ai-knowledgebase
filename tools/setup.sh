@@ -11,6 +11,8 @@
 #   --skip-deps   Skip optional dependencies (Playwright)
 #   --verify      Just verify the current setup
 #   --quiet       Skip Trucky animations (for CI)
+#   --local       Local install (no global symlinks, use OPENCODE_CONFIG_DIR)
+#   --dir <path>  Custom install directory (implies --local)
 #
 
 set -e
@@ -247,12 +249,26 @@ fi
 SKIP_DEPS=false
 VERIFY_ONLY=false
 QUIET=false
-for arg in "$@"; do
+LOCAL_MODE=false
+CUSTOM_DIR=""
+
+args=("$@")
+i=0
+while [[ $i -lt ${#args[@]} ]]; do
+  arg="${args[$i]}"
   case $arg in
     --skip-deps) SKIP_DEPS=true ;;
     --verify) VERIFY_ONLY=true ;;
     --quiet) QUIET=true ;;
+    --local) LOCAL_MODE=true ;;
+    --dir)
+      LOCAL_MODE=true
+      i=$((i + 1))
+      CUSTOM_DIR="${args[$i]}"
+      CUSTOM_DIR="${CUSTOM_DIR/#\~/$HOME}"
+      ;;
   esac
+  i=$((i + 1))
 done
 
 # Auto-detect CI
@@ -662,6 +678,173 @@ verify() {
 }
 
 # ═══════════════════════════════════════════════════════════════════════════════
+# LOCAL MODE FUNCTIONS
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Generate .envrc template
+generate_envrc_template() {
+  local repo_path="$1"
+  local template_file="$repo_path/.envrc.template"
+  
+  cat > "$template_file" << EOF
+# .envrc - Enable ShipitSmarter AI skills in this repo
+# 
+# Copy this file to your ShipitSmarter repos and rename to .envrc
+# Then run: direnv allow
+#
+# Or add this to your shell profile for manual activation:
+#   alias oc-ship='OPENCODE_CONFIG_DIR="$repo_path" opencode'
+
+export OPENCODE_CONFIG_DIR="$repo_path"
+EOF
+  
+  ok "Created .envrc.template"
+}
+
+# Show local mode completion instructions
+show_local_completion() {
+  local repo_path="$1"
+  
+  printf '\n'
+  printf '%b┌─────────────────────────────────────────────────────┐%b\n' "$GREEN" "$NC"
+  printf '%b│           Local Setup Complete!                     │%b\n' "$GREEN" "$NC"
+  printf '%b└─────────────────────────────────────────────────────┘%b\n' "$GREEN" "$NC"
+  printf '\n'
+  
+  printf '  %bKnowledgebase installed at:%b\n' "$BOLD" "$NC"
+  printf '    %s\n' "$repo_path"
+  printf '\n'
+  
+  printf '  %bNext Steps - Choose one:%b\n' "$BOLD" "$NC"
+  printf '\n'
+  
+  printf '  %bOption A: Using direnv (recommended)%b\n' "$CYAN" "$NC"
+  printf '    1. Install direnv: %bbrew install direnv%b\n' "$DIM" "$NC"
+  printf '    2. Add to shell: %beval "\$(direnv hook zsh)"%b  # or bash\n' "$DIM" "$NC"
+  printf '    3. In each ShipitSmarter repo:\n'
+  printf '       %bcp %s/.envrc.template .envrc%b\n' "$DIM" "$repo_path" "$NC"
+  printf '       %bdirenv allow%b\n' "$DIM" "$NC"
+  printf '\n'
+  
+  printf '  %bOption B: Shell alias (simpler)%b\n' "$CYAN" "$NC"
+  printf '    Add to ~/.zshrc or ~/.bashrc:\n'
+  printf '    %balias oc-ship='\''OPENCODE_CONFIG_DIR="%s" opencode'\''%b\n' "$DIM" "$repo_path" "$NC"
+  printf '    Then use %boc-ship%b instead of %bopencode%b in ShipitSmarter repos\n' "$BOLD" "$NC" "$BOLD" "$NC"
+  printf '\n'
+  
+  printf '  %bOption C: Per-repo .envrc (manual)%b\n' "$CYAN" "$NC"
+  printf '    In each ShipitSmarter repo, create .envrc with:\n'
+  printf '    %bexport OPENCODE_CONFIG_DIR="%s"%b\n' "$DIM" "$repo_path" "$NC"
+  printf '\n'
+  
+  printf '  %bTo update later:%b\n' "$BOLD" "$NC"
+  printf '    cd %s && git pull\n' "$repo_path"
+  printf '\n'
+}
+
+# Local mode main flow
+run_local_setup() {
+  local username
+  username=$(git config user.name 2>/dev/null | cut -d' ' -f1) || username=$(whoami)
+  
+  # Trucky greeting
+  local greeting=$(random_from "${GREETINGS[@]}")
+  trucky_say "$TRUCKY_EYES_EXCITED" "$greeting Hey $username! Local mode activated!"
+  
+  printf '  %bLocal mode:%b Skills will NOT be installed globally.\n' "$YELLOW" "$NC"
+  printf '  You'\''ll use OPENCODE_CONFIG_DIR to enable them per-repo.\n'
+  printf '\n'
+  
+  # Step 1: OpenCode
+  printf '%b1. OpenCode%b\n' "$BOLD" "$NC"
+  printf '\n'
+  if ! command -v opencode &>/dev/null; then
+    warn "OpenCode not installed"
+    printf '\n'
+    read -p "   Install OpenCode now? (Y/n) " -n 1 -r </dev/tty
+    echo
+    if [[ ! $REPLY =~ ^[Nn]$ ]]; then
+      trucky "$TRUCKY_EYES_THINKING" "Installing OpenCode..." "*starts engine*"
+      curl -fsSL https://opencode.ai/install | bash
+      export PATH="$HOME/.local/bin:$PATH"
+      ok "OpenCode installed!"
+    fi
+  else
+    ok "OpenCode installed"
+  fi
+  
+  # Step 2: Repository location
+  printf '\n'
+  printf '%b2. Repository Location%b\n' "$BOLD" "$NC"
+  printf '\n'
+  
+  # Use custom dir if provided, otherwise ask
+  if [[ -n "$CUSTOM_DIR" ]]; then
+    REPO_ROOT="$CUSTOM_DIR"
+    info "Using specified directory: $REPO_ROOT"
+  elif [[ -n "$REPO_ROOT" ]]; then
+    # Already in repo, use that
+    info "Using current repo: $REPO_ROOT"
+  else
+    # Ask for location
+    local default_dir="${HOME}/Developer/shipitsmarter/ai-knowledgebase"
+    if [[ "$OS" != "Darwin" ]]; then
+      default_dir="${HOME}/git/shipitsmarter/ai-knowledgebase"
+    fi
+    
+    printf '   Where should the knowledgebase be installed?\n'
+    printf '\n'
+    read -p "   Path [$default_dir]: " custom_path </dev/tty
+    REPO_ROOT="${custom_path:-$default_dir}"
+    REPO_ROOT="${REPO_ROOT/#\~/$HOME}"
+  fi
+  
+  # Clone or update
+  printf '\n'
+  if [[ -d "$REPO_ROOT" ]] && detect_repo "$REPO_ROOT"; then
+    trucky "$TRUCKY_EYES_HAPPY" "Found existing installation!" "*checks cargo*"
+    git -C "$REPO_ROOT" pull --quiet 2>/dev/null || true
+    ok "Repository updated: $REPO_ROOT"
+  else
+    trucky "$TRUCKY_EYES_EXCITED" "Fresh delivery to custom location!" "$(random_from "${WORKING_MSGS[@]}")"
+    mkdir -p "$(dirname "$REPO_ROOT")"
+    git clone --quiet "$REPO_URL" "$REPO_ROOT"
+    ok "Repository cloned: $REPO_ROOT"
+  fi
+  
+  # Step 3: Generate .envrc template
+  printf '\n'
+  printf '%b3. Environment Template%b\n' "$BOLD" "$NC"
+  printf '\n'
+  generate_envrc_template "$REPO_ROOT"
+  
+  # Step 4: Safety permissions (optional for local mode)
+  printf '\n'
+  printf '%b4. Safety Permissions (Optional)%b\n' "$BOLD" "$NC"
+  printf '\n'
+  info "Safety permissions block kubectl and require approval for git operations."
+  printf '\n'
+  read -p "   Set up global safety permissions? (y/N) " -n 1 -r </dev/tty
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    mkdir -p "$CONFIG_DIR"
+    setup_permissions
+  else
+    info "Skipping global permissions"
+    info "You can add them later via: ./tools/setup.sh --verify"
+  fi
+  
+  # Done!
+  printf '\n'
+  local success_msg=$(random_from "${SUCCESS_MSGS[@]}")
+  trucky_say "$TRUCKY_EYES_HAPPY" "Local delivery complete! $success_msg" "*parks truck*"
+  
+  show_local_completion "$REPO_ROOT"
+  
+  trucky "$TRUCKY_EYES_WINK" "See you next time! *beep beep*"
+}
+
+# ═══════════════════════════════════════════════════════════════════════════════
 # MAIN
 # ═══════════════════════════════════════════════════════════════════════════════
 
@@ -669,6 +852,12 @@ main() {
   show_intro
   
   [[ "$VERIFY_ONLY" == true ]] && { verify; exit 0; }
+  
+  # Dispatch to local mode if requested
+  if [[ "$LOCAL_MODE" == true ]]; then
+    run_local_setup
+    exit 0
+  fi
   
   # Get username for personalization
   local username
