@@ -453,3 +453,4 @@ dotnet test test/Shipping.Tests --filter "TestMethodName"
 | **rates-structure** | Working with the Rates microservice |
 | **mongodb-development** | MongoDB queries and aggregations |
 | **technical-architect** | Architecture decisions |
+| **webhooks-architecture** | Adding events, webhook flow, hooks service integration |

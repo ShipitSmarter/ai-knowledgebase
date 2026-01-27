@@ -33,17 +33,18 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [pr-review](./github-workflow/pr-review/SKILL.md) | Senior engineer PR review patterns | github-workflow |
 | [product-documentation](./documentation/product-documentation/SKILL.md) | Product docs for Viya TMS | documentation |
 | [product-strategy](./research-strategy/product-strategy/SKILL.md) | Playing to Win strategy framework | research-strategy |
-| [rates-feature](./codebase-structures/rates-feature/SKILL.md) | Rates module development patterns | codebase-structures |
-| [rates-structure](./codebase-structures/rates-structure/SKILL.md) | Rates codebase structure | codebase-structures |
+| [rates-feature](./codebase/cross-repo/rates-feature/SKILL.md) | Rates module development patterns | codebase/cross-repo |
+| [rates-structure](./codebase/repo-structures/rates-structure/SKILL.md) | Rates codebase structure | codebase/repo-structures |
 | [research](./research-strategy/research/SKILL.md) | Online research with source attribution | research-strategy |
-| [shipping-structure](./codebase-structures/shipping-structure/SKILL.md) | Shipping microservice structure | codebase-structures |
+| [shipping-structure](./codebase/repo-structures/shipping-structure/SKILL.md) | Shipping microservice structure | codebase/repo-structures |
 | [skill-writer](./documentation/skill-writer/SKILL.md) | Create and refine agent skills | documentation |
 | [technical-architect](./research-strategy/technical-architect/SKILL.md) | Architecture review and planning | research-strategy |
 | [typescript-helpers](./frontend-development/typescript-helpers/SKILL.md) | TypeScript patterns and type guards | frontend-development |
 | [unit-testing](./testing/unit-testing/SKILL.md) | Vitest and vue-test-utils patterns | testing |
-| [viya-app-structure](./codebase-structures/viya-app-structure/SKILL.md) | Viya app codebase structure | codebase-structures |
+| [viya-app-structure](./codebase/repo-structures/viya-app-structure/SKILL.md) | Viya app codebase structure | codebase/repo-structures |
 | [viya-dev-environment](./infrastructure/viya-dev-environment/SKILL.md) | Local dev environment management | infrastructure |
-| [viya-ui-warehouse-structure](./codebase-structures/viya-ui-warehouse-structure/SKILL.md) | Warehouse UI structure | codebase-structures |
+| [viya-ui-warehouse-structure](./codebase/repo-structures/viya-ui-warehouse-structure/SKILL.md) | Warehouse UI structure | codebase/repo-structures |
+| [webhooks](./codebase/cross-repo/webhooks/SKILL.md) | Webhook/event system across repos | codebase/cross-repo |
 | [viya-app-coding-standards](./frontend-development/viya-app-coding-standards/SKILL.md) | Viya-app coding standards | frontend-development |
 | [vue-component](./frontend-development/vue-component/SKILL.md) | Vue 3 component conventions | frontend-development |
 
@@ -126,15 +127,27 @@ The `frontend-design` skill includes reference files for:
 | [mongodb-development](./infrastructure/mongodb-development/SKILL.md) | MongoDB queries, aggregations, schema analysis |
 | [viya-dev-environment](./infrastructure/viya-dev-environment/SKILL.md) | Local dev environment management |
 
-### Codebase Structures (`codebase-structures/`)
+### Codebase (`codebase/`)
+
+#### Repo Structures (`codebase/repo-structures/`)
+
+Skills for understanding single-repository codebases.
 
 | Skill | Description |
 |-------|-------------|
-| [viya-app-structure](./codebase-structures/viya-app-structure/SKILL.md) | Main viya-app codebase structure (includes navigation patterns) |
-| [viya-ui-warehouse-structure](./codebase-structures/viya-ui-warehouse-structure/SKILL.md) | Warehouse UI structure |
-| [rates-structure](./codebase-structures/rates-structure/SKILL.md) | Rates microservice codebase structure |
-| [rates-feature](./codebase-structures/rates-feature/SKILL.md) | Rates module development patterns |
-| [shipping-structure](./codebase-structures/shipping-structure/SKILL.md) | Shipping microservice codebase structure |
+| [viya-app-structure](./codebase/repo-structures/viya-app-structure/SKILL.md) | Main viya-app codebase structure (includes navigation patterns) |
+| [viya-ui-warehouse-structure](./codebase/repo-structures/viya-ui-warehouse-structure/SKILL.md) | Warehouse UI structure |
+| [rates-structure](./codebase/repo-structures/rates-structure/SKILL.md) | Rates microservice codebase structure |
+| [shipping-structure](./codebase/repo-structures/shipping-structure/SKILL.md) | Shipping microservice codebase structure |
+
+#### Cross-Repo (`codebase/cross-repo/`)
+
+Generic knowledge about features and flows that span multiple repositories.
+
+| Skill | Description |
+|-------|-------------|
+| [rates-feature](./codebase/cross-repo/rates-feature/SKILL.md) | Rates module development patterns |
+| [webhooks](./codebase/cross-repo/webhooks/SKILL.md) | Webhook/event system across repositories |
 
 ## Using Skills in OpenCode
 
@@ -211,12 +224,15 @@ skills/
 ├── infrastructure/             # Infrastructure & Tools (2 skills)
 │   ├── mongodb-development/
 │   └── viya-dev-environment/
-└── codebase-structures/        # Codebase Structures (5 skills)
-    ├── rates-feature/
-    ├── rates-structure/
-    ├── shipping-structure/
-    ├── viya-app-structure/
-    └── viya-ui-warehouse-structure/
+└── codebase/                   # Codebase Knowledge (6 skills)
+    ├── repo-structures/        # Single-repo structure knowledge
+    │   ├── rates-structure/
+    │   ├── shipping-structure/
+    │   ├── viya-app-structure/
+    │   └── viya-ui-warehouse-structure/
+    └── cross-repo/             # Multi-repo features and flows
+        ├── rates-feature/
+        └── webhooks/
 ```
 
 ## Contributing
