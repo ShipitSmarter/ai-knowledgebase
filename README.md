@@ -8,11 +8,49 @@ This repository contains ready-to-use AI skills, commands, and settings that wor
 
 ## Quick Setup (2 minutes)
 
+### Global Install (all projects)
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash
 ```
 
 Restart your terminal. **Done!** All skills and commands now work in any project folder.
+
+### Local Install (organization repos only)
+
+Use this if you want skills only in ShipitSmarter repos, not personal projects:
+
+```bash
+# Install to custom directory (no global symlinks)
+curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash -s -- --local
+
+# Or specify exact location
+curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash -s -- --local --dir ~/Developer/shipitsmarter/ai-knowledgebase
+```
+
+Default paths when using `--local` without `--dir`:
+- **macOS**: `~/Developer/shipitsmarter/ai-knowledgebase`
+- **Linux**: `~/git/shipitsmarter/ai-knowledgebase`
+
+Then enable per-repo using one of these methods:
+
+**Option A: direnv (automatic)**
+```bash
+# Install direnv: brew install direnv
+# Add to shell: eval "$(direnv hook zsh)"  # or bash
+
+# In each ShipitSmarter repo:
+cp ~/Developer/shipitsmarter/ai-knowledgebase/.envrc.template .envrc
+direnv allow
+```
+
+**Option B: Shell alias**
+```bash
+# Add to ~/.zshrc or ~/.bashrc:
+alias oc-ship='OPENCODE_CONFIG_DIR="$HOME/Developer/shipitsmarter/ai-knowledgebase" opencode'
+
+# Then use oc-ship instead of opencode in ShipitSmarter repos
+```
 
 **Safety features included:**
 - Blocks all `kubectl` commands (prevent accidental cluster changes)
@@ -266,12 +304,17 @@ Explain what this skill helps with...
 
 ### "Skills aren't showing up"
 
-Check the symlinks exist:
+**Global install:** Check the symlinks exist:
 ```bash
 ls -la ~/.config/opencode/
 ```
-
 You should see symlinks for `skills`, `commands`, `agents`, `plugins` pointing to your ai-knowledgebase folder.
+
+**Local install:** Check OPENCODE_CONFIG_DIR is set:
+```bash
+echo $OPENCODE_CONFIG_DIR
+```
+Should show your ai-knowledgebase path. If using direnv, run `direnv allow` in the repo.
 
 ### "OpenCode won't start" or "Plugin errors"
 
@@ -280,8 +323,11 @@ Reset by running the uninstall script, then reinstall:
 # Uninstall (removes symlinks, keeps your config)
 curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/uninstall.sh | bash
 
-# Reinstall
+# Reinstall (global)
 curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash
+
+# Or reinstall (local)
+curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash -s -- --local
 ```
 
 ### "Copilot ignores instructions"
