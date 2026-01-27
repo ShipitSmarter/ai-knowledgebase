@@ -29,11 +29,25 @@ Find the ai-knowledgebase repository, pull latest changes, and re-run setup.
    ```
    Stop here.
 
-3. **If found, pull latest changes:**
+3. **If found, check for remote updates and pull:**
    ```bash
    cd <found-path>
+   git fetch origin
+   ```
+   
+   Check if there are updates:
+   ```bash
+   git rev-list HEAD..origin/main --count
+   ```
+   
+   If count > 0, there are updates. Pull them:
+   ```bash
    git pull
    ```
+   
+   Report what happened:
+   - If updates were pulled: "✓ Pulled X new commits from origin/main"
+   - If already up to date: "✓ Already up to date"
 
 4. **Re-run setup:**
    ```bash
