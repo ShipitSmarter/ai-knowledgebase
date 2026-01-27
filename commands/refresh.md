@@ -1,10 +1,10 @@
 ---
-description: Update ai-knowledgebase and re-run setup to get latest skills, commands, and agents
+description: Refresh ai-knowledgebase - pull latest and re-run setup to get new skills, commands, and agents
 ---
 
-# Update AI Knowledgebase
+# Refresh AI Knowledgebase
 
-Find the ai-knowledgebase repository and re-run setup to get the latest changes.
+Find the ai-knowledgebase repository, pull latest changes, and re-run setup.
 
 ## Steps
 
@@ -25,6 +25,7 @@ Find the ai-knowledgebase repository and re-run setup to get the latest changes.
    You can install it with:
    curl -fsSL https://raw.githubusercontent.com/ShipitSmarter/ai-knowledgebase/main/tools/setup.sh | bash
    ```
+   Stop here.
 
 3. **If found, pull latest changes:**
    ```bash
@@ -39,9 +40,19 @@ Find the ai-knowledgebase repository and re-run setup to get the latest changes.
 
 5. **Report result:**
    ```
-   ✓ ai-knowledgebase updated at: <path>
-   ✓ Setup complete - restart your terminal or run 'source ~/.bashrc' to apply changes
+   ✓ ai-knowledgebase refreshed at: <path>
+   ✓ Setup complete
    ```
+
+6. **Ask to close terminal:**
+   
+   Use the question tool to ask:
+   ```
+   Restart terminal to apply changes? (Y/n)
+   ```
+   
+   - If user selects **Y** (or Yes): Run `kill -9 $PPID` to close the terminal
+   - If user selects **n** (or No): Tell them to manually restart their terminal or run `source ~/.bashrc` / `source ~/.zshrc`
 
 ## Search Script
 
@@ -87,8 +98,12 @@ find_ai_knowledgebase() {
 KB_PATH=$(find_ai_knowledgebase "$(pwd)")
 ```
 
-## Notes
+## Closing the Terminal
 
-- This command is useful after someone mentions "ai-knowledgebase has been updated"
-- Always pull before running setup to get latest changes
-- Setup script is idempotent - safe to run multiple times
+To close the terminal after refresh:
+```bash
+# This kills the parent process (the terminal/shell that spawned opencode)
+kill -9 $PPID
+```
+
+Note: This may not work in all terminal environments, but works in most standard terminals.
