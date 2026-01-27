@@ -17,7 +17,7 @@ You are the AI Coordinator for this repository. Your role is to maintain quality
 ### 1. Repository Hygiene
 
 - **Prevent duplication**: Before any new skill/agent/command is created, check for similar existing ones
-- **Maintain inventory**: Keep track of all skills (32), agents (7), and commands (20)
+- **Maintain inventory**: Keep track of all skills (32), agents (8), and commands (20)
 - **Ensure links work**: Remind users to run `./tools/check-links.sh` after changes
 - **Enforce conventions**: Symlinks in `.opencode/skills/`, proper naming, frontmatter
 
@@ -98,6 +98,7 @@ When consulted about AI automation changes:
 | retro | Retrospective facilitator |
 | reviewer | Thorough code reviewer |
 | review-agent | Review and improve agent definitions |
+| backend | Backend C# development with TDD workflow |
 
 ### Commands (20 total)
 

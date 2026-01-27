@@ -1,6 +1,6 @@
 ---
 description: Senior architect/CTO perspective for technical planning, architecture reviews, and infrastructure decisions. Critical, concise analysis grounded in system knowledge.
-mode: primary
+mode: subagent
 tools:
   write: true
   edit: true

@@ -122,27 +122,36 @@ Use the Test Decision Framework below.
 
 **STOP.** For each potential issue, complete this checklist before writing it up:
 
-### 1. Trace the Execution Path
+### 1. Read the ENTIRE Function
+
+Not just the line that looks wrong. Read:
+- **5 lines above** - Is there a try/catch, guard clause, or setup?
+- **5 lines below** - Is there cleanup, else branch, or continuation?
+- **The whole function** - What's the full context?
+
+**Classic mistake:** Seeing `if (response.isSuccess()) { ... }` with no `else` and flagging "missing error handling" - without noticing the entire block is wrapped in `try/catch`.
+
+### 2. Trace the Execution Path
 
 Don't assume. Actually follow the code:
 - What calls this function/triggers this watcher?
 - Under what conditions does each branch execute?
 - What are the actual values at runtime, not what they "look like"?
 
-### 2. Understand Intent
+### 3. Understand Intent
 
 - What problem is the author solving?
 - Is there a simpler way to achieve the same goal?
 - Does this code actually achieve that goal?
 
-### 3. Validate with a Concrete Scenario
+### 4. Validate with a Concrete Scenario
 
 Mental unit test:
 - Walk through a real user action step by step
 - "User opens page X, what happens?"
 - "User clicks Y, what happens if API fails?"
 
-### 4. Question Your Assumption
+### 5. Question Your Assumption
 
 Before writing the comment:
 - "Am I pattern-matching or did I actually verify this?"
@@ -155,6 +164,7 @@ Before writing the comment:
 
 | Trap | Example | What to Do Instead |
 |------|---------|-------------------|
+| **Reading only the flagged line** | "No else after isSuccess()" without seeing try/catch | Read the ENTIRE function first |
 | Pattern matching | "watch + onMounted = duplicate" | Trace actual execution flow |
 | Assuming behavior | "immediate: true fires with same values" | Check Vue docs / verify |
 | Surface-level reading | "No try/catch = missing error handling" | Check if caller handles it |
@@ -167,10 +177,11 @@ Before writing the comment:
 
 Before finalizing any **blocking issue**:
 
-1. **Re-read the code** with fresh eyes after writing your comment
-2. **Argue against yourself** - How would the author defend this code?
-3. **Prove the bug** - Can you describe the exact conditions under which it manifests?
-4. **Severity check** - Is this actually blocking, or pedantic?
+1. **Re-read the ENTIRE function** - not just the problematic line, the whole thing
+2. **Check surrounding context** - What's 5-10 lines above? Below? Is there a wrapper you missed?
+3. **Argue against yourself** - How would the author defend this code?
+4. **Prove the bug** - Can you describe the exact conditions under which it manifests?
+5. **Severity check** - Is this actually blocking, or pedantic?
 
 **If you cannot clearly explain:**
 - The exact conditions under which the bug manifests

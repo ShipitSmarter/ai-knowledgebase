@@ -76,6 +76,36 @@ Examples from this repo:
 - `Add OpenCode research workflow and MongoDB deployment research`
 - `Add ShipitSmarter/Viya company research document`
 
+### AI Co-Author Attribution
+
+**ALWAYS** add a co-author trailer to every commit you create to indicate AI assistance:
+
+```
+<commit message>
+
+Co-authored-by: AI Assistant <ai@shipitsmarter.com>
+```
+
+**Example:**
+```bash
+git commit -m "Add MongoDB migration research
+
+Co-authored-by: AI Assistant <ai@shipitsmarter.com>"
+```
+
+Or using the `--trailer` flag:
+```bash
+git commit -m "Add MongoDB migration research" --trailer "Co-authored-by: AI Assistant <ai@shipitsmarter.com>"
+```
+
+**When to apply:**
+- Add to ALL commits made with AI assistance (OpenCode, Claude, Copilot, etc.)
+- This includes code changes, documentation, configuration, and all other changes
+- Do NOT add when the user explicitly makes commits without AI involvement
+
+This attribution ensures transparency about AI involvement in the codebase and allows
+tracking AI contributions in git history via `git log --grep="Co-authored-by: AI Assistant"`.
+
 ## Directory Structure
 
 ```
