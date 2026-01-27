@@ -12,6 +12,8 @@ Find the ai-knowledgebase repository, pull latest changes, and re-run setup.
 
    Search in this order:
    - Current directory (if it IS ai-knowledgebase)
+   - Direct child: `./ai-knowledgebase`
+   - Any child directory one level deep that matches
    - Parent directories up to 5 levels
    - Sibling directories (../ai-knowledgebase)
    - Common locations: ~/git/ai-knowledgebase, ~/Developer/ai-knowledgebase, ~/Projects/ai-knowledgebase, ~/code/ai-knowledgebase
@@ -67,6 +69,20 @@ find_ai_knowledgebase() {
     echo "$dir"
     return 0
   fi
+  
+  # Check direct child: ./ai-knowledgebase
+  if [[ -d "$dir/ai-knowledgebase/skills" && -d "$dir/ai-knowledgebase/commands" && -f "$dir/ai-knowledgebase/AGENTS.md" ]]; then
+    echo "$dir/ai-knowledgebase"
+    return 0
+  fi
+  
+  # Check any child directory one level deep
+  for child in "$dir"/*/; do
+    if [[ -d "$child/skills" && -d "$child/commands" && -f "$child/AGENTS.md" ]]; then
+      echo "${child%/}"
+      return 0
+    fi
+  done
   
   # Check parent directories (up to 5 levels)
   local current="$dir"
