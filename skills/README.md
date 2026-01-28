@@ -29,6 +29,7 @@ Skills are markdown-based instruction sets that teach AI agents how to perform s
 | [github-issue-tracker](./github-workflow/github-issue-tracker/SKILL.md) | Update and maintain GitHub issues | github-workflow |
 | [github-workflow](./github-workflow/github-workflow/SKILL.md) | PR workflow, releases, conventions | github-workflow |
 | [mongodb-development](./infrastructure/mongodb-development/SKILL.md) | MongoDB queries, aggregations, schema analysis | infrastructure |
+| [mongodb-performance](./infrastructure/mongodb-performance/SKILL.md) | MongoDB performance diagnostics (N+1, explain, batching) | infrastructure |
 | [playwright-test](./testing/playwright-test/SKILL.md) | E2E testing with Playwright | testing |
 | [pr-review](./github-workflow/pr-review/SKILL.md) | Senior engineer PR review patterns | github-workflow |
 | [product-documentation](./documentation/product-documentation/SKILL.md) | Product docs for Viya TMS | documentation |
@@ -125,6 +126,7 @@ The `frontend-design` skill includes reference files for:
 | Skill | Description |
 |-------|-------------|
 | [mongodb-development](./infrastructure/mongodb-development/SKILL.md) | MongoDB queries, aggregations, schema analysis |
+| [mongodb-performance](./infrastructure/mongodb-performance/SKILL.md) | MongoDB performance diagnostics (N+1, explain, batching) |
 | [viya-dev-environment](./infrastructure/viya-dev-environment/SKILL.md) | Local dev environment management |
 
 ### Codebase (`codebase/`)

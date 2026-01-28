@@ -44,15 +44,13 @@ Research → Plan → Architect Review → Build → Code Review → Improve
 
 ---
 
-## Getting Started by Role
+## Getting Started
 
-| Role | Guide |
-|------|-------|
-| **Designer** | [AI Tools for Designers](docs/getting-started/designers.md) - Frontend design, UI quality commands |
-| **Engineer** | [AI Tools for Engineers](docs/getting-started/engineers.md) - Vue, testing, GitHub workflow |
-| **Analyst / Integration Specialist** | [AI Tools for Analysts](docs/getting-started/analysts.md) - Carrier data, troubleshooting |
-| **Product** | [AI Tools for Product](docs/getting-started/product.md) - Strategy, documentation, user research |
-| **Research** | [AI Tools for Research](docs/getting-started/research.md) - Finding information, citing sources |
+Load a skill:
+
+- Research: `/skill research`
+- MongoDB exploration/debugging: `/skill mongodb-development`
+- MongoDB performance (N+1, explain, query-shape optimization): `/skill mongodb-performance`
 
 ---
 
@@ -234,7 +232,7 @@ ai-knowledgebase/
 └── tools/                   # Setup and update scripts
 ```
 
-**Looking for a specific repository?** See the [Repository Map](docs/repository-map.md) for a guide to all ~100 ShipitSmarter GitHub repos.
+**Looking for a specific repository?** Search in `research/` for the most recent system notes.
 
 ---
 

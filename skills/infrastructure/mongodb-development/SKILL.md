@@ -7,6 +7,8 @@ description: MongoDB database exploration, querying, and debugging using MCP too
 
 This skill guides AI-assisted MongoDB development using the official MongoDB MCP server. Use this when working with MongoDB databases in ShipitSmarter services.
 
+> For performance troubleshooting and query-shape optimization (especially N+1 / looped DB calls), also load the [`mongodb-performance`](../mongodb-performance/SKILL.md) skill.
+
 ## Prerequisites
 
 The MongoDB MCP server must be configured in OpenCode to use this skill.
@@ -460,4 +462,3 @@ Try these prompts in viya-app to do data analysis:
 ### Performance
 - "Explain the query plan for finding shipments by customerId"
 - "What queries would benefit from additional indexes on the shipments collection?"
-
