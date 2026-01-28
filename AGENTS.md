@@ -321,6 +321,66 @@ When research fails:
 - Check if Notion has relevant content
 - Offer to try different approaches
 
+## File Writing Best Practices
+
+**CRITICAL**: When using the `write` or `edit` tools, the file content must be serialized as valid JSON. This is a common source of errors, especially with long documents.
+
+### Common JSON Serialization Errors
+
+The `write` tool takes content as a JSON string parameter. These characters cause issues if not properly escaped:
+- Newlines → must be `\n`
+- Tabs → must be `\t`
+- Double quotes → must be `\"`
+- Backslashes → must be `\\`
+- Control characters → must be escaped
+
+### Strategies to Avoid Write Failures
+
+**1. Prefer `edit` over `write` for modifications**
+- Use `edit` to make incremental changes to existing files
+- Only use `write` when creating new files or complete rewrites
+
+**2. Build documents incrementally**
+For large documents (research papers, plans), consider:
+- Create the file with a minimal skeleton first
+- Use multiple `edit` calls to add sections
+- This reduces the chance of JSON errors in any single call
+
+**3. Keep individual tool calls smaller**
+If writing a 500-line document in one `write` call fails:
+- Split into logical sections
+- Write the structure first, then flesh out sections via `edit`
+
+**4. Watch for problematic content**
+Be extra careful when content includes:
+- Code blocks (especially with backticks, quotes)
+- JSON/YAML examples (nested escaping)
+- URLs with query parameters
+- User-provided content that may contain special chars
+
+**5. If a write fails, simplify and retry**
+- Try writing a smaller portion of the content
+- Check for unescaped special characters
+- Consider using `edit` to build up the file gradually
+
+### Example: Safe Document Creation
+
+Instead of one large write:
+```
+# RISKY: One large write with complex content
+write(filePath, entireDocumentContent)
+```
+
+Use incremental approach:
+```
+# SAFER: Create structure, then add content
+write(filePath, "# Title\n\n## Section 1\n\n## Section 2\n")
+edit(filePath, "## Section 1", "## Section 1\n\nDetailed content for section 1...")
+edit(filePath, "## Section 2", "## Section 2\n\nDetailed content for section 2...")
+```
+
+This approach is more resilient to JSON serialization issues.
+
 ## Planning Workflow
 
 When creating plans or doing any planning activities (feature plans, implementation plans, 
