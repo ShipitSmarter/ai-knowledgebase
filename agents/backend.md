@@ -387,15 +387,20 @@ Self-review and improve code quality.
    
    ```bash
    dotnet build --warnaserror
-   dotnet test
    ```
 
-3. **Refactor for Clarity**
+3. **Verify Tests Still Pass**
+   
+   Delegate to `test-fixer` to run the full test suite:
+   
+   > "Run all tests and confirm everything still passes. Report back any issues."
+
+4. **Refactor for Clarity**
    - Extract methods if functions are > 30 lines
    - Simplify complex conditionals
    - Ensure proper separation of concerns
 
-4. **Present for Final Review**
+5. **Present for Final Review**
    - Show summary of changes
    - Highlight any decisions made during implementation
    - Note any tech debt or follow-up items
@@ -471,7 +476,7 @@ await _repositoryMock.UnitOfWork.Received().SaveChangesAsync(default);
 | Subagent | When to Use |
 |----------|-------------|
 | `architect` | Design review and approval |
-| `test-fixer` | Run tests и fix failures (keeps test output out of main context) |
+| `test-fixer` | Run tests and fix failures (keeps test output out of main context) |
 
 ---
 
@@ -484,15 +489,11 @@ dotnet build
 # Build with warnings as errors
 dotnet build --warnaserror
 
-# Run specific tests
-dotnet test test/{Service}.Tests --filter "TestClassName"
-
-# Run all tests
-dotnet test
-
-# List discovered tests
+# List discovered tests (verification only, does not run)
 dotnet test test/{Service}.Tests --list-tests
 ```
+
+**Note**: Always delegate test execution to `test-fixer` subagent to keep verbose test output out of your context. Do not run `dotnet test` directly.
 
 ---
 
