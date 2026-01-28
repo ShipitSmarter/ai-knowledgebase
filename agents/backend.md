@@ -74,10 +74,10 @@ git log HEAD..origin/main --oneline
 +--------------+     +--------------+     +--------------+     +--------------+
 |    DESIGN    | --> |    TESTS     | --> |  IMPLEMENT   | --> |    REVIEW    |
 |              |     |              |     |              |     |              |
-| Create design|     | Write tests  |     | Make tests   |     | Self-review  |
-| Delegate to  |     | CHECKPOINT:  |     | pass         |     | Refactor     |
-| architect    |     | Get approval |     |              |     |              |
-| (subagent)   |     | + commit     |     |              |     |              |
+| Create design|     | Write tests  |     | Write code,  |     | Self-review  |
+| Delegate to  |     | CHECKPOINT:  |     | delegate to  |     | Refactor     |
+| architect    |     | Get approval |     | test-fixer   |     |              |
+| (subagent)   |     | + commit     |     | for fixes    |     |              |
 +--------------+     +--------------+     +--------------+     +--------------+
 ```
 
@@ -334,32 +334,37 @@ Write tests before implementation. Tests serve as documentation and define inter
 
 ## Phase 3: Implementation
 
-Implement code to make the tests pass.
+Implement code to make the tests pass, then delegate test execution to the `test-fixer` subagent.
 
 ### Steps
 
-1. **Implement Interfaces**
-   - Create classes defined in test phase
+1. **Implement the Feature**
+   - Replace stub implementations with real code
    - Follow patterns from existing codebase
    - Load relevant structure skill if needed (`rates-structure`, `shipping-structure`)
 
-2. **Make Tests Pass**
-   
-   ```bash
-   dotnet test test/{Service}.Tests --filter "{TestClass}"
-   ```
+2. **Delegate Test Execution to Test-Fixer**
 
-3. **Iterate Until Green**
-   - Fix failing tests one at a time
-   - Do not add functionality beyond what tests require (YAGNI)
+   After implementing, delegate test running and fixing to keep verbose test output out of your context:
 
-4. **Run All Tests**
-   
-   Ensure no regressions:
-   
-   ```bash
-   dotnet test
-   ```
+   > "Run the tests for `{TestClass}` and fix any failures. Report back what you changed."
+
+   Or for the full test suite:
+
+   > "Run all tests in `test/{Service}.Tests` and fix any failures. Report back 
+   > with a summary of changes."
+
+3. **Handle the Response**
+
+   | Status | Action |
+   |--------|--------|
+   | All tests passing | Proceed to Phase 4 (Review) |
+   | Some tests still failing | Review the analysis, address issues, then re-delegate |
+   | Test appears incorrect | Review the test, fix if needed, then re-delegate |
+
+4. **Re-delegate if Needed**
+
+   If the test-fixer reports remaining failures or stalls, address the root cause and delegate again until all tests pass.
 
 ---
 
@@ -460,6 +465,13 @@ await _repositoryMock.UnitOfWork.Received().SaveChangesAsync(default);
 | `rates-structure` | Rates microservice patterns |
 | `shipping-structure` | Shipping microservice patterns |
 | `code-review` | Review patterns |
+
+## Subagents Available
+
+| Subagent | When to Use |
+|----------|-------------|
+| `architect` | Design review and approval |
+| `test-fixer` | Run tests и fix failures (keeps test output out of main context) |
 
 ---
 
