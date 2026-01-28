@@ -528,7 +528,7 @@ Before starting migration, confirm:
 | 1 | [PostgreSQL JSON Types Documentation](https://www.postgresql.org/docs/current/datatype-json.html) | JSONB capabilities, indexing, jsonpath |
 | 2 | [Patroni Documentation](https://patroni.readthedocs.io/) | HA PostgreSQL template, DCS options |
 | 3 | [CloudNativePG GitHub](https://github.com/cloudnative-pg/cloudnative-pg) | Kubernetes-native PostgreSQL operator |
-| 4 | [Viya MongoDB Data Model](../viya-data-model/2026-01-20-mongodb-data-model.md) | Current schema and relationships |
+| 4 | [Viya MongoDB Data Model](../viya-data-model/2026-01-26-mongodb-data-model.md) | Current schema and relationships |
 | 5 | [ADR-001: MongoDB Decision](../../architecture/decisions/001-mongodb-document-database.md) | Original database selection rationale |
 | 6 | [Infrastructure Overview](../../architecture/infrastructure.md) | Current MongoDB Atlas configuration |
 

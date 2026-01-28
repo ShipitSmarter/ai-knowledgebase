@@ -39,7 +39,7 @@ Technical architecture documentation for Viya TMS. Used by AI agents (via the `t
 
 For deeper analysis, see `/research/`:
 - [Service Architecture](../research/shipitsmarter-repos/2026-01-19-service-architecture.md)
-- [MongoDB Data Model](../research/viya-data-model/2026-01-20-mongodb-data-model.md)
+- [MongoDB Data Model](../research/viya-data-model/2026-01-26-mongodb-data-model.md)
 - [Repository Catalog](../research/shipitsmarter-repos/2026-01-19-repository-catalog.md)
 
 ## Contributing

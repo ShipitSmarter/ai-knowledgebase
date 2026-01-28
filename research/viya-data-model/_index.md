@@ -6,7 +6,7 @@ Documentation of MongoDB database structure, entity relationships, and cross-ser
 
 | Date | Topic | Status |
 |------|-------|--------|
-| 2026-01-20 | [MongoDB Entity Relationships & Data Model](./2026-01-20-mongodb-data-model.md) | draft |
+| 2026-01-26 | [MongoDB Entity Relationships & Data Model](./2026-01-26-mongodb-data-model.md) | draft |
 
 ## Key Insights
 

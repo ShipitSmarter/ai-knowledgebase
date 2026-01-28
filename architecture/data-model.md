@@ -2,7 +2,7 @@
 
 MongoDB database schemas and entity relationships for Viya TMS.
 
-> **Detailed Analysis:** See [MongoDB Data Model Research](../research/viya-data-model/2026-01-20-mongodb-data-model.md) for complete schemas, document examples, and relationship diagrams.
+> **Detailed Analysis:** See [MongoDB Data Model Research](../research/viya-data-model/2026-01-26-mongodb-data-model.md) for complete schemas, document examples, and relationship diagrams.
 
 ## Database Overview
 
@@ -290,5 +290,5 @@ db.shipments.aggregate([
 
 ## Related Documentation
 
-- [MongoDB Data Model Research](../research/viya-data-model/2026-01-20-mongodb-data-model.md) - Full schemas and diagrams
+- [MongoDB Data Model Research](../research/viya-data-model/2026-01-26-mongodb-data-model.md) - Full schemas and diagrams
 - [Reporting MVs](../research/viya-reporting/2026-01-20-reporting-materialized-views.md) - Aggregation pipelines
