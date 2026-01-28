@@ -11,6 +11,15 @@ Conduct online research on a topic with full source attribution, organized by pr
 
 When user asks to research a topic or invokes this skill.
 
+## Required: Safe File Writing
+
+**Before creating research documents, load the `safe-file-writing` skill.**
+
+Research documents are typically >50 lines. Use incremental writes:
+1. Write skeleton (frontmatter + headers only)
+2. Add each section via separate `edit` calls
+3. Never write the full document in one call
+
 ## Process
 
 ### Step 1: Check Existing Knowledge

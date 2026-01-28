@@ -23,6 +23,15 @@ Phase 3: RESEARCH      → Parallel agents research each subtopic
 Phase 4: SYNTHESIS     → Unified overview + source validation (user-triggered)
 ```
 
+## Required: Safe File Writing
+
+**Before creating any research documents, load the `safe-file-writing` skill.**
+
+Research documents are typically >50 lines. Use incremental writes:
+1. Write skeleton (frontmatter + headers only)
+2. Add each section via separate `edit` calls
+3. Never write the full document in one call
+
 ---
 
 ## Phase 1: Discovery

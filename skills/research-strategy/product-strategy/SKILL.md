@@ -38,6 +38,15 @@ Viya is a cloud-based Transportation Management System (TMS) for B2B shippers.
 | **Freight Settlement / Rates** | Financial Manager / Logistics Analyst | Cost optimization and accuracy |
 | **Carrier Portal** | Carriers | Easier collaboration with Viya |
 
+## Required: Safe File Writing
+
+**Before creating strategy documents, load the `safe-file-writing` skill.**
+
+Strategy documents are typically >50 lines. Use incremental writes:
+1. Write skeleton (frontmatter + headers only)
+2. Add each section via separate `edit` calls
+3. Never write the full document in one call
+
 ## Process
 
 ### Step 1: Identify the Product Area
